@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="bg-navy pb-28 pt-16 text-white/80 lg:pb-12">
       <div className="container-x grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Logo tone="white" />
+          <Logo tone="white" size="lg" />
           <p className="mt-5 max-w-xs leading-relaxed">Residential cleaning from Brisbane to Tweed Heads. Weekly, fortnightly and monthly cleans, tailored to your home.</p>
           <Link href="/quote" className="btn-white mt-6">Get a free quote</Link>
         </div>

@@ -2,23 +2,23 @@
 
 @theme {
   /* Brand – taken from the Swept logo + mockup */
-  --color-violet: #5b35d5;       /* primary purple (buttons, bands) */
-  --color-violet-deep: #4320b8;  /* hover / pressed */
-  --color-violet-ink: #2a1470;   /* text on lavender */
+  --color-violet: #4c0296;       /* primary deep purple (buttons, bands) – from logo */
+  --color-violet-deep: #3a0174;  /* hover / pressed */
+  --color-violet-ink: #2e0a63;   /* text on lavender */
   --color-orchid: #c86bf5;       /* gradient start in mark */
-  --color-electric: #1f4bff;     /* gradient end in mark */
+  --color-electric: #8a3ffc;     /* focus ring */
   --color-navy: #0b1a3a;         /* wordmark + headings */
   --color-slate: #4a5578;        /* body copy */
-  --color-lavender: #f3f0ff;     /* soft section bg */
-  --color-lilac: #e4dcff;        /* borders on lavender */
-  --color-cloud: #fbfaff;        /* page bg */
+  --color-lavender: #f5effc;     /* soft section bg */
+  --color-lilac: #e6daf6;        /* borders on lavender */
+  --color-cloud: #fcfaff;        /* page bg */
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-outfit), var(--font-inter), ui-sans-serif, sans-serif;
 
   --radius-card: 1.25rem;
-  --shadow-soft: 0 1px 2px rgb(11 26 58 / 0.04), 0 8px 24px -8px rgb(67 32 184 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(11 26 58 / 0.05), 0 18px 40px -12px rgb(67 32 184 / 0.32);
+  --shadow-soft: 0 1px 2px rgb(11 26 58 / 0.04), 0 8px 24px -8px rgb(58 1 116 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(11 26 58 / 0.05), 0 18px 40px -12px rgb(58 1 116 / 0.3);
 }
 
 html {
@@ -66,3 +66,6 @@ p { text-wrap: pretty; }
   .prose-swept p { margin-bottom: 1rem; line-height: 1.7; }
   .prose-swept h2 { margin-top: 2.5rem; margin-bottom: .75rem; font-size: 1.5rem; font-weight: 700; }
 }
+
+/* Focus ring stays visible on dark purple surfaces */
+.bg-violet :focus-visible, .band :focus-visible, .bg-navy :focus-visible { outline-color: #fff; }

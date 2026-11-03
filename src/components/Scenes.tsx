@@ -5,11 +5,11 @@
  */
 
 const C = {
-  wall: "#EEE9FF",
-  floor: "#DCD3FF",
-  violet: "#5B35D5",
-  violetSoft: "#8E6CF0",
-  lilac: "#C9BBFF",
+  wall: "#F3ECFC",
+  floor: "#E2D3F6",
+  violet: "#4C0296",
+  violetSoft: "#8A4FD8",
+  lilac: "#D2BDF0",
   navy: "#0B1A3A",
   white: "#FFFFFF",
   leaf: "#3E9C7A",
@@ -40,11 +40,11 @@ export function LivingScene({ className }: { className?: string }) {
       <path d="M250 120h20v-30h12v30h10v-48h14v48h10v-20h14v20h30v28H250Z" fill="#B7CBF5" />
       <path d="M305 28v120M250 88h110" stroke={C.white} strokeWidth="5" />
       <rect y="190" width="400" height="50" fill={C.floor} />
-      <ellipse cx="160" cy="206" rx="120" ry="12" fill="#C8BCF7" />
+      <ellipse cx="160" cy="206" rx="120" ry="12" fill="#D5C3F2" />
       <rect x="64" y="122" width="192" height="58" rx="22" fill={C.white} />
       <rect x="52" y="140" width="28" height="52" rx="12" fill={C.white} stroke={C.lilac} strokeWidth="2" />
       <rect x="240" y="140" width="28" height="52" rx="12" fill={C.white} stroke={C.lilac} strokeWidth="2" />
-      <rect x="78" y="160" width="164" height="30" rx="10" fill="#F7F5FF" stroke={C.lilac} strokeWidth="2" />
+      <rect x="78" y="160" width="164" height="30" rx="10" fill="#FAF6FE" stroke={C.lilac} strokeWidth="2" />
       <rect x="92" y="116" width="44" height="40" rx="12" fill={C.lilac} transform="rotate(-8 114 136)" />
       <rect x="180" y="116" width="44" height="40" rx="12" fill="#7FC7B0" transform="rotate(6 202 136)" />
       <Plant x={330} y={176} s={0.95} />
@@ -57,12 +57,12 @@ export function LivingScene({ className }: { className?: string }) {
 export function BathScene({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 400 240" className={className} role="presentation" aria-hidden="true" preserveAspectRatio="xMidYMax slice">
-      <rect width="400" height="240" fill="#F4F2FF" />
+      <rect width="400" height="240" fill="#F7F2FD" />
       {Array.from({ length: 9 }).map((_, i) => (
-        <path key={i} d={`M${i * 48} 0v190`} stroke="#E4DEFF" strokeWidth="2" />
+        <path key={i} d={`M${i * 48} 0v190`} stroke="#EADFF8" strokeWidth="2" />
       ))}
       {Array.from({ length: 4 }).map((_, i) => (
-        <path key={i} d={`M0 ${i * 48 + 46}h400`} stroke="#E4DEFF" strokeWidth="2" />
+        <path key={i} d={`M0 ${i * 48 + 46}h400`} stroke="#EADFF8" strokeWidth="2" />
       ))}
       <rect y="190" width="400" height="50" fill={C.floor} />
       <path d="M96 128h196c0 44-30 66-98 66s-98-22-98-66Z" fill={C.white} stroke={C.lilac} strokeWidth="2" />
@@ -92,7 +92,7 @@ export function ComfortScene({ className }: { className?: string }) {
       <path d="M170 110c0-22 18-30 50-30s50 8 50 30v52h-100Z" fill={C.violetSoft} />
       <rect x="156" y="132" width="26" height="58" rx="12" fill={C.violet} />
       <rect x="258" y="132" width="26" height="58" rx="12" fill={C.violet} />
-      <rect x="172" y="150" width="96" height="28" rx="10" fill="#7B57E8" />
+      <rect x="172" y="150" width="96" height="28" rx="10" fill="#6A23C0" />
       <rect x="168" y="188" width="8" height="14" rx="3" fill={C.navy} opacity=".5" />
       <rect x="264" y="188" width="8" height="14" rx="3" fill={C.navy} opacity=".5" />
       <rect x="300" y="150" width="54" height="8" rx="4" fill={C.wood} />
@@ -110,11 +110,11 @@ export function ComfortScene({ className }: { className?: string }) {
 export function MoveScene({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 400 240" className={className} role="presentation" aria-hidden="true" preserveAspectRatio="xMidYMax slice">
-      <rect width="400" height="240" fill="#F5F3FF" />
+      <rect width="400" height="240" fill="#F7F2FD" />
       <rect x="230" y="26" width="130" height="124" rx="8" fill={C.sky} />
       <path d="M295 26v124M230 88h130" stroke={C.white} strokeWidth="5" />
-      <rect y="190" width="400" height="50" fill="#E3DBFF" />
-      <path d="M0 214h400" stroke="#D3C8FF" strokeWidth="2" />
+      <rect y="190" width="400" height="50" fill="#E6D8F7" />
+      <path d="M0 214h400" stroke="#D9C6F3" strokeWidth="2" />
       <rect x="70" y="128" width="90" height="64" rx="4" fill={C.wood} />
       <path d="M70 146h90M115 128v18" stroke="#A97C54" strokeWidth="3" />
       <rect x="90" y="84" width="64" height="46" rx="4" fill="#D8AE84" />
