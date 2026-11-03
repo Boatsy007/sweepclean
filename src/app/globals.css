@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand – taken from the Swept logo + mockup */
+  --color-violet: #5b35d5;       /* primary purple (buttons, bands) */
+  --color-violet-deep: #4320b8;  /* hover / pressed */
+  --color-violet-ink: #2a1470;   /* text on lavender */
+  --color-orchid: #c86bf5;       /* gradient start in mark */
+  --color-electric: #1f4bff;     /* gradient end in mark */
+  --color-navy: #0b1a3a;         /* wordmark + headings */
+  --color-slate: #4a5578;        /* body copy */
+  --color-lavender: #f3f0ff;     /* soft section bg */
+  --color-lilac: #e4dcff;        /* borders on lavender */
+  --color-cloud: #fbfaff;        /* page bg */
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-logo: var(--font-nunito), ui-rounded, sans-serif;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 1px 2px rgb(11 26 58 / 0.04), 0 8px 24px -8px rgb(67 32 184 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(11 26 58 / 0.05), 0 18px 40px -12px rgb(67 32 184 / 0.32);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  background: var(--color-cloud);
+  color: var(--color-slate);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-navy);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+p { text-wrap: pretty; }
+
+:focus-visible {
+  outline: 3px solid var(--color-electric);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@utility container-x { @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8; }
+@utility btn { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-[1.02rem] font-semibold transition-[background-color,box-shadow,transform,color] duration-200 active:scale-[.98]; }
+@utility btn-primary { @apply btn bg-violet text-white shadow-soft hover:bg-violet-deep hover:shadow-lift; }
+@utility btn-outline { @apply btn border-2 border-violet text-violet hover:bg-violet hover:text-white; }
+@utility btn-white { @apply btn bg-white text-violet shadow-soft hover:bg-lavender; }
+@utility eyebrow { @apply font-display text-[0.8rem] font-bold uppercase tracking-[0.2em] text-violet; }
+@utility band { @apply relative overflow-hidden rounded-[1.75rem] bg-violet text-white; }
+@utility card { @apply rounded-[var(--radius-card)] border border-lilac bg-white shadow-soft; }
+@utility field { @apply block w-full rounded-xl border-2 border-lilac bg-white px-4 py-3 text-navy placeholder:text-slate/60 transition-colors focus:border-violet focus:outline-none; }
+@utility label { @apply mb-1.5 block font-display text-[0.95rem] font-semibold text-navy; }
+@utility error { @apply mt-1.5 text-sm font-medium text-[#b42318]; }
+@layer components {
+  .prose-swept p { margin-bottom: 1rem; line-height: 1.7; }
+  .prose-swept h2 { margin-top: 2.5rem; margin-bottom: .75rem; font-size: 1.5rem; font-weight: 700; }
+}
