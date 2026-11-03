@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit, Nunito } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -11,7 +11,6 @@ import { site, siteUrl } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", weight: ["500", "600", "700", "800"], display: "swap" });
-const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", weight: ["700", "900"], display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -28,7 +27,7 @@ export const viewport: Viewport = { themeColor: "#5b35d5", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-AU" className={`${inter.variable} ${outfit.variable} ${nunito.variable}`}>
+    <html lang="en-AU" className={`${inter.variable} ${outfit.variable}`}>
       <body className="min-h-dvh antialiased">
         <JsonLd data={[businessSchema(), websiteSchema()]} />
         <Header />

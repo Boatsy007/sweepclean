@@ -37,7 +37,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-violet text-white shadow-[0_1px_0_rgb(255_255_255/0.08)]">
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
       <div className="container-x flex h-[72px] items-center justify-between gap-6">
-        <Link href="/" className="shrink-0"><Logo tone="white" /></Link>
+        <Link href="/" className="shrink-0"><Logo tone="white" priority /></Link>
 
         <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-1">

@@ -13,7 +13,7 @@ export function businessSchema() {
     name: `${site.name} Cleaning`,
     alternateName: site.name,
     url: siteUrl(),
-    logo: `${siteUrl()}/brand/swept-mark.svg`,
+    logo: `${siteUrl()}/brand/swept-logo.png`,
     image: `${siteUrl()}/opengraph-image`,
     description: site.description,
     areaServed: areas.map((a) => ({
