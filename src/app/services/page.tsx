@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
-import { serviceScenes } from "@/components/Scenes";
+import { ServiceVisual } from "@/components/ServiceVisual";
 
 export const metadata = {
   title: "Home Cleaning Services – Regular, Deep, NDIS & Bond",
@@ -25,10 +25,9 @@ export default function Services() {
       </section>
       <section className="container-x space-y-6 py-8">
         {services.map((s, i) => {
-          const Scene = serviceScenes[s.icon];
           return (
             <article key={s.slug} className="card grid overflow-hidden md:grid-cols-[1fr_1.2fr]">
-              <div className={i % 2 ? "md:order-2" : ""}><Scene className="block h-full min-h-56 w-full" /></div>
+              <div className={i % 2 ? "md:order-2" : ""}><ServiceVisual service={s} sizes="(min-width: 768px) 520px, 100vw" className="h-full min-h-56 w-full" /></div>
               <div className="p-7 sm:p-10">
                 <Icon name={s.icon} className="size-8 text-violet" />
                 <h2 className="mt-3 text-2xl font-extrabold sm:text-3xl"><Link href={`/services/${s.slug}`} className="hover:text-violet">{s.name}</Link></h2>

@@ -5,7 +5,9 @@ import { site } from "@/lib/site";
 import { faqSchema } from "@/lib/schema";
 import { Icon } from "@/components/Icon";
 import { SweptMark } from "@/components/SweptMark";
-import { LivingScene, serviceScenes } from "@/components/Scenes";
+import Image from "next/image";
+import { ServiceVisual } from "@/components/ServiceVisual";
+import { photos } from "@/lib/photos";
 import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
 import { JsonLd } from "@/components/JsonLd";
@@ -61,9 +63,11 @@ export default function Home() {
 
           <div className="relative">
             <div className="overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
-              <LivingScene className="block aspect-[5/3.3] w-full sm:aspect-[5/3.6]" />
+              <div className="relative aspect-[4/3] w-full">
+                <Image src={photos.bathroom.src} alt={photos.bathroom.alt} fill priority placeholder="blur" sizes="(min-width: 1200px) 560px, (min-width: 1024px) 46vw, 100vw" className="object-cover" />
+              </div>
             </div>
-            <div className="card relative mx-4 -mt-12 p-4 sm:absolute sm:-left-6 sm:bottom-8 sm:mx-0 sm:mt-0 sm:w-[17rem]">
+            <div className="card relative mx-4 -mt-12 p-4 sm:absolute sm:-left-8 sm:-bottom-10 sm:mx-0 sm:mt-0 sm:w-[17rem]">
               <p className="flex items-center gap-2 font-display text-sm font-bold text-navy"><Icon name="calendar" className="size-5 text-violet" />Your cleaning plan</p>
               <p className="mt-1 text-sm">Fortnightly · Thursday mornings</p>
               <ul className="mt-3 space-y-1.5 text-sm text-navy">
@@ -88,7 +92,6 @@ export default function Home() {
         </div>
         <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s) => {
-            const Scene = serviceScenes[s.icon];
             return (
               <li key={s.slug}>
                 <Link href={`/services/${s.slug}`} className="card group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lift">
@@ -100,7 +103,7 @@ export default function Home() {
                     {s.availability && <p className="mt-2 text-sm text-slate">Availability confirmed on enquiry.</p>}
                   </div>
                   <div className="relative hidden sm:block">
-                    <Scene className="block aspect-[5/3] w-full" />
+                    <ServiceVisual service={s} sizes="(min-width: 1024px) 280px, 50vw" className="aspect-[5/3] w-full" />
                     <span className="absolute bottom-3 right-3 grid size-10 place-items-center rounded-full bg-white text-violet shadow-soft transition-transform group-hover:translate-x-0.5">
                       <Icon name="arrow" className="size-5" />
                       <span className="sr-only">Learn about {s.name}</span>

@@ -10,7 +10,7 @@ import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
-import { serviceScenes } from "@/components/Scenes";
+import { ServiceVisual } from "@/components/ServiceVisual";
 import { TrackedLink } from "@/components/TrackedLink";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ServicePage({ params }: Props) {
   const s = getService((await params).slug);
   if (!s) notFound();
-  const Scene = serviceScenes[s.icon];
   const crumbs = [{ name: "Home", path: "/" }, { name: "Services", path: "/services" }, { name: s.name, path: `/services/${s.slug}` }];
   const others = services.filter((o) => o.slug !== s.slug);
   const quoteHref = `/quote?service=${s.slug}`;
@@ -57,7 +56,7 @@ export default async function ServicePage({ params }: Props) {
             <p className="mt-4 text-sm">Written quote {site.quoteResponse} · Brisbane, Logan, Gold Coast &amp; Tweed Heads</p>
           </div>
           <div className="overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
-            <Scene className="block aspect-[5/3.4] w-full" />
+            <ServiceVisual service={s} priority sizes="(min-width: 1200px) 520px, (min-width: 1024px) 45vw, 100vw" className="aspect-[5/3.4] w-full" />
           </div>
         </div>
       </section>
