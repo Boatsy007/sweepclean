@@ -42,46 +42,46 @@ export default function Home() {
     <>
 
       {/* HERO – headline + quote form above the fold */}
-      <section className="relative isolate overflow-hidden bg-violet text-white">
+      <section className="relative isolate overflow-hidden bg-[#E4D3FC] text-[#390078]">
         <HeroBackground src={photos.bathroom.src} className="hero-parallax -z-20 object-cover object-[70%_50%]" />
-        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,#3a0174_0%,#2b0857_100%)] lg:bg-[linear-gradient(90deg,rgb(30_8_56/0.88)_0%,rgb(36_8_70/0.78)_38%,rgb(36_8_70/0.5)_54%,rgb(20_8_40/0.12)_72%,rgb(20_8_40/0)_100%)]" />
-        <SweptMark tone="white" size={360} className="spin-on-scroll pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#E4D3FC] lg:bg-[linear-gradient(90deg,rgb(228_211_252/0.97)_0%,rgb(228_211_252/0.92)_38%,rgb(228_211_252/0.62)_54%,rgb(228_211_252/0.15)_72%,rgb(228_211_252/0)_100%)]" />
+        <SweptMark size={360} className="spin-on-scroll pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
         <div className="container-x grid items-center gap-7 pb-10 pt-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
           <div className="hero-drift min-w-0">
-            <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
-              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-2.5 py-1 font-display text-[0.62rem] min-[380px]:whitespace-nowrap font-semibold uppercase leading-normal tracking-[0.05em] min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:border-white/35 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
+            <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-[#390078] sm:text-6xl lg:text-[3.9rem]">
+              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[#390078]/25 bg-white/55 px-2.5 py-1 font-display text-[0.62rem] min-[380px]:whitespace-nowrap font-semibold uppercase leading-normal tracking-[0.05em] min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:border-[#390078]/25 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
                 <Icon name="sparkle" className="size-3.5 lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
               <span className="block">A beautifully clean home.</span>{" "}
-              <span className="relative inline-block text-[#e9d8ff]">
+              <span className="relative inline-block text-violet">
                 More time for you.
-                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3.5 w-full text-[#c9a8ff]"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3.5 w-full text-[#a77ff0]"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
               </span>
             </h1>
-            <p className="intro mt-5 max-w-xl text-[1.05rem] leading-relaxed text-white/90 [--d:160ms] sm:text-xl lg:mt-7">
+            <p className="intro mt-5 max-w-xl text-[1.05rem] leading-relaxed text-[#390078] [--d:160ms] sm:text-xl lg:mt-7">
               Flexible weekly, fortnightly and monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
             </p>
             <ul className="intro mt-4 grid gap-2 text-[1rem] font-medium [--d:280ms] lg:hidden">
               {["No lock-in contracts", "Personalised cleaning checklists", "Free, no-obligation quotes"].map((t) => (
-                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-[#d9bfff]" />{t}</li>
+                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
               ))}
             </ul>
             <ul className="intro mt-7 hidden gap-3 text-[1rem] font-medium [--d:280ms] lg:grid lg:grid-cols-2">
               {["Free, no-obligation quotes", "No lock-in contracts", "The same checklist every visit", `We reply ${site.quoteResponse}`].map((t) => (
-                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-[#d9bfff]" />{t}</li>
+                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
               ))}
             </ul>
             {/* Mobile: one clear primary action, phone as secondary, services as a text link */}
             <div className="intro mt-6 lg:hidden [--d:400ms]">
-              <a href="#quote" className="btn-white !min-h-14 w-full whitespace-nowrap text-[1.08rem]">Get my free quote <Icon name="arrow" className="size-[1.1rem] rotate-90" /></a>
+              <a href="#quote" className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem]">Get my free quote <Icon name="arrow" className="size-[1.1rem] rotate-90" /></a>
               <div className="mt-3 flex items-center justify-between gap-3">
                 {site.phone && (
-                  <a href={telHref(site.phone)} className="btn !min-h-12 whitespace-nowrap border-2 border-white/55 !px-4 text-[0.98rem] text-white hover:bg-white hover:text-violet">
+                  <a href={telHref(site.phone)} className="btn !min-h-12 whitespace-nowrap border-2 border-violet !px-4 text-[0.98rem] text-violet hover:bg-violet hover:text-white">
                     <Icon name="phone" className="size-[1.1rem]" />{site.phone}
                   </a>
                 )}
-                <Link href="/services" className="inline-flex items-center gap-1 whitespace-nowrap font-display text-[0.98rem] font-semibold text-white/90 underline decoration-white/40 underline-offset-4 hover:decoration-white">
+                <Link href="/services" className="inline-flex items-center gap-1 whitespace-nowrap font-display text-[0.98rem] font-semibold text-[#390078] underline decoration-[#390078]/40 underline-offset-4 hover:decoration-[#390078]">
                   Explore services <Icon name="arrow" className="size-4" />
                 </Link>
               </div>
@@ -89,9 +89,9 @@ export default function Home() {
             {/* Desktop (unchanged) */}
             <div className="intro mt-8 hidden flex-wrap gap-3 [--d:400ms] lg:flex">
               {site.phone && (
-                <a href={telHref(site.phone)} className="btn-white"><Icon name="phone" className="size-5" />{site.phone}</a>
+                <a href={telHref(site.phone)} className="btn-primary"><Icon name="phone" className="size-5" />{site.phone}</a>
               )}
-              <Link href="/services" className="btn border-2 border-white/60 text-white hover:bg-white hover:text-violet">Explore our services</Link>
+              <Link href="/services" className="btn border-2 border-violet text-violet hover:bg-violet hover:text-white">Explore our services</Link>
             </div>
           </div>
 
