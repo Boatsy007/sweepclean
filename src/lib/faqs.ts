@@ -16,7 +16,7 @@ export const generalFaqs: Faq[] = [
   },
   {
     q: "Can I choose what gets cleaned?",
-    a: "Yes. Every clean starts from our room-by-room checklist, and you can tell us which areas matter most, which to skip, and any add-ons such as the oven, fridge or interior windows.",
+    a: "Yes. Every clean starts from our room-by-room checklist, and you can tell us which areas matter most, which to skip, and extras such as the oven and stove, blinds, laundry or windows and tracks.",
   },
   {
     q: "Am I locked into a contract?",

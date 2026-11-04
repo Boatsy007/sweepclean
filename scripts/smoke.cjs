@@ -101,7 +101,7 @@ const ok = (m) => console.log("  ✓ " + m);
   await page.click("fieldset:has-text('Property type') label:has-text('House')");
   await page.click("fieldset:has-text('Bedrooms') label:has-text('3')");
   await page.click("fieldset:has-text('Bathrooms') label:has-text('2')");
-  await page.click("label:has-text('Inside oven')");
+  await page.click("label:has-text('Oven & stove')");
   await page.click("text=Continue");
   await page.click("text=Continue");
   if (await page.isVisible("text=How often would you like us to come?")) ok("frequency validation shown"); else fail("frequency validation missing");

@@ -20,7 +20,7 @@ const approach = [
   { icon: "doc", title: "A written plan for your home", body: "Your quote spells out what we'll clean, how long we expect to take and the price. That plan becomes the checklist for every visit." },
   { icon: "chat", title: "Easy, friendly communication", body: "Enquire online in a couple of minutes, then hear back from a real person. Changes, skips and questions are a quick message away." },
   { icon: "calendar", title: "Scheduling built around you", body: "Weekly, fortnightly or monthly on a day that suits – and the freedom to pause or change when life does." },
-  { icon: "sparkle", title: "Attention to the details", body: "Skirting boards, shower screens, tapware, the top of the fridge – the things that make a home feel properly clean, not just tidied." },
+  { icon: "sparkle", title: "Attention to the details", body: "Skirting boards, shower screens, tapware, fans and vents – the things that make a home feel properly clean, not just tidied." },
 ];
 
 export default function WhySwept() {

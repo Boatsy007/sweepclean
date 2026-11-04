@@ -3,6 +3,7 @@ import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
 import { generalFaqs } from "@/lib/faqs";
 import { suburbPath, suburbsIn } from "@/lib/suburbs";
+import { tasks } from "@/lib/tasks";
 
 export const dynamic = "force-static";
 
@@ -26,6 +27,9 @@ export function GET() {
     "",
     "## Services",
     ...services.map((s) => `- [${s.name}](${u}/services/${s.slug}): ${s.summary} Best for: ${s.bestFor}.`),
+    "",
+    "## What we clean",
+    ...tasks.map((t) => `- ${t.name}: ${t.detail}`),
     "",
     "## Areas and suburbs",
     ...areas.flatMap((a) => [

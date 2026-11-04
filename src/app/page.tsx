@@ -11,6 +11,7 @@ import { CtaBand } from "@/components/CtaBand";
 import { HeroQuoteForm } from "@/components/HeroQuoteForm";
 import { HeroBackground } from "@/components/HeroBackground";
 import { TrackedLink } from "@/components/TrackedLink";
+import { tasks } from "@/lib/tasks";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -19,7 +20,6 @@ export const metadata = pageMeta({
   path: "/",
 });
 
-const tasks = ["Dusting", "Kitchens", "Bathrooms", "Floors", "Blinds and fans", "Windows and tracks", "Beds", "Laundry and general tidy"];
 
 const schedules = [
   { value: "weekly", label: "Weekly", body: "For busy households, young kids and pets – the house never gets a chance to slip." },
@@ -114,16 +114,16 @@ export default function Home() {
 
       {/* YOUR CLEAN, YOUR WAY */}
       <section className="container-x" aria-labelledby="way-h">
-        <div className="band grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-[1fr_1.3fr] lg:items-center lg:py-12">
+        <div className="band grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-[0.75fr_1.65fr] lg:items-center lg:py-12">
           <SweptMark tone="white" size={260} className="pointer-events-none absolute -bottom-16 -right-12 opacity-15" />
           <div className="relative lg:border-r lg:border-white/25 lg:pr-10">
             <h2 id="way-h" className="text-3xl font-extrabold !text-white sm:text-[2.5rem]">Your clean, your way</h2>
             <p className="mt-3 text-lg text-white/90">A flexible, customised clean that covers the areas that matter most to you.</p>
           </div>
           <div className="relative">
-            <ul className="grid grid-cols-1 gap-x-8 gap-y-3 min-[420px]:grid-cols-2">
+            <ul className="grid grid-cols-2 gap-x-5 gap-y-3 sm:gap-x-8 lg:grid-cols-3">
               {tasks.map((t) => (
-                <li key={t} className="flex items-center gap-3 text-lg font-medium"><Icon name="checkCircle" className="size-6 shrink-0" />{t}</li>
+                <li key={t.name} className="flex items-center gap-2.5 text-[0.98rem] font-medium sm:text-[1.05rem]"><Icon name="checkCircle" className="size-5 shrink-0 sm:size-6" />{t.name}</li>
               ))}
             </ul>
             <p className="mt-5 italic text-white/85">Customise the tasks to your home and schedule.</p>

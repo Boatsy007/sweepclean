@@ -15,7 +15,9 @@ export const FREQUENCY_OPTIONS = [
 ] as const;
 
 export const PROPERTY_OPTIONS = ["House", "Townhouse", "Apartment / unit"] as const;
-export const EXTRA_OPTIONS = ["Inside oven", "Inside fridge", "Interior windows", "Balcony / patio", "Change bed linen"] as const;
+import { EXTRA_TASKS } from "./tasks";
+
+export const EXTRA_OPTIONS = EXTRA_TASKS;
 export const TIME_OPTIONS = ["Morning", "Afternoon", "Flexible"] as const;
 
 export type QuoteRequest = {

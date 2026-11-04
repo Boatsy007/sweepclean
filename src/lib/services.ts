@@ -47,7 +47,7 @@ const coreBathroom = [
 
 const coreLiving = [
   "Dusting of reachable surfaces, sills and skirting",
-  "Beds made (linen changed if left out)",
+  "Beds made (fresh linen if left out)",
   "Light switches and door handles wiped",
   "Carpets and rugs vacuumed",
   "Hard floors vacuumed and mopped",
@@ -79,15 +79,15 @@ export const services: Service[] = [
       { room: "Bathrooms & laundry", items: [...coreBathroom, "Laundry tub and benches wiped"] },
       { room: "Living areas & bedrooms", items: coreLiving },
       {
-        room: "Add-ons on request",
-        items: ["Inside the oven", "Inside the fridge", "Interior windows and tracks", "Balcony or patio sweep", "Changing bed linen"],
+        room: "Add to any visit",
+        items: ["Dishes", "Laundry", "Oven & stove", "Kitchen cabinets", "Blinds", "Fans & vents", "Windows & tracks"],
       },
     ],
     pricing: [
       "The size of the home – bedrooms, bathrooms and living areas",
       "How often we visit – shorter gaps mean less build-up each time",
       "The condition of the first visit (a longer first clean may be needed to bring everything up to standard)",
-      "Any add-ons, such as inside the oven or fridge",
+      "Any extras, such as the oven and stove, blinds or windows and tracks",
     ],
     steps: [
       { title: "Tell us about your home", body: "Answer a few quick questions online – rooms, frequency, suburb and any priorities." },
@@ -146,13 +146,13 @@ export const services: Service[] = [
         room: "Living areas & bedrooms",
         items: [...coreLiving, "Skirting boards and door frames wiped", "Ceiling fans and light fittings dusted", "Window sills and tracks vacuumed"],
       },
-      { room: "Add-ons on request", items: ["Inside the fridge", "Interior windows", "Balcony or patio", "Wall spot-cleaning"] },
+      { room: "Add to your deep clean", items: ["Blinds", "Interior windows", "Dishes", "Laundry", "Bed making"] },
     ],
     pricing: [
       "The size of the home",
       "How long since the last thorough clean",
       "Specific problem areas such as heavy grease or mould",
-      "Add-ons such as inside the fridge or interior windows",
+      "Extras such as blinds, interior windows or laundry",
     ],
     steps: [
       { title: "Describe the job", body: "Tell us the size of the home and anything that needs special attention." },
@@ -200,7 +200,7 @@ export const services: Service[] = [
       { room: "Kitchen", items: coreKitchen },
       { room: "Bathrooms & laundry", items: [...coreBathroom, "Laundry tub and benches wiped"] },
       { room: "Living areas & bedrooms", items: [...coreLiving, "Clear, safe walkways kept free of trip hazards"] },
-      { room: "Tailored to you", items: ["Bed linen changes", "Putting a load of washing on", "Tasks agreed with you, written into your plan"] },
+      { room: "Tailored to you", items: ["Bed making and linen changes", "Laundry – a load washed and folded", "Dishes washed and put away", "Tasks agreed with you, written into your plan"] },
     ],
     pricing: [
       "The size of the home and the tasks agreed",
@@ -279,13 +279,13 @@ export const services: Service[] = [
           "Floors vacuumed and mopped",
         ],
       },
-      { room: "Ask us about", items: ["Wall spot-cleaning", "Balcony, patio or garage", "Blinds"] },
+      { room: "Add to your bond clean", items: ["Blinds", "Fans & vents"] },
     ],
     pricing: [
       "Number of bedrooms, bathrooms and living areas",
       "Whether the property is empty (strongly recommended)",
       "Condition – heavy oven grease, mould or pet hair takes longer",
-      "Extras such as balconies, garages or blinds",
+      "Extras such as blinds",
     ],
     steps: [
       { title: "Send us your move-out details", body: "Your vacate date, property size and – ideally – a copy of your entry condition report." },
@@ -302,8 +302,8 @@ export const services: Service[] = [
         a: "Ideally for the day after the removalists, once the property is empty and before your final inspection. Book as early as you know your vacate date – end-of-month dates fill quickly.",
       },
       {
-        q: "Do you do carpet steam cleaning?",
-        a: "Mention it in your quote request and we'll confirm what we can arrange for your property and lease requirements.",
+        q: "Is the oven included in a bond clean?",
+        a: "Yes. Every bond clean includes the oven, grill trays, stovetop and rangehood, along with inside and outside every kitchen cabinet and drawer.",
       },
       {
         q: "Does the process differ in Tweed Heads?",

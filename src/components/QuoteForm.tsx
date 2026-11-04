@@ -220,7 +220,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
                 </div>
                 <Pills label="Any pets at home?" name="pets" options={["No", "Yes"]} value={data.pets} onChange={(v) => set("pets", v)} compact optional />
                 <fieldset className="mt-7">
-                  <legend className="label">Add-ons <span className="font-normal text-slate">(optional)</span></legend>
+                  <legend className="label">Anything extra to include? <span className="font-normal text-slate">(optional)</span></legend>
                   <div className="mt-1 flex flex-wrap gap-2.5">
                     {EXTRA_OPTIONS.map((x) => {
                       const on = data.extras.includes(x);
