@@ -35,7 +35,8 @@ export function Header() {
   const active = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 
   return (
-    <header className="sticky top-0 z-50 bg-violet text-white shadow-[0_1px_0_rgb(255_255_255/0.08)]">
+    <header className="header-elevate sticky top-0 z-50 bg-violet text-white shadow-[0_1px_0_rgb(255_255_255/0.08)]">
+      <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-white/90" />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
       <div className="container-x flex h-[76px] items-center justify-between gap-6 lg:h-[96px]">
         <Link href="/" className="shrink-0"><Logo tone="white" size="header" priority /></Link>

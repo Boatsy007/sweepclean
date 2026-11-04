@@ -35,15 +35,15 @@ export default function WhySwept() {
             <h1 className="text-4xl font-extrabold leading-[1.05] sm:text-5xl">Why choose Swept?</h1>
             <p className="mt-5 text-lg leading-relaxed">Swept is a new residential cleaning service for homes from Brisbane to Tweed Heads. We&apos;re building our reputation one home at a time – so rather than big claims, here&apos;s exactly how we work and what you can hold us to.</p>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
-            <Image src={photos.cleaner.src} alt={photos.cleaner.alt} fill priority placeholder="blur" sizes="(min-width: 1024px) 460px, 100vw" className="object-cover object-[50%_35%]" />
+          <div className="reveal-zoom relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
+            <Image src={photos.cleaner.src} alt={photos.cleaner.alt} fill priority fetchPriority="high" quality={70} placeholder="blur" sizes="(min-width: 1024px) 460px, calc(100vw - 32px)" className="object-cover object-[50%_35%]" />
           </div>
         </div>
       </section>
 
       <section className="container-x" aria-labelledby="commit-h">
         <div className="band px-6 py-10 sm:px-10 lg:py-12">
-          <SweptMark tone="white" size={280} className="pointer-events-none absolute -bottom-20 -right-16 opacity-15" />
+          <SweptMark tone="white" size={280} className="spin-on-scroll pointer-events-none absolute -bottom-20 -right-16 opacity-15" />
           <h2 id="commit-h" className="relative text-3xl font-extrabold !text-white">Our commitments on every clean</h2>
           <ul className="relative mt-8 grid gap-6 md:grid-cols-2">
             {site.commitments.map((c) => (
@@ -60,7 +60,7 @@ export default function WhySwept() {
 
       <section className="container-x py-16 sm:py-20" aria-labelledby="approach-h">
         <h2 id="approach-h" className="text-3xl font-extrabold sm:text-[2.5rem]">How we work</h2>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        <div className="reveal-stagger mt-8 grid gap-5 sm:grid-cols-2">
           {approach.map((a) => (
             <div key={a.title} className="card p-7">
               <Icon name={a.icon} className="size-9 text-violet" />

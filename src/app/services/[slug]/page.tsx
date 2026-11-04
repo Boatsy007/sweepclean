@@ -52,7 +52,7 @@ export default async function ServicePage({ params }: Props) {
             </div>
             <p className="mt-4 text-sm">Written quote {site.quoteResponse} · Brisbane, Logan, Gold Coast &amp; Tweed Heads</p>
           </div>
-          <div className="overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
+          <div className="reveal-zoom overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
             <ServiceVisual service={s} priority sizes="(min-width: 1200px) 520px, (min-width: 1024px) 45vw, 100vw" className="aspect-[5/3.4] w-full" />
           </div>
         </div>
@@ -85,7 +85,7 @@ export default async function ServicePage({ params }: Props) {
         <div className="container-x">
           <h2 id="check-h" className="text-3xl font-extrabold sm:text-[2.5rem]">What&apos;s included in {s.name.toLowerCase()}</h2>
           <p className="mt-3 max-w-2xl text-lg">Our room-by-room checklist. Tell us your priorities and anything to skip – we&apos;ll tailor it to your home.</p>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="reveal-stagger mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {s.checklist.map((g) => (
               <div key={g.room} className="card p-6">
                 <h3 className="text-lg font-bold">{g.room}</h3>
@@ -100,7 +100,7 @@ export default async function ServicePage({ params }: Props) {
 
       <section className="container-x py-16 sm:py-20" aria-labelledby="steps-h">
         <h2 id="steps-h" className="text-3xl font-extrabold sm:text-[2.5rem]">How it works</h2>
-        <ol className="mt-8 grid gap-5 sm:grid-cols-3">
+        <ol className="reveal-stagger mt-8 grid gap-5 sm:grid-cols-3">
           {s.steps.map((st, i) => (
             <li key={st.title} className="card p-6">
               <span className="grid size-10 place-items-center rounded-full bg-violet font-display text-lg font-bold text-white">{i + 1}</span>
@@ -127,7 +127,7 @@ export default async function ServicePage({ params }: Props) {
           ))}
         </ul>
         <h2 className="mt-12 text-2xl font-extrabold">Other services</h2>
-        <ul className="mt-5 grid gap-4 sm:grid-cols-3">
+        <ul className="reveal-stagger mt-5 grid gap-4 sm:grid-cols-3">
           {others.map((o) => (
             <li key={o.slug}>
               <Link href={`/services/${o.slug}`} className="card flex items-center gap-4 p-5 hover:shadow-lift">

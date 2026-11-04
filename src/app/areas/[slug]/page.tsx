@@ -70,7 +70,7 @@ export default async function AreaPage({ params }: Props) {
 
       <section className="container-x py-16" aria-labelledby="local-h">
         <h2 id="local-h" className="text-3xl font-extrabold sm:text-[2.5rem]">Cleaning homes in {a.name}: what we look out for</h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
+        <div className="reveal-stagger mt-8 grid gap-5 md:grid-cols-3">
           {a.notes.map((n) => (
             <div key={n.title} className="card p-6">
               <h3 className="text-lg font-bold">{n.title}</h3>
@@ -84,7 +84,7 @@ export default async function AreaPage({ params }: Props) {
         <div className="container-x">
           <h2 id="suburbs-h" className="text-3xl font-extrabold">Suburbs we clean in {a.name}</h2>
           <p className="mt-3 max-w-2xl">Choose your suburb for local cleaning details and a quote form ready to go. Don&apos;t see yours? Request a quote and we&apos;ll confirm.</p>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="reveal-stagger mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {groups.map((g) => (
               <div key={g.name} id={anchor(g.name)} className="card scroll-mt-24 p-6">
                 <h3 className="flex items-center gap-2 text-lg font-bold"><Icon name="pin" className="size-5 text-violet" />{g.name}</h3>

@@ -10,7 +10,7 @@ export function ServiceVisual({ service, className = "", sizes, priority = false
   if (photo) {
     return (
       <div className={`relative overflow-hidden ${className}`}>
-        <Image src={photo.src} alt={photo.alt} fill sizes={sizes} priority={priority} placeholder="blur" className="object-cover" />
+        <Image src={photo.src} alt={photo.alt} fill sizes={sizes} priority={priority} fetchPriority={priority ? "high" : undefined} quality={70} placeholder="blur" className="object-cover" />
       </div>
     );
   }

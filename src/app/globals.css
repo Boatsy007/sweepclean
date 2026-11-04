@@ -69,3 +69,101 @@ p { text-wrap: pretty; }
 
 /* Focus ring stays visible on dark purple surfaces */
 .bg-violet :focus-visible, .band :focus-visible, .bg-navy :focus-visible { outline-color: #fff; }
+
+/* ------------------------------------------------------------------
+ * Scroll-driven motion (CSS only – no JS, no layout shift).
+ * Uses animation-timeline; browsers without support simply show the
+ * content statically. Disabled entirely for prefers-reduced-motion.
+ * ------------------------------------------------------------------ */
+/* Mask reveal: content rises out of an invisible edge. No opacity change, so text keeps full contrast throughout.
+   The negative insets leave room for card shadows. */
+@keyframes swept-reveal {
+  from { transform: translateY(44px); clip-path: inset(-48px -48px 55% -48px); }
+  to { transform: none; clip-path: inset(-48px -48px -48px -48px); }
+}
+@keyframes swept-zoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+@keyframes swept-parallax { from { transform: translateY(0) scale(1.08); } to { transform: translateY(18%) scale(1.08); } }
+@keyframes swept-drift { from { transform: none; opacity: 1; } to { transform: translateY(-70px); opacity: 0.35; } }
+@keyframes swept-spin { from { transform: rotate(-25deg) scale(0.9); } to { transform: rotate(35deg) scale(1.1); } }
+@keyframes swept-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes swept-elevate { from { box-shadow: 0 0 0 rgb(20 0 50 / 0); } to { box-shadow: 0 10px 30px -12px rgb(20 0 50 / 0.55); } }
+
+.scroll-progress { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* Elements rise into place as they enter the viewport */
+    /* Everything is fully revealed the moment it's fully on screen */
+    .reveal,
+    main .card:not(form) {
+      animation: swept-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    /* Large panels can be taller than the screen: finish halfway in */
+    main .band {
+      animation: swept-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 50%;
+    }
+    /* Headings finish the moment they're fully on screen, so none sit half-faded at the fold */
+    main section > div > h2,
+    main section > h2 {
+      animation: swept-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    /* Children of a stagger group arrive one after another */
+    .reveal-stagger > * {
+      animation: swept-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    .reveal-stagger > :nth-child(2) { animation-range: entry 15% entry 100%; }
+    .reveal-stagger > :nth-child(3) { animation-range: entry 28% entry 100%; }
+    .reveal-stagger > :nth-child(4) { animation-range: entry 38% entry 100%; }
+    .reveal-stagger > :nth-child(n + 5) { animation-range: entry 45% entry 100%; }
+    /* A stagger child is already animated – don't double up on inner cards */
+    .reveal-stagger > * .card { animation: none; }
+
+    /* Photos settle from a gentle zoom */
+    .reveal-zoom img {
+      animation: swept-zoom linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+
+    /* Hero: background drifts slower than the page, text lifts away */
+    .hero-parallax {
+      animation: swept-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    @media (min-width: 1024px) {
+      .hero-drift {
+        animation: swept-drift linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 85vh;
+      }
+    }
+
+    /* Sparkle watermarks turn as their band scrolls past */
+    .spin-on-scroll {
+      animation: swept-spin linear both;
+      animation-timeline: view();
+    }
+
+    /* Header: soft shadow once scrolling starts, plus a reading-progress line */
+    .header-elevate {
+      animation: swept-elevate linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 140px;
+    }
+    .scroll-progress {
+      display: block;
+      transform-origin: 0 50%;
+      animation: swept-progress linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}

@@ -136,7 +136,7 @@ export default async function SuburbPage({ params }: Props) {
       <section className="container-x grid gap-10 py-16 lg:grid-cols-[1fr_1.1fr]" aria-labelledby="glance-h">
         <div>
           <h2 id="glance-h" className="text-3xl font-extrabold">{s.name} at a glance</h2>
-          <dl className="mt-6 divide-y divide-lilac overflow-hidden rounded-[var(--radius-card)] border border-lilac bg-white">
+          <dl className="reveal mt-6 divide-y divide-lilac overflow-hidden rounded-[var(--radius-card)] border border-lilac bg-white">
             {facts.map(([k, v]) => (
               <div key={k} className="grid grid-cols-[9.5rem_1fr] gap-4 px-5 py-3.5 sm:grid-cols-[12rem_1fr]">
                 <dt className="font-display font-semibold text-navy">{k}</dt>
@@ -156,7 +156,7 @@ export default async function SuburbPage({ params }: Props) {
       <section className="bg-lavender py-16" aria-labelledby="svc-h">
         <div className="container-x">
           <h2 id="svc-h" className="text-3xl font-extrabold sm:text-[2.4rem]">Cleaning services in {s.name}</h2>
-          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="reveal-stagger mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((sv) => (
               <li key={sv.slug} className="card flex flex-col p-6">
                 <Icon name={sv.icon} className="size-8 text-violet" />

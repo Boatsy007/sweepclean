@@ -28,7 +28,7 @@ export default function Services() {
         {services.map((s, i) => {
           return (
             <article key={s.slug} className="card grid overflow-hidden md:grid-cols-[1fr_1.2fr]">
-              <div className={i % 2 ? "md:order-2" : ""}><ServiceVisual service={s} sizes="(min-width: 768px) 520px, 100vw" className="h-full min-h-56 w-full" /></div>
+              <div className={i % 2 ? "md:order-2" : ""}><ServiceVisual service={s} priority={i === 0} sizes="(min-width: 768px) 520px, calc(100vw - 32px)" className="h-full min-h-56 w-full" /></div>
               <div className="p-7 sm:p-10">
                 <Icon name={s.icon} className="size-8 text-violet" />
                 <h2 className="mt-3 text-2xl font-extrabold sm:text-3xl"><Link href={`/services/${s.slug}`} className="hover:text-violet">{s.name}</Link></h2>
