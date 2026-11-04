@@ -45,7 +45,7 @@ export default function Home() {
       {/* HERO – headline + quote form above the fold */}
       <section className="relative isolate overflow-hidden bg-[#E4D3FC] text-[#390078]">
         <HeroBackground src={photos.bathroom.src} className="hero-parallax -z-20 object-cover object-[70%_50%]" />
-        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#E4D3FC] lg:bg-[linear-gradient(90deg,rgb(228_211_252/0.97)_0%,rgb(228_211_252/0.92)_38%,rgb(228_211_252/0.62)_54%,rgb(228_211_252/0.15)_72%,rgb(228_211_252/0)_100%)]" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#E4D3FC] lg:bg-transparent lg:bg-[linear-gradient(90deg,rgb(228_211_252/0.97)_0%,rgb(228_211_252/0.92)_38%,rgb(228_211_252/0.62)_54%,rgb(228_211_252/0.15)_72%,rgb(228_211_252/0)_100%)]" />
         <SweptMark size={360} className="spin-on-scroll pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
         <div className="container-x grid items-center gap-5 pb-10 pt-4 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
           <div className="hero-drift min-w-0">
