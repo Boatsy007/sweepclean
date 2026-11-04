@@ -26,7 +26,7 @@ export const guide: Guide = {
   image: photos.apartment,
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning", "airbnb-cleaning", "carpet-cleaning"],
   areas: ["tweed-heads"],
-  related: ["average-price-cleaning-services-gold-coast", "how-much-does-house-cleaning-cost-in-brisbane"],
+  related: ["bond-cleaning-cost-tweed-heads", "average-price-cleaning-services-gold-coast", "how-much-does-house-cleaning-cost-in-brisbane"],
   body: [
     {
       type: "p",

@@ -30,7 +30,7 @@ export const guide: Guide = {
   image: photos.bathroom,
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning", "ndis-cleaning", "carpet-cleaning"],
   areas: ["logan"],
-  related: ["how-much-does-house-cleaning-cost-in-brisbane", "average-price-cleaning-services-gold-coast"],
+  related: ["bond-cleaning-cost-logan", "how-much-does-house-cleaning-cost-in-brisbane", "average-price-cleaning-services-gold-coast"],
   body: [
     {
       type: "p",
