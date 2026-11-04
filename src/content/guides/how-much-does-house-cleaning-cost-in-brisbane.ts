@@ -19,6 +19,7 @@ export const guide: Guide = {
   categories: ["Pricing", "Regular cleaning"],
   image: photos.cleaner,
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning"],
+  areas: ["brisbane"],
   body: [
     {
       type: "p",
@@ -116,6 +117,25 @@ export const guide: Guide = {
         "**Type of clean** – a [bond clean](/services/bond-cleaning) is far more detailed than a regular clean, and [carpet steam cleaning](/services/carpet-cleaning) is priced separately.",
         "**Access** – apartment parking, lift bookings and key collection all take time.",
       ],
+    },
+
+    { type: "h2", text: "Does house cleaning cost more in some Brisbane suburbs?" },
+    {
+      type: "p",
+      text: "A good cleaning company charges much the same hourly rate across Brisbane. What changes the total is the type of home and how easy it is to get in and park – and Brisbane has a big mix of both.",
+    },
+    {
+      type: "ul",
+      items: [
+        "**Inner city** – apartments in [New Farm](/areas/brisbane/new-farm), [Teneriffe](/areas/brisbane/teneriffe), [Kangaroo Point](/areas/brisbane/kangaroo-point) and [South Brisbane](/areas/brisbane/south-brisbane) are often quicker to clean than a house, but visitor parking, lift bookings and key collection can add time.",
+        "**Character homes in the inner west and east** – Queenslanders in [Paddington](/areas/brisbane/paddington), [Red Hill](/areas/brisbane/red-hill), [Ashgrove](/areas/brisbane/ashgrove) and [Bulimba](/areas/brisbane/bulimba) often have polished timber floors, VJ walls and high ceilings that take longer to dust and need timber-safe products.",
+        "**Larger family homes on the northside and southside** – suburbs like [Aspley](/areas/brisbane/aspley), [Bridgeman Downs](/areas/brisbane/bridgeman-downs), [Carindale](/areas/brisbane/carindale), [Eight Mile Plains](/areas/brisbane/eight-mile-plains) and [Calamvale](/areas/brisbane/calamvale) have plenty of four-bedroom, multi-bathroom homes, which simply take more hours per clean.",
+        "**Bayside** – in [Wynnum](/areas/brisbane/wynnum) and [Manly](/areas/brisbane/manly), salt air and sand mean extra time on glass, sliding doors and tracks.",
+      ],
+    },
+    {
+      type: "p",
+      text: "Wherever you are, the best way to compare is the total price per clean for your home. See all the [Brisbane suburbs we clean](/areas/brisbane).",
     },
 
     { type: "h2", text: "Hourly rate or fixed price: how to compare quotes" },

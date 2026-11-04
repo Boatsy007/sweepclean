@@ -13,6 +13,7 @@ import { HeroQuoteForm } from "@/components/HeroQuoteForm";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { pageMeta } from "@/lib/seo";
+import { AreaGuides } from "@/components/AreaGuides";
 
 type Props = { params: Promise<{ slug: string; suburb: string }> };
 
@@ -176,6 +177,8 @@ export default async function SuburbPage({ params }: Props) {
         <h2 id="sfaq-h" className="text-3xl font-extrabold">House cleaning in {s.name}: FAQs</h2>
         <Faqs faqs={faqs} />
       </section>
+
+      <AreaGuides area={a.slug} place={s.name} />
 
       <section className="container-x" aria-labelledby="near-h">
         <h2 id="near-h" className="text-2xl font-extrabold">We also clean near {s.name}</h2>

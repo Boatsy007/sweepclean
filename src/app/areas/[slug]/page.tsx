@@ -13,6 +13,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { QuickStart } from "@/components/QuickStart";
 import { suburbPath, suburbsIn } from "@/lib/suburbs";
 import { pageMeta } from "@/lib/seo";
+import { AreaGuides } from "@/components/AreaGuides";
 
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() {
@@ -110,6 +111,8 @@ export default async function AreaPage({ params }: Props) {
         </div>
         <Faqs faqs={a.faqs} />
       </section>
+
+      <AreaGuides area={a.slug} place={a.name} />
 
       <section className="container-x" aria-label="Other areas">
         <p className="font-display font-semibold text-navy">Other areas we clean:</p>

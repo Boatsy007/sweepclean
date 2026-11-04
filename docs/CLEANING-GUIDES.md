@@ -8,6 +8,7 @@ The Cleaning Guides section (`/cleaning-guides`) is driven entirely by data. Add
 - Structured data is added: `BlogPosting`, `BreadcrumbList`, and `FAQPage` if the guide has FAQs.
 - The guide is added to `sitemap.xml` (with its updated date) and `llms.txt`.
 - Related guides are linked, using shared categories or the `related` list. Linked services are shown and quote CTAs are included.
+- With `areas`, the guide is featured under "Helpful guides" on that area page and every suburb page in it. Use this for location-specific guides only.
 - The reading time is calculated automatically.
 
 While **no guides exist**, `/cleaning-guides` shows an empty state, is set to `noindex, follow`, and is left out of the sitemap. It switches to indexable as soon as the first guide is published.
@@ -30,6 +31,7 @@ export const guide: Guide = {
   categories: ["Regular cleaning", "Tips & how-to"],
   image: photos.cleaner, // or { src: importedImage, alt: "Describe the photo" }
   services: ["regular-house-cleaning"], // service slugs to link at the end
+  // areas: ["brisbane"],               // feature on that area page + all its suburb pages
   // related: ["another-guide-slug"],    // otherwise picked by shared category
   body: [
     { type: "p", text: "Opening paragraph. Links look like [this](/services/regular-house-cleaning); **bold** works too." },
@@ -75,5 +77,5 @@ Commit and push. Vercel deploys automatically.
 - **Prices and rates:** only when the owner asks for them, backed by current sources (e.g. the Fair Work award and published market guides). Review them every July after the Annual Wage Review. No promotions.
 - **Australian English.** For bond cleaning, use QLD (RTA Form 1a/14a) and NSW (Tweed) specifics where relevant.
 - **Link internally.** Link to at least one relevant service page and, where natural, an area page or another guide.
-- **One topic per guide,** so guides don't compete with each other or with service pages for the same search.
+- **One topic per guide,** so guides don't compete with each other or with service pages for the same search. Never create one guide per suburb. Instead, tag a city-wide guide with `areas` and link to a few relevant suburb pages from the text.
 - **Suggested categories** (reuse them so related guides link up): Regular cleaning · Deep cleaning · Bond cleaning · NDIS & home care · Airbnb hosting · Carpets · Kitchens · Bathrooms · Tips & how-to.

@@ -48,6 +48,8 @@ export type Guide = {
   related?: string[];
   /** Service slugs this guide supports (e.g. "bond-cleaning") – linked at the end of the article */
   services?: string[];
+  /** Area slugs (e.g. "brisbane") – the guide is featured on that area page and all its suburb pages */
+  areas?: string[];
 };
 
 export const guidePath = (slug: string) => `/cleaning-guides/${slug}`;
@@ -92,6 +94,9 @@ export function relatedGuides(g: Guide, n = 3): Guide[] {
     .map((x) => x.o);
   return [...explicit, ...byCategory].slice(0, n);
 }
+
+/** Guides tagged for an area (featured on the area page and its suburb pages). */
+export const guidesForArea = (area: string) => guides.filter((g) => g.areas?.includes(area));
 
 export const allCategories = () => [...new Set(guides.flatMap((g) => g.categories))].sort();
 
