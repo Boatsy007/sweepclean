@@ -1,4 +1,5 @@
 import type { Guide } from "@/lib/guides";
+import { guide as brisbaneCleaningCost } from "./how-much-does-house-cleaning-cost-in-brisbane";
 
 /*
  * Published Cleaning Guides.
@@ -9,4 +10,4 @@ import type { Guide } from "@/lib/guides";
  * Full instructions: docs/CLEANING-GUIDES.md
  */
 
-export const guideList: Guide[] = [];
+export const guideList: Guide[] = [brisbaneCleaningCost];

@@ -72,7 +72,7 @@ Commit and push. Vercel deploys automatically.
 ## Writing standards
 
 - **Accurate and original.** Don't invent statistics, prices, reviews, guarantees or credentials. Don't copy text from other sites, including Bloom's.
-- **No prices, hourly rates or promotions.**
+- **Prices and rates:** only when the owner asks for them, backed by current sources (e.g. the Fair Work award and published market guides). Review them every July after the Annual Wage Review. No promotions.
 - **Australian English.** For bond cleaning, use QLD (RTA Form 1a/14a) and NSW (Tweed) specifics where relevant.
 - **Link internally.** Link to at least one relevant service page and, where natural, an area page or another guide.
 - **One topic per guide,** so guides don't compete with each other or with service pages for the same search.
