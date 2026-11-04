@@ -15,7 +15,7 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", weight: [
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: { default: "House Cleaning Brisbane to Tweed Heads | Swept Cleaning", template: "%s | Swept Cleaning" },
+  title: { default: "House Cleaning Brisbane, Logan & Gold Coast | Swept Cleaning", template: "%s | Swept Cleaning" },
   description: site.description,
   applicationName: "Swept Cleaning",
   alternates: { canonical: "/" },

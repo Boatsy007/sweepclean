@@ -64,7 +64,7 @@ export const services: Service[] = [
     icon: "home",
     summary: "Weekly, fortnightly or monthly visits that keep your whole home fresh, clean and under control.",
     bestFor: "Busy households who want the weekend back",
-    metaTitle: "Regular House Cleaning Brisbane to Tweed Heads | Swept",
+    metaTitle: "Regular House Cleaning Brisbane, Logan & Gold Coast | Swept",
     metaDescription:
       "Weekly, fortnightly or monthly house cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Same checklist every visit, no lock-in. Free quote.",
     h1: "Regular house cleaning, on a schedule that suits you",
@@ -123,7 +123,7 @@ export const services: Service[] = [
     icon: "sparkle",
     summary: "A more thorough top-to-bottom clean to refresh your home – ideal for seasonal or periodic cleans.",
     bestFor: "Spring cleans, pre-sale, or starting a regular plan",
-    metaTitle: "Deep Cleaning Brisbane, Gold Coast & Tweed | Swept",
+    metaTitle: "Deep Cleaning Brisbane, Logan & Gold Coast | Swept",
     metaDescription:
       "Once-off deep cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Detailed kitchens, bathrooms and whole-home resets. Request a free quote.",
     h1: "Detailed and deep home cleaning for a proper reset",
@@ -184,7 +184,7 @@ export const services: Service[] = [
     icon: "heart",
     summary: "Supportive, personalised home cleaning with the flexibility to fit individual needs.",
     bestFor: "NDIS participants, older Australians and their families",
-    metaTitle: "NDIS & Home Care Cleaning Brisbane to Tweed | Swept",
+    metaTitle: "NDIS Cleaning Brisbane, Logan & Gold Coast | Swept",
     metaDescription:
       "Personalised home cleaning for NDIS participants and older people across Brisbane, Logan, the Gold Coast and Tweed Heads. Regular, consistent visits.",
     h1: "NDIS and home care cleaning, tailored to the person",
@@ -238,7 +238,7 @@ export const services: Service[] = [
     availability: "Bond cleaning availability depends on your dates and location – we'll confirm when we reply to your enquiry.",
     summary: "A detailed bond clean built around your entry condition report.",
     bestFor: "Renters moving out who want their bond back",
-    metaTitle: "Bond Cleaning Brisbane, Gold Coast & Tweed Heads | Swept",
+    metaTitle: "Bond Cleaning Brisbane, Logan & Gold Coast | Swept",
     metaDescription:
       "End-of-lease bond cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads, cleaned against your entry condition report. Book your move-out clean online.",
     h1: "Bond cleaning and end-of-lease cleaning, checked against your entry report",
@@ -377,7 +377,7 @@ export const services: Service[] = [
     icon: "carpet",
     summary: "Professional carpet steam cleaning for bond cleans, high-traffic areas and a fresh start.",
     bestFor: "Renters moving out, pet owners and busy family homes",
-    metaTitle: "Carpet Steam Cleaning Brisbane, Gold Coast & Tweed | Swept",
+    metaTitle: "Carpet Cleaning Brisbane, Logan & Gold Coast | Swept",
     metaDescription:
       "Carpet steam cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Ideal with a bond clean, for pet homes or high-traffic rooms. Free written quote.",
     h1: "Carpet steam cleaning for homes and bond cleans",
@@ -429,7 +429,7 @@ export const services: Service[] = [
     commercial: true,
     summary: "Reliable, scheduled cleaning for offices, shops and small business premises.",
     bestFor: "Offices, shops, studios and small businesses",
-    metaTitle: "Commercial & Office Cleaning Brisbane to Tweed | Swept",
+    metaTitle: "Commercial Cleaning Brisbane, Logan & Gold Coast | Swept",
     metaDescription:
       "Commercial and office cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Scheduled cleans for offices, shops and small businesses. Free quote.",
     h1: "Commercial and office cleaning for small businesses",

@@ -11,7 +11,7 @@
 export const site = {
   name: "Swept",
   legalName: null as string | null, // e.g. "Swept Cleaning Pty Ltd"
-  tagline: "Home cleaning, Brisbane to Tweed Heads",
+  tagline: "House cleaning in Brisbane, Logan and the Gold Coast",
   description:
     "Regular, deep, bond, Airbnb, carpet and commercial cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Get a written quote online in about two minutes.",
 

@@ -15,7 +15,7 @@ import { tasks } from "@/lib/tasks";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "House Cleaning Brisbane to Tweed Heads | Swept Cleaning",
+  title: "House Cleaning Brisbane, Logan & Gold Coast | Swept Cleaning",
   description: "Weekly, fortnightly and monthly house cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. No lock-in contracts. Get a free written quote online.",
   path: "/",
 });
@@ -50,7 +50,7 @@ export default function Home() {
           <div className="hero-drift">
             <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
               <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2 font-display text-[0.8rem] font-semibold uppercase leading-normal tracking-[0.14em]">
-                <Icon name="sparkle" className="size-4" /> House cleaning · Brisbane to Tweed Heads
+                <Icon name="sparkle" className="size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
               <span className="block">A beautifully clean home.</span>{" "}
@@ -215,7 +215,7 @@ export default function Home() {
           <div className="flex items-start gap-4">
             <Icon name="pin" className="size-10 shrink-0 text-violet" />
             <div>
-              <h2 id="areas-h" className="text-2xl font-extrabold sm:text-3xl">Serving Brisbane to Tweed Heads</h2>
+              <h2 id="areas-h" className="text-2xl font-extrabold sm:text-3xl">Serving Brisbane, Logan, the Gold Coast &amp; Tweed Heads</h2>
               <p className="mt-2">Across South East Queensland and over the border into NSW.</p>
             </div>
           </div>

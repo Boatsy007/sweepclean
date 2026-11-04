@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { StaticImageData } from "next/image";
 
 const SITE = "Swept Cleaning";
-const DEFAULT_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: "Swept Cleaning – house cleaning from Brisbane to Tweed Heads" };
+const DEFAULT_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: "Swept Cleaning – house cleaning in Brisbane, Logan and the Gold Coast" };
 
 /**
  * Complete metadata for a page: title, description, canonical, Open Graph and

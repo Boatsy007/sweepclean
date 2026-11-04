@@ -4,7 +4,7 @@ import { site } from "./site";
 export const generalFaqs: Faq[] = [
   {
     q: "Which areas does Swept clean?",
-    a: "We clean homes from Brisbane to Tweed Heads – including Brisbane's northside, southside and inner city, Logan, the Gold Coast, and Tweed Heads in NSW. If you're not sure we cover your suburb, request a quote and we'll confirm.",
+    a: "We clean homes across Brisbane (northside, southside and inner city), Logan, the Gold Coast, and Tweed Heads in NSW. If you're not sure we cover your suburb, request a quote and we'll confirm.",
   },
   {
     q: "How much does a house clean cost?",

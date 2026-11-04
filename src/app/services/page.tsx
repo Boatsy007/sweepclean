@@ -10,7 +10,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Cleaning Services: Regular, Deep, NDIS & Bond | Swept",
-  description: "Residential cleaning from Brisbane to Tweed Heads: regular home cleaning, detailed deep cleans, NDIS and home care cleaning, and bond cleaning.",
+  description: "House cleaning in Brisbane, Logan and the Gold Coast: regular, deep, NDIS, bond, Airbnb and carpet cleaning, plus commercial cleaning for small businesses.",
   path: "/services",
 });
 

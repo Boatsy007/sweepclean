@@ -9,8 +9,8 @@ import { suburbPath, suburbsIn } from "@/lib/suburbs";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Areas We Clean: Brisbane to Tweed Heads | Swept Cleaning",
-  description: "Swept cleans homes in 112 suburbs from Brisbane to Tweed Heads – Brisbane, Logan, the Gold Coast and Tweed Heads. Find your suburb and get a free quote.",
+  title: "Areas We Clean: Brisbane, Logan & Gold Coast | Swept",
+  description: "Swept cleans homes in 112 suburbs across Brisbane, Logan, the Gold Coast and Tweed Heads. Find your suburb and get a free, no-obligation quote.",
   path: "/areas",
 });
 
@@ -23,7 +23,7 @@ export default function Areas() {
       <JsonLd data={breadcrumbSchema(crumbs)} />
       <section className="container-x pb-6 pt-10">
         <Breadcrumbs items={crumbs} />
-        <h1 className="text-4xl font-extrabold sm:text-5xl">Areas we clean, from Brisbane to Tweed Heads</h1>
+        <h1 className="text-4xl font-extrabold sm:text-5xl">Areas we clean: Brisbane, Logan, the Gold Coast &amp; Tweed Heads</h1>
         <p className="mt-4 max-w-2xl text-lg">One standard of cleaning along the whole South East Queensland corridor – and across the border into Tweed Heads.</p>
       </section>
       <section className="container-x py-8">

@@ -11,7 +11,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Why Choose Swept Cleaning | Our Commitments",
-  description: "Swept is a new residential cleaning service from Brisbane to Tweed Heads. Here is how we work, what we commit to on every clean, and what to expect.",
+  description: "Swept is a new residential cleaning service for Brisbane, Logan, the Gold Coast and Tweed Heads. Here is how we work and what we commit to on every clean.",
   path: "/why-swept",
   image: photos.cleaner,
 });
@@ -33,7 +33,7 @@ export default function WhySwept() {
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center">
           <div>
             <h1 className="text-4xl font-extrabold leading-[1.05] sm:text-5xl">Why choose Swept?</h1>
-            <p className="mt-5 text-lg leading-relaxed">Swept is a new residential cleaning service for homes from Brisbane to Tweed Heads. We&apos;re building our reputation one home at a time – so rather than big claims, here&apos;s exactly how we work and what you can hold us to.</p>
+            <p className="mt-5 text-lg leading-relaxed">Swept is a new residential cleaning service for homes across Brisbane, Logan, the Gold Coast and Tweed Heads. We&apos;re building our reputation one home at a time – so rather than big claims, here&apos;s exactly how we work and what you can hold us to.</p>
           </div>
           <div className="reveal-zoom relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
             <Image src={photos.cleaner.src} alt={photos.cleaner.alt} fill priority fetchPriority="high" quality={70} placeholder="blur" sizes="(min-width: 1024px) 460px, calc(100vw - 32px)" className="object-cover object-[50%_35%]" />

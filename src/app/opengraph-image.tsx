@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "Swept Cleaning – house cleaning from Brisbane to Tweed Heads";
+export const alt = "Swept Cleaning – house cleaning in Brisbane, Logan and the Gold Coast";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -17,7 +17,7 @@ export default async function OG() {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 68, fontWeight: 800, lineHeight: 1.05, letterSpacing: -1.5 }}>A beautifully clean home.</div>
           <div style={{ fontSize: 68, fontWeight: 800, lineHeight: 1.05, letterSpacing: -1.5, color: "#e6daf6" }}>More time for you.</div>
-          <div style={{ fontSize: 32, marginTop: 28, color: "#f5effc" }}>Weekly · Fortnightly · Monthly — Brisbane to Tweed Heads</div>
+          <div style={{ fontSize: 32, marginTop: 28, color: "#f5effc" }}>House cleaning · Brisbane · Logan · Gold Coast</div>
         </div>
       </div>
     ),
