@@ -47,7 +47,7 @@ export default function Home() {
         <HeroBackground src={photos.bathroom.src} className="hero-parallax -z-20 object-cover object-[70%_50%]" />
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#E4D3FC] lg:bg-[linear-gradient(90deg,rgb(228_211_252/0.97)_0%,rgb(228_211_252/0.92)_38%,rgb(228_211_252/0.62)_54%,rgb(228_211_252/0.15)_72%,rgb(228_211_252/0)_100%)]" />
         <SweptMark size={360} className="spin-on-scroll pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
-        <div className="container-x grid items-center gap-7 pb-10 pt-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
+        <div className="container-x grid items-center gap-5 pb-10 pt-4 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
           <div className="hero-drift min-w-0">
             <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-[#390078] sm:text-6xl lg:text-[3.9rem]">
               <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[#390078]/25 bg-white/55 px-2.5 py-1 font-display text-[0.62rem] min-[380px]:whitespace-nowrap font-semibold uppercase leading-normal tracking-[0.05em] min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:border-[#390078]/25 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
@@ -73,9 +73,9 @@ export default function Home() {
                 <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
               ))}
             </ul>
-            <PromiseBacked className="intro mt-4 text-[1rem] text-violet [--d:340ms] lg:mt-5" />
+            <PromiseBacked className="intro mt-3.5 text-[1rem] text-violet [--d:340ms] lg:mt-5" />
             {/* Mobile: one clear primary action, phone as secondary, services as a text link */}
-            <div className="intro mt-6 lg:hidden [--d:400ms]">
+            <div className="intro mt-5 lg:hidden [--d:400ms]">
               <a href="#quote" className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem]">Get my free quote <Icon name="arrow" className="size-[1.1rem] rotate-90" /></a>
               <div className="mt-3 flex items-center justify-between gap-3">
                 {site.phone && (
