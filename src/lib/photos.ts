@@ -2,6 +2,7 @@ import type { StaticImageData } from "next/image";
 import bathroom from "../../public/images/bathroom-vanity.webp";
 import apartment from "../../public/images/empty-apartment.webp";
 import cleaner from "../../public/images/swept-cleaner-benchtop.webp";
+import homeCare from "../../public/images/swept-ndis-home-care.webp";
 
 export type Photo = { src: StaticImageData; alt: string };
 
@@ -18,11 +19,16 @@ export const photos = {
     src: cleaner,
     alt: "Swept Cleaning cleaner in a purple uniform wiping down a stone kitchen benchtop in a bright living area",
   },
+  homeCare: {
+    src: homeCare,
+    alt: "Swept Cleaning cleaner chatting with a smiling older woman holding a cup of tea while wiping down a coffee table in her living room",
+  },
 } satisfies Record<string, Photo>;
 
 /** Photo per service. Services without one fall back to their illustration. */
 export const servicePhotos: Partial<Record<string, Photo>> = {
   "regular-house-cleaning": photos.cleaner,
   "deep-cleaning": photos.bathroom,
+  "ndis-cleaning": photos.homeCare,
   "bond-cleaning": photos.apartment,
 };
