@@ -75,7 +75,7 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
   }
 
   return (
-    <form id="quote" onSubmit={submit} noValidate className="relative scroll-mt-24 overflow-hidden rounded-[1.75rem] bg-white p-5 text-slate shadow-[0_30px_60px_-20px_rgb(20_0_50/0.55)] sm:p-8" aria-labelledby="hq-title">
+    <form id="quote" onSubmit={submit} noValidate className="relative scroll-mt-4 overflow-hidden rounded-[1.75rem] lg:scroll-mt-24 bg-white p-5 text-slate shadow-[0_30px_60px_-20px_rgb(20_0_50/0.55)] sm:p-8" aria-labelledby="hq-title">
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>Website<input tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} name="website" /></label>
       </div>

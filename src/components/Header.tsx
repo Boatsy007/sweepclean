@@ -36,8 +36,9 @@ export function Header() {
 
   return (
     <>
-    {/* Phones/tablets: fixed header + spacer (more reliable than sticky on iOS). Desktop: sticky. */}
-    <header className="header-elevate fixed inset-x-0 top-0 z-50 border-b border-lilac bg-white text-violet lg:sticky lg:border-b-0 lg:bg-violet lg:text-white lg:shadow-[0_1px_0_rgb(255_255_255/0.08)]">
+    {/* Phones/tablets: header scrolls with the page – nothing pinned to the top, which clashes with
+        Chrome-on-iOS's collapsing toolbar. The bottom bar keeps Call / Quote within reach. Desktop: sticky. */}
+    <header className="header-elevate relative z-50 border-b border-lilac bg-white text-violet lg:sticky lg:top-0 lg:border-b-0 lg:bg-violet lg:text-white lg:shadow-[0_1px_0_rgb(255_255_255/0.08)]">
       <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-violet lg:to-white/90" />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
       <div className="container-x flex h-[76px] items-center justify-between gap-6 lg:h-[96px]">
@@ -101,7 +102,13 @@ export function Header() {
         </div>
       </div>
 
-      <div id="mobile-nav" data-lenis-prevent hidden={!open} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto bg-violet px-4 pb-10 pt-2 text-white lg:hidden">
+      <div id="mobile-nav" data-lenis-prevent hidden={!open} className="fixed inset-0 z-[60] overflow-y-auto bg-violet px-4 pb-10 text-white lg:hidden">
+        <div className="-mx-4 mb-2 flex h-[76px] items-center justify-between border-b border-white/15 px-4">
+          <Link href="/" onClick={() => setOpen(false)}><Logo tone="white" /></Link>
+          <button type="button" onClick={() => setOpen(false)} aria-label="Close menu" className="grid size-11 place-items-center rounded-full hover:bg-white/10">
+            <Icon name="close" className="size-7" />
+          </button>
+        </div>
         <nav aria-label="Mobile">
           <ul className="divide-y divide-white/15 font-display text-xl font-semibold">
             {nav.filter((n) => !n.children).slice(0, 1).map((n) => (
@@ -123,7 +130,6 @@ export function Header() {
         <Link href="/quote" onClick={() => track("cta_click", { cta: "mobile_menu_quote" })} className="btn-white mt-6 w-full">Get a free quote <Icon name="arrow" className="size-4" /></Link>
       </div>
     </header>
-    <div aria-hidden="true" className="h-[77px] lg:hidden" />
     </>
   );
 }
