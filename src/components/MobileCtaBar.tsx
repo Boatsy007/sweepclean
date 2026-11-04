@@ -10,11 +10,17 @@ import { Icon } from "./Icon";
 export function MobileCtaBar() {
   const path = usePathname();
   const [shown, setShown] = useState(false);
+  const [hasInline, setHasInline] = useState(false);
   useEffect(() => {
-    const on = () => setShown(window.scrollY > 520);
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    const form = document.getElementById("quote");
+    setHasInline(!!form);
+    let formVisible = false;
+    const update = () => setShown(window.scrollY > 520 && !formVisible);
+    const io = form ? new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; update(); }, { threshold: 0.15 }) : null;
+    if (form && io) io.observe(form);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => { window.removeEventListener("scroll", update); io?.disconnect(); };
   }, [path]);
   if (path.startsWith("/quote")) return null;
   return (
@@ -25,7 +31,7 @@ export function MobileCtaBar() {
             <Icon name="phone" className="size-5" /> Call
           </a>
         )}
-        <Link href="/quote" onClick={() => track("cta_click", { cta: "mobile_bar_quote" })} className="btn-primary !min-h-12 flex-[2]">
+        <Link href={hasInline ? "#quote" : "/quote"} onClick={() => track("cta_click", { cta: "mobile_bar_quote" })} className="btn-primary !min-h-12 flex-[2]">
           Get a free quote <Icon name="arrow" className="size-4" />
         </Link>
       </div>

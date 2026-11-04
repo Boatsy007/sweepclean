@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { services } from "@/lib/services";
 import { generalFaqs } from "@/lib/faqs";
-import { site } from "@/lib/site";
+import { site, telHref } from "@/lib/site";
 import { faqSchema } from "@/lib/schema";
 import { Icon } from "@/components/Icon";
 import { SweptMark } from "@/components/SweptMark";
-import Image from "next/image";
 import { ServiceVisual } from "@/components/ServiceVisual";
 import { photos } from "@/lib/photos";
 import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
 import { JsonLd } from "@/components/JsonLd";
-import { QuickStart } from "@/components/QuickStart";
+import { HeroQuoteForm } from "@/components/HeroQuoteForm";
+import { HeroBackground } from "@/components/HeroBackground";
 import { TrackedLink } from "@/components/TrackedLink";
 
 export const metadata = {
@@ -42,45 +42,41 @@ export default function Home() {
     <>
       <JsonLd data={faqSchema(homeFaqs)} />
 
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white to-lavender/60">
-        <div className="container-x grid items-center gap-10 pb-14 pt-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pb-20 lg:pt-16">
+      {/* HERO – headline + quote form above the fold */}
+      <section className="relative isolate overflow-hidden bg-violet text-white">
+        <HeroBackground src={photos.bathroom.src} className="-z-20 object-cover object-[70%_50%]" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(76_2_150/0.92)_0%,rgb(58_1_116/0.9)_100%)] lg:bg-[linear-gradient(90deg,rgb(58_1_116/0.97)_0%,rgb(76_2_150/0.9)_45%,rgb(76_2_150/0.55)_75%,rgb(76_2_150/0.35)_100%)]" />
+        <SweptMark tone="white" size={360} className="pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
+        <div className="container-x grid items-center gap-10 pb-14 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
           <div>
-            <h1 className="text-[2.6rem] font-extrabold leading-[1.02] sm:text-6xl lg:text-[4.1rem]">
-              <span className="eyebrow mb-4 block !leading-normal">House cleaning · Brisbane to Tweed Heads</span>
-              A beautifully clean home. <span className="text-violet">More time for you.</span>
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2 font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em]">
+              <Icon name="sparkle" className="size-4" /> House cleaning · Brisbane to Tweed Heads
+            </p>
+            <h1 className="mt-6 text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
+              A beautifully clean home.{" "}
+              <span className="relative inline-block text-[#e9d8ff]">
+                More time for you.
+                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3.5 w-full text-[#c9a8ff]"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
+              </span>
             </h1>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed sm:text-xl">
+            <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
               Flexible weekly, fortnightly and monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
             </p>
-            <QuickStart />
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-[0.95rem] font-medium text-navy">
-              <li className="flex items-center gap-2"><Icon name="calendar" className="size-5 text-violet" />Flexible scheduling</li>
-              <li className="flex items-center gap-2"><Icon name="sparkle" className="size-5 text-violet" />Customised cleans</li>
-              <li className="flex items-center gap-2"><Icon name="pin" className="size-5 text-violet" />Brisbane to Tweed Heads</li>
+            <ul className="mt-7 grid gap-3 text-[1rem] font-medium sm:grid-cols-2">
+              {["Free, no-obligation quotes", "No lock-in contracts", "The same checklist every visit", `We reply ${site.quoteResponse}`].map((t) => (
+                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-[#d9bfff]" />{t}</li>
+              ))}
             </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#quote" className="btn-white lg:hidden">Get my free quote <Icon name="arrow" className="size-4 rotate-90" /></a>
+              {site.phone && (
+                <a href={telHref(site.phone)} className="btn-white"><Icon name="phone" className="size-5" />{site.phone}</a>
+              )}
+              <Link href="/services" className="btn border-2 border-white/60 text-white hover:bg-white hover:text-violet">Explore our services</Link>
+            </div>
           </div>
 
-          <div className="relative">
-            <div className="overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
-              <div className="relative aspect-[4/3] w-full">
-                <Image src={photos.bathroom.src} alt={photos.bathroom.alt} fill priority placeholder="blur" sizes="(min-width: 1200px) 560px, (min-width: 1024px) 46vw, 100vw" className="object-cover" />
-              </div>
-            </div>
-            <div className="card relative mx-4 -mt-12 p-4 sm:absolute sm:-left-8 sm:-bottom-10 sm:mx-0 sm:mt-0 sm:w-[17rem]">
-              <p className="flex items-center gap-2 font-display text-sm font-bold text-navy"><Icon name="calendar" className="size-5 text-violet" />Your cleaning plan</p>
-              <p className="mt-1 text-sm">Fortnightly · Thursday mornings</p>
-              <ul className="mt-3 space-y-1.5 text-sm text-navy">
-                {["Kitchen & bathrooms", "Floors throughout", "Your priority: the oven"].map((t) => (
-                  <li key={t} className="flex items-center gap-2"><Icon name="checkCircle" className="size-4 text-violet" />{t}</li>
-                ))}
-              </ul>
-              <p className="mt-3 text-[0.7rem] uppercase tracking-wider text-slate">Example plan</p>
-            </div>
-            <div className="absolute -right-2 -top-4 hidden rounded-full bg-violet px-4 py-2 font-display text-sm font-semibold text-white shadow-lift sm:block">
-              No lock-in contracts
-            </div>
-          </div>
+          <HeroQuoteForm />
         </div>
       </section>
 

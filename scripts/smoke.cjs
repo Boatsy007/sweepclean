@@ -73,10 +73,25 @@ const ok = (m) => console.log("  ✓ " + m);
   // 3. Quote funnel
   console.log("Quote funnel");
   const events = () => page.evaluate(() => (window.dataLayer || []).map((e) => e.event).filter(Boolean));
+  // Hero form (home page)
   await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
-  await page.fill("#qs-hero", "Robina");
-  await page.click("form >> text=Get a free quote");
-  await page.waitForURL(/\/quote\?suburb=Robina/);
+  await page.click("#quote button[type=submit]");
+  if (await page.isVisible("#hq-name-error")) ok("hero form validation shown"); else fail("hero form validation missing");
+  await page.fill("#hq-name", "Hero Person");
+  await page.fill("#hq-phone", "0412 345 678");
+  await page.fill("#hq-email", "hero@example.com");
+  await page.fill("#hq-suburb", "Burleigh Heads 4220");
+  await page.selectOption("#hq-service", "regular-house-cleaning");
+  await page.selectOption("#hq-frequency", "weekly");
+  await page.check("#hq-consent");
+  await page.waitForTimeout(2600);
+  await page.click("#quote button[type=submit]");
+  await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("hero form → thank-you page"), () => fail("hero form did not submit"));
+
+  // Full multi-step form, arriving with a suburb pre-filled
+  await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
+  await page.evaluate(() => localStorage.clear());
+  await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
   await page.click("text=Continue");
   if (await page.isVisible("text=Choose the type of clean you need.")) ok("step 1 validation shown"); else fail("step 1 validation missing");
   await page.click("label:has-text('Regular home cleaning')");
@@ -92,7 +107,7 @@ const ok = (m) => console.log("  ✓ " + m);
   if (await page.isVisible("text=How often would you like us to come?")) ok("frequency validation shown"); else fail("frequency validation missing");
   await page.click("label:has-text('Fortnightly')");
   await page.click("text=Continue");
-  if ((await page.inputValue("#suburb")) === "Robina") ok("suburb prefilled from hero"); else fail("suburb not prefilled");
+  if ((await page.inputValue("#suburb")) === "Robina") ok("suburb prefilled from URL"); else fail("suburb not prefilled");
   await page.fill("#postcode", "4226");
   await page.fill("#name", "Test Person");
   await page.fill("#phone", "123");
