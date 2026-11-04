@@ -7,6 +7,7 @@ import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { Analytics } from "@/components/Analytics";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { ScrollDebug } from "@/components/ScrollDebug";
 import { JsonLd } from "@/components/JsonLd";
 import { businessSchema, websiteSchema } from "@/lib/schema";
 import { site, siteUrl } from "@/lib/site";
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SmoothScroll />
         <ScrollReveal />
+        <ScrollDebug />
       </body>
     </html>
   );
