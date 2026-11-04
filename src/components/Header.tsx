@@ -36,8 +36,8 @@ export function Header() {
   const active = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 
   return (
-    <header className="header-elevate sticky top-0 z-50 border-b border-lilac bg-white text-violet lg:border-b-0 lg:bg-violet lg:text-white lg:shadow-[0_1px_0_rgb(255_255_255/0.08)]">
-      <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-violet lg:to-white/90" />
+    <header className="header-elevate sticky top-0 z-50 border-b border-lilac bg-white text-violet">
+      <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-violet" />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
       <div className="container-x flex h-[76px] items-center justify-between gap-3 lg:h-[96px] lg:gap-6">
         <Link href="/" className="shrink-0"><Logo tone="white" size="header" priority /></Link>
@@ -52,11 +52,11 @@ export function Header() {
                     aria-expanded={svcOpen}
                     aria-controls="svc-menu"
                     onClick={() => setSvcOpen((v) => !v)}
-                    className={`flex items-center gap-1 whitespace-nowrap rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:px-2.5 lg:text-[1rem] xl:px-3 xl:text-[1.05rem] 2xl:px-4 ${active("/services") ? "underline decoration-2 underline-offset-[10px]" : ""}`}
+                    className={`flex items-center gap-1 whitespace-nowrap rounded-full px-4 py-2 font-display font-medium hover:bg-lavender lg:px-2.5 lg:text-[1rem] xl:px-3 xl:text-[1.05rem] 2xl:px-4 ${active("/services") ? "underline decoration-2 underline-offset-[10px]" : ""}`}
                   >
                     Services <Icon name="chevron" className={`size-4 transition-transform ${svcOpen ? "rotate-180" : ""}`} />
                   </button>
-                  <div id="svc-menu" hidden={!svcOpen} className="absolute left-1/2 top-full mt-3 w-[22rem] -translate-x-1/2 rounded-2xl bg-white p-2 text-navy shadow-lift">
+                  <div id="svc-menu" hidden={!svcOpen} className="absolute left-1/2 top-full mt-3 w-[22rem] -translate-x-1/2 rounded-2xl border border-lilac bg-white p-2 text-navy shadow-lift">
                     {services.map((s) => (
                       <Link key={s.slug} href={`/services/${s.slug}`} className="flex items-start gap-3 rounded-xl p-3 hover:bg-lavender">
                         <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-lg bg-lavender text-violet"><Icon name={s.icon} className="size-5" /></span>
@@ -71,7 +71,7 @@ export function Header() {
                 </li>
               ) : (
                 <li key={n.href}>
-                  <Link href={n.href} aria-current={active(n.href) ? "page" : undefined} className={`block whitespace-nowrap rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:px-2.5 lg:text-[1rem] xl:px-3 xl:text-[1.05rem] 2xl:px-4 ${active(n.href) ? "underline decoration-2 underline-offset-[10px]" : ""}`}>
+                  <Link href={n.href} aria-current={active(n.href) ? "page" : undefined} className={`block whitespace-nowrap rounded-full px-4 py-2 font-display font-medium hover:bg-lavender lg:px-2.5 lg:text-[1rem] xl:px-3 xl:text-[1.05rem] 2xl:px-4 ${active(n.href) ? "underline decoration-2 underline-offset-[10px]" : ""}`}>
                     {n.label}
                   </Link>
                 </li>
@@ -84,15 +84,15 @@ export function Header() {
         <div className="hidden items-center gap-2 lg:flex">
           {site.phone && (
             <>
-              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-white/10 xl:inline-flex">
+              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-lavender xl:inline-flex">
                 <Icon name="phone" className="size-5" />{site.phone}
               </a>
-              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-white/10 xl:hidden">
+              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-lavender xl:hidden">
                 <Icon name="phone" className="size-6" />
               </a>
             </>
           )}
-          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-white !min-h-12 whitespace-nowrap !px-5 text-[1rem] xl:!px-6 xl:text-[1.05rem]">
+          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-primary !min-h-12 whitespace-nowrap !px-5 text-[1rem] xl:!px-6 xl:text-[1.05rem]">
             Book a clean <Icon name="arrow" className="size-4" />
           </Link>
         </div>

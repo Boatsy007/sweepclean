@@ -16,13 +16,13 @@ export function Logo({ tone = "color", size = "md", priority = false }: { tone?:
   const src = tone === "white" ? logoWhite : logoColor;
   const ratio = src.width / src.height;
   if (size === "header") {
-    // Phones/tablets: purple logo on a white header (60px). Desktop: white logo on purple (78px).
+    // Purple logo on the white header: 60px on phones/tablets, 78px on desktop.
     const wm = Math.round((logoColor.width / logoColor.height) * 60);
-    const wd = Math.round((logoWhite.width / logoWhite.height) * 78);
+    const wd = Math.round((logoColor.width / logoColor.height) * 78);
     return (
       <>
         <Image src={logoColor} alt="Swept Cleaning" width={wm} height={60} priority={priority} sizes={`${wm}px`} className="h-[60px] w-auto lg:hidden" />
-        <Image src={logoWhite} alt="Swept Cleaning" width={wd} height={78} priority={priority} sizes={`${wd}px`} className="hidden h-[78px] w-auto lg:block" />
+        <Image src={logoColor} alt="Swept Cleaning" width={wd} height={78} priority={priority} sizes={`${wd}px`} className="hidden h-[78px] w-auto lg:block" />
       </>
     );
   }
