@@ -4,7 +4,9 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
+import Image from "next/image";
 import { SweptMark } from "@/components/SweptMark";
+import { photos } from "@/lib/photos";
 
 export const metadata = {
   title: "Why Swept – How We Clean & What We Commit To",
@@ -31,7 +33,9 @@ export default function WhySwept() {
             <h1 className="text-4xl font-extrabold leading-[1.05] sm:text-5xl">Why choose Swept?</h1>
             <p className="mt-5 text-lg leading-relaxed">Swept is a new residential cleaning service for homes from Brisbane to Tweed Heads. We&apos;re building our reputation one home at a time – so rather than big claims, here&apos;s exactly how we work and what you can hold us to.</p>
           </div>
-          <SweptMark size={220} className="mx-auto hidden lg:block" />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
+            <Image src={photos.cleaner.src} alt={photos.cleaner.alt} fill priority placeholder="blur" sizes="(min-width: 1024px) 460px, 100vw" className="object-cover object-[50%_35%]" />
+          </div>
         </div>
       </section>
 
