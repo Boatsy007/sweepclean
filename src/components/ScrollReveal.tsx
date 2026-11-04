@@ -16,6 +16,7 @@ export function ScrollReveal() {
   useEffect(() => {
     if (!window.matchMedia("(pointer: coarse)").matches) return;
     if (!("IntersectionObserver" in window)) return;
+    if ((new URLSearchParams(location.search).get("off") ?? "").split(",").includes("anim")) return;
     const root = document.documentElement;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     root.classList.add("js-reveal");

@@ -224,3 +224,8 @@ html.lenis { scroll-behavior: auto; }
 }
 .js-reveal .rv.rv-in { opacity: 1; transform: none; }
 .js-reveal.rv-fade-only .rv { transform: none; }
+
+/* Diagnostic switches (?off=anim / ?off=bar) – see TestSwitches.tsx */
+.t-noanim .intro, .t-noanim .intro-solid, .t-noanim .intro-right { animation: none !important; }
+.t-noanim .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
+.t-nobar [data-cta-bar] { display: none !important; }

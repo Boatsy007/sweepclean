@@ -8,6 +8,7 @@ import { Analytics } from "@/components/Analytics";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ScrollDebug } from "@/components/ScrollDebug";
+import { TestSwitches } from "@/components/TestSwitches";
 import { JsonLd } from "@/components/JsonLd";
 import { businessSchema, websiteSchema } from "@/lib/schema";
 import { site, siteUrl } from "@/lib/site";
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SmoothScroll />
         <ScrollReveal />
         <ScrollDebug />
+        <TestSwitches />
       </body>
     </html>
   );
