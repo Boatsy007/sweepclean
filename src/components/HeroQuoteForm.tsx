@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { FREQUENCY_OPTIONS, SERVICE_OPTIONS, validateContact, type Errors, type QuoteRequest } from "@/lib/quote";
 import { postcodeInArea } from "@/lib/areas";
 import { services } from "@/lib/services";
-import { site } from "@/lib/site";
+import { site, telHref } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
 
@@ -123,7 +123,7 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
 
       {status === "error" && (
         <p role="alert" className="mt-5 rounded-xl border border-[#f4c7c3] bg-[#fef3f2] px-4 py-3 text-sm text-[#b42318]">
-          Sorry – your request didn&apos;t send. Please try again in a moment{site.phone ? <> or call {site.phone}</> : null}.
+          Sorry – your request didn&apos;t send. Please try again in a moment{site.phone ? <> or call <a href={telHref(site.phone)} className="font-semibold underline">{site.phone}</a></> : null}.
         </p>
       )}
 

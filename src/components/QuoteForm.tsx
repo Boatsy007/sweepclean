@@ -16,7 +16,7 @@ import {
 } from "@/lib/quote";
 import { services } from "@/lib/services";
 import { postcodeInArea } from "@/lib/areas";
-import { site } from "@/lib/site";
+import { site, telHref } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
 
@@ -308,7 +308,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
 
         {status === "error" && (
           <p role="alert" className="mt-6 rounded-xl border border-[#f4c7c3] bg-[#fef3f2] px-4 py-3 text-sm text-[#b42318]">
-            Sorry – your request didn&apos;t send. Please try again in a moment{site.phone ? <> or call us on <a className="font-semibold underline" href={`tel:${site.phone}`}>{site.phone}</a></> : null}{site.email ? <> or email <a className="font-semibold underline" href={`mailto:${site.email}`}>{site.email}</a></> : null}.
+            Sorry – your request didn&apos;t send. Please try again in a moment{site.phone ? <> or call us on <a className="font-semibold underline" href={telHref(site.phone)}>{site.phone}</a></> : null}{site.email ? <> or email <a className="font-semibold underline" href={`mailto:${site.email}`}>{site.email}</a></> : null}.
           </p>
         )}
 

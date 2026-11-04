@@ -3,7 +3,7 @@
 Nothing below is optional. The site hides anything that isn't set, but it can't take leads until **lead delivery** is configured.
 
 ## 1. Business facts – `src/lib/site.ts`
-- [ ] `phone`: real number (enables click-to-call everywhere)
+- [x] `phone`: 0490 216 363 (click-to-call everywhere)
 - [ ] `email`
 - [ ] `abn` and `legalName` once registered
 - [ ] `quoteResponse` / `responseHours`: only promise what you can keep

@@ -16,7 +16,7 @@ export const site = {
     "Regular, deep, bond, Airbnb, carpet and commercial cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Get a written quote online in about two minutes.",
 
   /** Contact details. Leave null until real – the UI hides anything that is null. */
-  phone: null as string | null, // display format, e.g. "0400 000 000"
+  phone: "0490 216 363" as string | null, // display format
   email: null as string | null, // e.g. "hello@swept.com.au"
   abn: null as string | null,
 

@@ -1,4 +1,4 @@
-import { site, siteUrl } from "./site";
+import { site, siteUrl, telHref } from "./site";
 import { areas } from "./areas";
 import { services, type Faq, type Service } from "./services";
 
@@ -44,7 +44,7 @@ export function businessSchema() {
     },
   };
   if (site.profiles.length) b.sameAs = site.profiles;
-  if (site.phone) b.telephone = site.phone;
+  if (site.phone) b.telephone = telHref(site.phone).replace("tel:", "");
   if (site.email) b.email = site.email;
   if (site.legalName) b.legalName = site.legalName;
   if (site.abn) b.taxID = site.abn;

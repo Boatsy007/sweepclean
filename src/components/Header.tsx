@@ -6,6 +6,7 @@ import { Logo } from "./SweptMark";
 import { Icon } from "./Icon";
 import { services } from "@/lib/services";
 import { track } from "@/lib/analytics";
+import { site, telHref } from "@/lib/site";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -78,6 +79,16 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {site.phone && (
+            <>
+              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-white/10 xl:inline-flex">
+                <Icon name="phone" className="size-5" />{site.phone}
+              </a>
+              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header_mobile" })} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-white/10 xl:hidden">
+                <Icon name="phone" className="size-6" />
+              </a>
+            </>
+          )}
           <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-white hidden !min-h-11 !px-5 sm:inline-flex lg:!min-h-12 lg:!px-6 lg:text-[1.05rem]">
             Book a clean <Icon name="arrow" className="size-4" />
           </Link>
