@@ -1,6 +1,7 @@
 import type { Guide } from "@/lib/guides";
 import { guide as brisbaneCleaningCost } from "./how-much-does-house-cleaning-cost-in-brisbane";
 import { guide as goldCoastCleaningPrices } from "./average-price-cleaning-services-gold-coast";
+import { guide as tweedCleaningPrices } from "./average-price-cleaning-services-tweed-heads";
 
 /*
  * Published Cleaning Guides.
@@ -11,4 +12,4 @@ import { guide as goldCoastCleaningPrices } from "./average-price-cleaning-servi
  * Full instructions: docs/CLEANING-GUIDES.md
  */
 
-export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices];
+export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices, tweedCleaningPrices];
