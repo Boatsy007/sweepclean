@@ -35,7 +35,9 @@ export function Header() {
   const active = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 
   return (
-    <header className="header-elevate sticky top-0 z-50 border-b border-lilac bg-white text-violet lg:border-b-0 lg:bg-violet lg:text-white lg:shadow-[0_1px_0_rgb(255_255_255/0.08)]">
+    <>
+    {/* Phones/tablets: fixed header + spacer (more reliable than sticky on iOS). Desktop: sticky. */}
+    <header className="header-elevate fixed inset-x-0 top-0 z-50 border-b border-lilac bg-white text-violet lg:sticky lg:border-b-0 lg:bg-violet lg:text-white lg:shadow-[0_1px_0_rgb(255_255_255/0.08)]">
       <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-violet lg:to-white/90" />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
       <div className="container-x flex h-[76px] items-center justify-between gap-6 lg:h-[96px]">
@@ -121,5 +123,7 @@ export function Header() {
         <Link href="/quote" onClick={() => track("cta_click", { cta: "mobile_menu_quote" })} className="btn-white mt-6 w-full">Get a free quote <Icon name="arrow" className="size-4" /></Link>
       </div>
     </header>
+    <div aria-hidden="true" className="h-[77px] lg:hidden" />
+    </>
   );
 }

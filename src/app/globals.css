@@ -21,8 +21,11 @@
   --shadow-lift: 0 2px 4px rgb(11 26 58 / 0.05), 0 18px 40px -12px rgb(58 1 116 / 0.3);
 }
 
+/* Smooth anchor scrolling on mouse/trackpad devices only (touch uses JS – see ScrollReveal). */
+@media (pointer: fine) {
+  html { scroll-behavior: smooth; }
+}
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 @media (prefers-reduced-motion: reduce) {

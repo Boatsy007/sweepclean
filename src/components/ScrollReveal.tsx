@@ -19,6 +19,17 @@ export function ScrollReveal() {
     const root = document.documentElement;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     root.classList.add("js-reveal");
+
+    // In-page links (e.g. "Get my free quote" → #quote): smooth-scroll with JS on touch
+    const onClick = (ev: MouseEvent) => {
+      const a = (ev.target as HTMLElement).closest?.('a[href^="#"]') as HTMLAnchorElement | null;
+      const id = a?.getAttribute("href")?.slice(1);
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      ev.preventDefault();
+      target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    };
+    document.addEventListener("click", onClick);
     root.classList.toggle("rv-fade-only", reduce);
 
     const els = [...document.querySelectorAll<HTMLElement>(SELECTOR)].filter(
@@ -48,6 +59,7 @@ export function ScrollReveal() {
       io.observe(el);
     }
     return () => {
+      document.removeEventListener("click", onClick);
       io.disconnect();
       for (const el of els) el.classList.remove("rv", "rv-in");
     };
