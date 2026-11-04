@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { areaFor, getSuburb, nearby, stateName, suburbPath, suburbs, suburbsIn } from "@/lib/suburbs";
 import { services } from "@/lib/services";
-import { site, siteUrl } from "@/lib/site";
+import { site, siteUrl, trustLabel } from "@/lib/site";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import type { Faq } from "@/lib/services";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -125,7 +125,7 @@ export default async function SuburbPage({ params }: Props) {
               <p className="mt-2 leading-relaxed">{s.note}</p>
             </div>
             <ul className="mt-6 grid gap-2.5 text-[0.98rem] font-medium text-navy sm:grid-cols-2">
-              {["Free, no-obligation quote", "No lock-in contracts", "Same checklist every visit", `Reply ${site.quoteResponse}`].map((t) => (
+              {["Free, no-obligation quote", "No lock-in contracts", "Same checklist every visit", trustLabel() ?? `Reply ${site.quoteResponse}`].map((t) => (
                 <li key={t} className="flex items-center gap-2"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
               ))}
             </ul>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, services } from "@/lib/services";
 import { areas } from "@/lib/areas";
-import { site } from "@/lib/site";
+import { site, trustLabel } from "@/lib/site";
 import { breadcrumbSchema, faqSchema, serviceSchema } from "@/lib/schema";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Faqs } from "@/components/Faqs";
@@ -50,7 +50,7 @@ export default async function ServicePage({ params }: Props) {
               <TrackedLink cta={`service_hero_${s.slug}`} href={quoteHref} className="btn-primary !min-h-14 !px-8 text-lg">Get a free quote <Icon name="arrow" className="size-5" /></TrackedLink>
               <a href="#checklist" className="btn-outline !min-h-14">What&apos;s included</a>
             </div>
-            <p className="mt-4 text-sm">Written quote {site.quoteResponse} · Brisbane, Logan, Gold Coast &amp; Tweed Heads</p>
+            <p className="mt-4 text-sm">Written quote {site.quoteResponse}{trustLabel() ? ` · ${trustLabel()}` : ""} · Brisbane, Logan, Gold Coast &amp; Tweed Heads</p>
           </div>
           <div className="reveal-zoom overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
             <ServiceVisual service={s} priority sizes="(min-width: 1200px) 520px, (min-width: 1024px) 45vw, 100vw" className="aspect-[5/3.4] w-full" />

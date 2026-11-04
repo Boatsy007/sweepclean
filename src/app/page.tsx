@@ -226,6 +226,12 @@ export default function Home() {
                 <span><strong className="font-display text-lg font-semibold text-white">{c.title}.</strong> <span className="text-white/85">{c.body}</span></span>
               </li>
             ))}
+            {(site.insured || site.policeChecked) && (
+              <li className="flex gap-3">
+                <Icon name="shield" className="mt-0.5 size-6 shrink-0" />
+                <span><strong className="font-display text-lg font-semibold text-white">{site.insured && site.policeChecked ? "Insured and police-checked." : site.insured ? "Fully insured." : "Police-checked cleaners."}</strong> <span className="text-white/85">{[site.insured && "We hold current public liability insurance", site.policeChecked && "every cleaner holds a current national police check"].filter(Boolean).join(", and ")}.</span></span>
+              </li>
+            )}
           </ul>
           <PromisePanel className="lg:col-span-2" />
         </div>

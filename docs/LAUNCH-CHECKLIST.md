@@ -8,8 +8,8 @@ Nothing below is optional. The site hides anything that isn't set, but it can't 
 - [ ] `abn` and `legalName` once registered
 - [ ] `quoteResponse` / `responseHours`: only promise what you can keep
 - [ ] Review each of the 4 `commitments`. Delete any you won't honour every time.
-- [ ] `insured: true` **only** once public liability cover is active
-- [ ] `policeChecked: true` **only** if every cleaner has a current check
+- [x] `insured: true` **only** once public liability cover is active (owner confirmed 2026-11-04)
+- [x] `policeChecked: true` **only** if every cleaner has a current check (owner confirmed 2026-11-04)
 - [ ] `recurringOffer` if you want to offer one (e.g. "10% off every fortnightly clean")
 
 ## 2. Operational claims to confirm (in `src/lib/services.ts` and `areas.ts`)

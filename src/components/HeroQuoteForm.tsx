@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { FREQUENCY_OPTIONS, SERVICE_OPTIONS, validateContact, type Errors, type QuoteRequest } from "@/lib/quote";
 import { postcodeInArea } from "@/lib/areas";
 import { services } from "@/lib/services";
-import { site, telHref } from "@/lib/site";
+import { site, telHref, trustLabel } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
 import Image from "next/image";
@@ -88,6 +88,7 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
       <p className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-center text-sm">
         <span>Free, no obligation</span>
         <span className="inline-flex items-center gap-1 whitespace-nowrap font-medium text-navy"><Icon name="clock" className="size-4 shrink-0 text-violet" />We reply {site.quoteResponse}</span>
+        {trustLabel() && <span className="inline-flex items-center gap-1 whitespace-nowrap font-medium text-navy"><Icon name="shield" className="size-4 shrink-0 text-violet" />{trustLabel()}</span>}
       </p>
 
       <div className="mt-5 grid gap-3.5">

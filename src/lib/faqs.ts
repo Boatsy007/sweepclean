@@ -22,6 +22,15 @@ export const generalFaqs: Faq[] = [
     q: "Am I locked into a contract?",
     a: "No. Regular cleans run visit to visit. You can pause, change your frequency or stop at any time.",
   },
+  ...(site.insured || site.policeChecked
+    ? [{
+        q: site.insured && site.policeChecked ? "Are your cleaners insured and police-checked?" : site.insured ? "Are you insured?" : "Are your cleaners police-checked?",
+        a: [
+          site.insured && "Yes – Swept holds current public liability insurance. Commercial clients can ask us for a copy of our certificate of currency.",
+          site.policeChecked && "Every cleaner holds a current national police check.",
+        ].filter(Boolean).join(" "),
+      }]
+    : []),
   {
     q: "Do I need to supply cleaning products or equipment?",
     a: "No – we bring everything. If you'd like us to use your own products on particular surfaces, just let us know.",

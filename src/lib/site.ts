@@ -36,9 +36,9 @@ export const site = {
   quoteResponse: "within one business day",
 
   /** Set to true only once a current public liability policy is in place. */
-  insured: false,
+  insured: true,
   /** Set to true only if every cleaner holds a current police check. */
-  policeChecked: false,
+  policeChecked: true,
 
   /**
    * Operating commitments shown on the site. These are promises, not marketing:
@@ -105,6 +105,14 @@ export function siteUrl(): string {
   const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
   if (vercel) return `https://${vercel}`;
   return "http://localhost:3000";
+}
+
+/** Short trust label built from the insured / police-check flags. null = show nothing. */
+export function trustLabel(): string | null {
+  if (site.insured && site.policeChecked) return "Insured & police-checked";
+  if (site.insured) return "Fully insured";
+  if (site.policeChecked) return "Police-checked cleaners";
+  return null;
 }
 
 export function telHref(phone: string): string {

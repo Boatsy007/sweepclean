@@ -1,4 +1,4 @@
-import { site, siteUrl } from "@/lib/site";
+import { site, siteUrl, trustLabel } from "@/lib/site";
 import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
 import { generalFaqs } from "@/lib/faqs";
@@ -44,6 +44,7 @@ export function GET() {
     "## Frequently asked questions",
     ...generalFaqs.flatMap((f) => [`- Q: ${f.q}`, `  A: ${f.a}`]),
     "",
+    ...(trustLabel() ? [`Trust: ${[site.insured && "Swept holds current public liability insurance", site.policeChecked && "every cleaner holds a current national police check"].filter(Boolean).join("; ")}.`, ""] : []),
     `## ${site.promise.name}`,
     `${site.promise.tagline} ${site.promise.body} ${site.promise.acl} Details: ${u}${site.promise.path}`,
     "",
