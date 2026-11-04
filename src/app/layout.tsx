@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { Analytics } from "@/components/Analytics";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { JsonLd } from "@/components/JsonLd";
 import { businessSchema, websiteSchema } from "@/lib/schema";
 import { site, siteUrl } from "@/lib/site";
@@ -29,7 +30,7 @@ export const viewport: Viewport = { themeColor: "#ffffff", width: "device-width"
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-AU" className={`${inter.variable} ${outfit.variable}`}>
-      <body className="min-h-dvh antialiased">
+      <body className="antialiased">
         <JsonLd data={[businessSchema(), websiteSchema()]} />
         <Header />
         <main id="main">{children}</main>
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileCtaBar />
         <Analytics />
         <SmoothScroll />
+        <ScrollReveal />
       </body>
     </html>
   );

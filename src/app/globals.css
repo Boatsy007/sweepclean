@@ -110,7 +110,9 @@ html.lenis { scroll-behavior: auto; }
   .intro-right { animation: swept-intro-right 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
+  /* Mouse/trackpad devices only. Touch devices (incl. iOS WebKit, where scroll-linked
+     animations can fight momentum scrolling) use the IntersectionObserver reveals below. */
   @supports (animation-timeline: view()) {
     /* Elements rise into place as they enter the viewport */
     /* Everything is fully revealed the moment it's fully on screen */
@@ -192,6 +194,8 @@ html.lenis { scroll-behavior: auto; }
 @keyframes swept-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .intro, .intro-right { animation: swept-fade 0.8s ease-out both; animation-delay: var(--d, 0ms); }
+}
+@media (prefers-reduced-motion: reduce) and (pointer: fine) {
   @supports (animation-timeline: view()) {
     .reveal,
     main .card:not(form),
@@ -206,3 +210,14 @@ html.lenis { scroll-behavior: auto; }
     .reveal-stagger > * .card { animation: none; }
   }
 }
+
+/* Touch devices: one-shot reveals driven by IntersectionObserver (see ScrollReveal.tsx).
+   Classes are only added by JS, so content is fully visible without it. */
+.js-reveal .rv {
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity 0.7s ease-out, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--rv-d, 0ms);
+}
+.js-reveal .rv.rv-in { opacity: 1; transform: none; }
+.js-reveal.rv-fade-only .rv { transform: none; }
