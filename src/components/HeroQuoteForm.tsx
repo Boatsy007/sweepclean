@@ -8,6 +8,8 @@ import { services } from "@/lib/services";
 import { site, telHref } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
+import Image from "next/image";
+import { photos } from "@/lib/photos";
 
 type Data = Partial<QuoteRequest>;
 
@@ -73,13 +75,20 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
   }
 
   return (
-    <form id="quote" onSubmit={submit} noValidate className="relative scroll-mt-24 rounded-[1.75rem] bg-white p-6 text-slate shadow-[0_30px_60px_-20px_rgb(20_0_50/0.55)] sm:p-8" aria-labelledby="hq-title">
+    <form id="quote" onSubmit={submit} noValidate className="relative scroll-mt-24 overflow-hidden rounded-[1.75rem] bg-white p-5 text-slate shadow-[0_30px_60px_-20px_rgb(20_0_50/0.55)] sm:p-8" aria-labelledby="hq-title">
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>Website<input tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} name="website" /></label>
       </div>
 
-      <h2 id="hq-title" className="text-center text-2xl font-extrabold uppercase tracking-wide sm:text-[1.65rem]">{title}</h2>
-      <p className="mt-1 text-center text-sm">No obligation · We reply {site.quoteResponse}</p>
+      {/* Mobile: a real person front and centre, right where people enquire */}
+      <div className="relative -mx-5 -mt-5 mb-4 aspect-[16/7] overflow-hidden lg:hidden">
+        <Image src={photos.cleaner.src} alt={photos.cleaner.alt} fill sizes="100vw" quality={70} placeholder="blur" className="object-cover object-[50%_14%]" />
+      </div>
+      <h2 id="hq-title" className="text-center text-[1.3rem] font-extrabold uppercase tracking-wide sm:text-[1.65rem]">{title}</h2>
+      <p className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-center text-sm">
+        <span>Free, no obligation</span>
+        <span className="inline-flex items-center gap-1 whitespace-nowrap font-medium text-navy"><Icon name="clock" className="size-4 shrink-0 text-violet" />We reply {site.quoteResponse}</span>
+      </p>
 
       <div className="mt-5 grid gap-3.5">
         <Field id="name" label="Name" error={errors.name}>

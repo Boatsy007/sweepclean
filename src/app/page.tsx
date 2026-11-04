@@ -46,11 +46,11 @@ export default function Home() {
         <HeroBackground src={photos.bathroom.src} className="hero-parallax -z-20 object-cover object-[70%_50%]" />
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,#3a0174_0%,#2b0857_100%)] lg:bg-[linear-gradient(90deg,rgb(30_8_56/0.88)_0%,rgb(36_8_70/0.78)_38%,rgb(36_8_70/0.5)_54%,rgb(20_8_40/0.12)_72%,rgb(20_8_40/0)_100%)]" />
         <SweptMark tone="white" size={360} className="spin-on-scroll pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
-        <div className="container-x grid items-center gap-10 pb-14 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
-          <div className="hero-drift">
+        <div className="container-x grid items-center gap-7 pb-10 pt-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
+          <div className="hero-drift min-w-0">
             <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
-              <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2 font-display text-[0.8rem] font-semibold uppercase leading-normal tracking-[0.14em]">
-                <Icon name="sparkle" className="size-4" /> House cleaning · Brisbane, Logan & Gold Coast
+              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-2.5 py-1 font-display text-[0.62rem] min-[380px]:whitespace-nowrap font-semibold uppercase leading-normal tracking-[0.05em] min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:border-white/35 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
+                <Icon name="sparkle" className="size-3.5 lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
               <span className="block">A beautifully clean home.</span>{" "}
@@ -59,16 +59,35 @@ export default function Home() {
                 <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3.5 w-full text-[#c9a8ff]"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
               </span>
             </h1>
-            <p className="intro mt-7 max-w-xl text-lg leading-relaxed text-white/90 [--d:160ms] sm:text-xl">
+            <p className="intro mt-5 max-w-xl text-[1.05rem] leading-relaxed text-white/90 [--d:160ms] sm:text-xl lg:mt-7">
               Flexible weekly, fortnightly and monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
             </p>
-            <ul className="intro mt-7 grid gap-3 text-[1rem] font-medium [--d:280ms] sm:grid-cols-2">
+            <ul className="intro mt-4 grid gap-2 text-[1rem] font-medium [--d:280ms] lg:hidden">
+              {["No lock-in contracts", "Personalised cleaning checklists", "Free, no-obligation quotes"].map((t) => (
+                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-[#d9bfff]" />{t}</li>
+              ))}
+            </ul>
+            <ul className="intro mt-7 hidden gap-3 text-[1rem] font-medium [--d:280ms] lg:grid lg:grid-cols-2">
               {["Free, no-obligation quotes", "No lock-in contracts", "The same checklist every visit", `We reply ${site.quoteResponse}`].map((t) => (
                 <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-[#d9bfff]" />{t}</li>
               ))}
             </ul>
-            <div className="intro mt-8 flex flex-wrap gap-3 [--d:400ms]">
-              <a href="#quote" className="btn-white lg:hidden">Get my free quote <Icon name="arrow" className="size-4 rotate-90" /></a>
+            {/* Mobile: one clear primary action, phone as secondary, services as a text link */}
+            <div className="intro mt-6 lg:hidden [--d:400ms]">
+              <a href="#quote" className="btn-white !min-h-14 w-full whitespace-nowrap text-[1.08rem]">Get my free quote <Icon name="arrow" className="size-[1.1rem] rotate-90" /></a>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                {site.phone && (
+                  <a href={telHref(site.phone)} className="btn !min-h-12 whitespace-nowrap border-2 border-white/55 !px-4 text-[0.98rem] text-white hover:bg-white hover:text-violet">
+                    <Icon name="phone" className="size-[1.1rem]" />{site.phone}
+                  </a>
+                )}
+                <Link href="/services" className="inline-flex items-center gap-1 whitespace-nowrap font-display text-[0.98rem] font-semibold text-white/90 underline decoration-white/40 underline-offset-4 hover:decoration-white">
+                  Explore services <Icon name="arrow" className="size-4" />
+                </Link>
+              </div>
+            </div>
+            {/* Desktop (unchanged) */}
+            <div className="intro mt-8 hidden flex-wrap gap-3 [--d:400ms] lg:flex">
               {site.phone && (
                 <a href={telHref(site.phone)} className="btn-white"><Icon name="phone" className="size-5" />{site.phone}</a>
               )}
@@ -88,21 +107,21 @@ export default function Home() {
           <h2 id="services-h" className="text-3xl font-extrabold sm:text-[2.6rem]">Our cleaning services</h2>
           <p className="mt-3 text-lg">A complete range of home cleaning services to keep your home fresh, clean and comfortable.</p>
         </div>
-        <ul className="reveal-stagger mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="reveal-stagger mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
           {services.slice(0, 4).map((s) => {
             return (
               <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="card group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lift">
-                  <div className="relative flex-1 p-6">
-                    <Icon name="arrow" className="absolute right-6 top-6 size-5 text-violet sm:hidden" />
-                    <Icon name={s.icon} className="size-8 text-violet" />
-                    <h3 className="mt-3 text-xl font-bold leading-tight">{s.name}</h3>
-                    <p className="mt-2 leading-relaxed">{s.summary}</p>
-                    {s.availability && <p className="mt-2 text-sm text-slate">Availability confirmed on enquiry.</p>}
+                <Link href={`/services/${s.slug}`} className="card group flex h-full flex-row-reverse overflow-hidden transition-shadow hover:shadow-lift sm:flex-col">
+                  <div className="relative flex-1 p-4 pr-9 sm:p-6">
+                    <Icon name="arrow" className="absolute right-3.5 top-4 size-5 text-violet sm:hidden" />
+                    <Icon name={s.icon} className="hidden size-8 text-violet sm:block" />
+                    <h3 className="text-lg font-bold leading-tight sm:mt-3 sm:text-xl">{s.name}</h3>
+                    <p className="mt-1.5 text-[0.95rem] leading-relaxed sm:mt-2 sm:text-base">{s.summary}</p>
+                    {s.availability && <p className="mt-2 hidden text-sm text-slate sm:block">Availability confirmed on enquiry.</p>}
                   </div>
-                  <div className="reveal-zoom relative hidden overflow-hidden sm:block">
-                    <ServiceVisual service={s} sizes="(min-width: 1024px) 280px, 50vw" className="aspect-[5/3] w-full" />
-                    <span className="absolute bottom-3 right-3 grid size-10 place-items-center rounded-full bg-white text-violet shadow-soft transition-transform group-hover:translate-x-0.5">
+                  <div className="reveal-zoom relative w-[7.25rem] shrink-0 overflow-hidden sm:w-auto">
+                    <ServiceVisual service={s} sizes="(min-width: 1024px) 280px, (min-width: 640px) 50vw, 120px" className="h-full w-full sm:aspect-[5/3] sm:h-auto" />
+                    <span className="absolute bottom-3 right-3 hidden size-10 place-items-center rounded-full bg-white text-violet shadow-soft transition-transform group-hover:translate-x-0.5 sm:grid">
                       <Icon name="arrow" className="size-5" />
                       <span className="sr-only">Learn about {s.name}</span>
                     </span>
