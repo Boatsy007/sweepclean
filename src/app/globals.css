@@ -206,3 +206,12 @@ html.lenis { scroll-behavior: auto; }
     .reveal-stagger > * .card { animation: none; }
   }
 }
+
+/* Chrome on iPhone only (html.crios, set in layout <head>): header scrolls with the page on
+   phones/tablets to avoid an iOS 26 WebKit bug with top-pinned headers. Everyone else: sticky. */
+.crios-only { display: none; }
+@media (max-width: 1023px) {
+  html.crios header { position: relative; }
+  html.crios #mobile-nav { top: 0; z-index: 60; }
+  html.crios .crios-only { display: flex; }
+}
