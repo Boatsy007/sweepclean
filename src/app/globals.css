@@ -212,4 +212,7 @@ html.lenis { scroll-behavior: auto; }
 @media (max-width: 1023px) {
   html.crios header { position: fixed; top: 0; left: 0; right: 0; }
   html.crios body { padding-top: 77px; }
+  /* Extra room inside each page's first section (keeps its background colour) so the top content
+     stays clear of the header even when Chrome's scroll offset bug (~113px) kicks in. */
+  html.crios main > section:first-of-type { padding-top: 112px; }
 }
