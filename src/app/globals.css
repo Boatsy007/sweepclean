@@ -78,7 +78,7 @@ p { text-wrap: pretty; }
 /* Mask reveal: content rises out of an invisible edge. No opacity change, so text keeps full contrast throughout.
    The negative insets leave room for card shadows. */
 @keyframes swept-reveal {
-  from { transform: translateY(44px); clip-path: inset(-48px -48px 55% -48px); }
+  from { transform: translateY(84px) scale(0.965); clip-path: inset(-48px -48px 60% -48px); }
   to { transform: none; clip-path: inset(-48px -48px -48px -48px); }
 }
 @keyframes swept-zoom { from { transform: scale(1.12); } to { transform: scale(1); } }
@@ -89,6 +89,24 @@ p { text-wrap: pretty; }
 @keyframes swept-elevate { from { box-shadow: 0 0 0 rgb(20 0 50 / 0); } to { box-shadow: 0 10px 30px -12px rgb(20 0 50 / 0.55); } }
 
 .scroll-progress { display: none; }
+
+/* Lenis smooth scrolling */
+html.lenis, html.lenis body { height: auto; }
+html.lenis { scroll-behavior: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Hero entrance on page load (time-based, not scroll) */
+@keyframes swept-intro { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+@keyframes swept-intro-solid { from { transform: translateY(36px); } to { transform: none; } }
+@keyframes swept-intro-right { from { opacity: 0; transform: translateX(56px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .intro { animation: swept-intro 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+  /* The H1 is the main content: it moves but never fades, so it paints immediately */
+  .intro-solid { animation: swept-intro-solid 1s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+  .intro-right { animation: swept-intro-right 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {

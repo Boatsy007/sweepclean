@@ -99,7 +99,7 @@ export function Header() {
         </div>
       </div>
 
-      <div id="mobile-nav" hidden={!open} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto bg-violet px-4 pb-10 pt-2 lg:hidden">
+      <div id="mobile-nav" data-lenis-prevent hidden={!open} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto bg-violet px-4 pb-10 pt-2 lg:hidden">
         <nav aria-label="Mobile">
           <ul className="divide-y divide-white/15 font-display text-xl font-semibold">
             {nav.filter((n) => !n.children).slice(0, 1).map((n) => (

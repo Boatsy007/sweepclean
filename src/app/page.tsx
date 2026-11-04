@@ -48,7 +48,7 @@ export default function Home() {
         <SweptMark tone="white" size={360} className="spin-on-scroll pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
         <div className="container-x grid items-center gap-10 pb-14 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
           <div className="hero-drift">
-            <h1 className="text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
+            <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
               <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2 font-display text-[0.8rem] font-semibold uppercase leading-normal tracking-[0.14em]">
                 <Icon name="sparkle" className="size-4" /> House cleaning · Brisbane to Tweed Heads
               </span>{" "}
@@ -59,15 +59,15 @@ export default function Home() {
                 <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3.5 w-full text-[#c9a8ff]"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
               </span>
             </h1>
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
+            <p className="intro mt-7 max-w-xl text-lg leading-relaxed text-white/90 [--d:160ms] sm:text-xl">
               Flexible weekly, fortnightly and monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
             </p>
-            <ul className="mt-7 grid gap-3 text-[1rem] font-medium sm:grid-cols-2">
+            <ul className="intro mt-7 grid gap-3 text-[1rem] font-medium [--d:280ms] sm:grid-cols-2">
               {["Free, no-obligation quotes", "No lock-in contracts", "The same checklist every visit", `We reply ${site.quoteResponse}`].map((t) => (
                 <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-[#d9bfff]" />{t}</li>
               ))}
             </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="intro mt-8 flex flex-wrap gap-3 [--d:400ms]">
               <a href="#quote" className="btn-white lg:hidden">Get my free quote <Icon name="arrow" className="size-4 rotate-90" /></a>
               {site.phone && (
                 <a href={telHref(site.phone)} className="btn-white"><Icon name="phone" className="size-5" />{site.phone}</a>
@@ -76,7 +76,9 @@ export default function Home() {
             </div>
           </div>
 
-          <HeroQuoteForm />
+          <div className="intro-right [--d:220ms]">
+            <HeroQuoteForm />
+          </div>
         </div>
       </section>
 

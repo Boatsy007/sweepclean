@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { Analytics } from "@/components/Analytics";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { JsonLd } from "@/components/JsonLd";
 import { businessSchema, websiteSchema } from "@/lib/schema";
 import { site, siteUrl } from "@/lib/site";
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <MobileCtaBar />
         <Analytics />
+        <SmoothScroll />
       </body>
     </html>
   );
