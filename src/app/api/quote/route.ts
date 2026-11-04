@@ -25,6 +25,7 @@ function summary(q: QuoteRequest) {
     ["Frequency", q.frequency ? labelFor(FREQUENCY_OPTIONS, q.frequency) : undefined],
     ["Property", q.propertyType],
     ["Bedrooms / bathrooms", q.bedrooms || q.bathrooms ? `${q.bedrooms ?? "?"} bed / ${q.bathrooms ?? "?"} bath` : undefined],
+    ["Premises size", q.size],
     ["Pets", q.pets],
     ["Add-ons", q.extras?.length ? q.extras.join(", ") : undefined],
     ["Preferred date", q.startDate],

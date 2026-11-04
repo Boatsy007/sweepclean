@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { servicePhotos } from "@/lib/photos";
 import { serviceScenes } from "./Scenes";
+import { Icon } from "./Icon";
 import type { Service } from "@/lib/services";
 
 /** Real photo for a service if we have one, otherwise its brand illustration. */
@@ -13,6 +14,12 @@ export function ServiceVisual({ service, className = "", sizes, priority = false
       </div>
     );
   }
-  const Scene = serviceScenes[service.icon];
-  return <Scene className={`block ${className}`} />;
+  const Scene = serviceScenes[service.icon as keyof typeof serviceScenes];
+  if (Scene) return <Scene className={`block ${className}`} />;
+  // No photo or illustration yet: branded panel with the service icon
+  return (
+    <div className={`relative grid place-items-center overflow-hidden bg-gradient-to-br from-lavender to-lilac ${className}`}>
+      <Icon name={service.icon} className="size-16 text-violet/80" strokeWidth={1.3} />
+    </div>
+  );
 }

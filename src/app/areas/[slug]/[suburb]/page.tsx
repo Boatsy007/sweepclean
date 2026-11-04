@@ -79,7 +79,7 @@ export default async function SuburbPage({ params }: Props) {
     "@id": `${siteUrl()}${path}#service`,
     name: `House cleaning in ${s.name}`,
     serviceType: "House cleaning",
-    description: `Regular, deep, NDIS and bond cleaning for homes in ${s.name} ${a.state} ${s.postcode}.`,
+    description: `Regular, deep, NDIS, bond, Airbnb, carpet and commercial cleaning in ${s.name} ${a.state} ${s.postcode}.`,
     url: `${siteUrl()}${path}`,
     provider: { "@id": `${siteUrl()}/#business` },
     areaServed: {
@@ -100,7 +100,7 @@ export default async function SuburbPage({ params }: Props) {
     ["Postcode", s.postcode],
     ["Council", s.council],
     ["Region", <Link key="r" href={`/areas/${a.slug}`} className="font-semibold text-violet underline underline-offset-2">{a.name}</Link>],
-    ["Services", "Regular, deep, NDIS & home care, and bond cleaning"],
+    ["Services", "Regular, deep, NDIS & home care, bond, Airbnb, carpet and commercial cleaning"],
     ["Visit frequency", "Weekly, fortnightly, monthly or one-off"],
     ["Quote turnaround", `Written quote ${site.quoteResponse}`],
     ["Bond cleaning standard", nsw ? "NSW condition report" : "QLD RTA Form 1a / Form 14a"],
@@ -117,7 +117,7 @@ export default async function SuburbPage({ params }: Props) {
             <p className="eyebrow">{s.name} {a.state} {s.postcode} · {s.council}</p>
             <h1 className="mt-3 text-4xl font-extrabold leading-[1.05] sm:text-5xl">House cleaning in {s.name}</h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed">
-              Swept offers regular, detailed, NDIS and bond cleaning for homes in {s.name} and the surrounding {s.group === s.name ? a.name : s.group} suburbs. Choose weekly, fortnightly or monthly visits – no lock-in contract.
+              Swept offers regular, deep, NDIS, bond, Airbnb and carpet cleaning for homes in {s.name} and the surrounding {s.group === s.name ? a.name : s.group} suburbs, plus commercial cleaning for local businesses. Choose weekly, fortnightly or monthly visits – no lock-in contract.
             </p>
             <div className="mt-6 rounded-2xl border border-lilac bg-white p-5 shadow-soft">
               <h2 className="flex items-center gap-2 text-lg font-bold"><Icon name="home" className="size-5 text-violet" />Homes in {s.name}</h2>

@@ -1,11 +1,8 @@
 /** Shared quote-request model + validation (used by the form and the API). */
 
-export const SERVICE_OPTIONS = [
-  { value: "regular-house-cleaning", label: "Regular home cleaning" },
-  { value: "deep-cleaning", label: "Detailed / deep clean" },
-  { value: "ndis-cleaning", label: "NDIS / home care cleaning" },
-  { value: "bond-cleaning", label: "Bond / end-of-lease clean" },
-] as const;
+import { services } from "./services";
+
+export const SERVICE_OPTIONS = services.map((s) => ({ value: s.slug, label: s.label }));
 
 export const FREQUENCY_OPTIONS = [
   { value: "weekly", label: "Weekly" },
@@ -15,6 +12,8 @@ export const FREQUENCY_OPTIONS = [
 ] as const;
 
 export const PROPERTY_OPTIONS = ["House", "Townhouse", "Apartment / unit"] as const;
+export const PREMISES_OPTIONS = ["Office", "Shop / retail", "Medical / consulting", "Other"] as const;
+export const SIZE_OPTIONS = ["Small (under 150m²)", "Medium (150–400m²)", "Large (400m²+)"] as const;
 import { EXTRA_TASKS } from "./tasks";
 
 export const EXTRA_OPTIONS = EXTRA_TASKS;
@@ -26,6 +25,7 @@ export type QuoteRequest = {
   propertyType?: string;
   bedrooms?: string;
   bathrooms?: string;
+  size?: string;
   extras?: string[];
   pets?: string;
   frequency?: string;
@@ -74,6 +74,7 @@ export function sanitise(raw: Record<string, unknown>): QuoteRequest {
     propertyType: str(raw.propertyType),
     bedrooms: str(raw.bedrooms, 4),
     bathrooms: str(raw.bathrooms, 4),
+    size: str(raw.size, 40),
     extras: Array.isArray(raw.extras) ? raw.extras.slice(0, 10).map((x) => String(x).slice(0, 60)) : [],
     pets: str(raw.pets, 10),
     frequency: str(raw.frequency, 20),

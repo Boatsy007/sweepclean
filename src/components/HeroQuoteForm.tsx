@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { FREQUENCY_OPTIONS, SERVICE_OPTIONS, validateContact, type Errors, type QuoteRequest } from "@/lib/quote";
 import { postcodeInArea } from "@/lib/areas";
+import { services } from "@/lib/services";
 import { site } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
@@ -20,7 +21,7 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
   const started = useRef(false);
   const mountedAt = useRef(Date.now());
 
-  const recurring = d.service === "regular-house-cleaning" || d.service === "ndis-cleaning" || !d.service;
+  const recurring = !d.service || !!services.find((s) => s.slug === d.service)?.recurring;
 
   function set<K extends keyof Data>(k: K, v: Data[K]) {
     if (!started.current) {

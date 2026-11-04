@@ -25,7 +25,9 @@ export type Service = {
   /** Optional honesty note shown near the CTA */
   availability?: string;
   /** Short icon key for UI */
-  icon: "home" | "sparkle" | "heart" | "box";
+  icon: "home" | "sparkle" | "heart" | "box" | "key" | "carpet" | "city";
+  /** Commercial premises rather than a home (changes the quote form questions). */
+  commercial?: boolean;
 };
 
 const coreKitchen = [
@@ -279,13 +281,13 @@ export const services: Service[] = [
           "Floors vacuumed and mopped",
         ],
       },
-      { room: "Add to your bond clean", items: ["Blinds", "Fans & vents"] },
+      { room: "Add to your bond clean", items: ["Carpet steam cleaning", "Blinds", "Fans & vents"] },
     ],
     pricing: [
       "Number of bedrooms, bathrooms and living areas",
       "Whether the property is empty (strongly recommended)",
       "Condition – heavy oven grease, mould or pet hair takes longer",
-      "Extras such as blinds",
+      "Extras such as carpet steam cleaning or blinds",
     ],
     steps: [
       { title: "Send us your move-out details", body: "Your vacate date, property size and – ideally – a copy of your entry condition report." },
@@ -311,6 +313,166 @@ export const services: Service[] = [
       },
     ],
     recurring: false,
+  },
+  {
+    slug: "airbnb-cleaning",
+    name: "Airbnb & holiday rental cleaning",
+    label: "Airbnb / holiday rental",
+    icon: "key",
+    summary: "Turnover cleans between guests that leave your property spotless, restocked and photo-ready.",
+    bestFor: "Airbnb, Stayz and holiday home hosts",
+    metaTitle: "Airbnb Cleaning Gold Coast, Brisbane & Tweed | Swept",
+    metaDescription:
+      "Airbnb and holiday rental turnover cleaning across the Gold Coast, Brisbane and Tweed Heads. Linen, laundry, restocking and a guest-ready checklist every stay.",
+    h1: "Airbnb and holiday rental cleaning, guest-ready every time",
+    intro:
+      "Between check-out and the next check-in, a short-stay property has to look exactly like its listing photos. We clean to a property-specific turnover checklist, make the beds, take care of laundry and dishes, restock the amenities you supply and let you know about anything that needs your attention before the next guest arrives.",
+    suits: [
+      "Airbnb, Stayz and direct-booking hosts",
+      "Holiday homes and investment apartments",
+      "Co-hosts and property managers looking after several listings",
+      "High-rise apartments with lift, parking or key-collection rules – tell us the details",
+    ],
+    checklist: [
+      { room: "Kitchen", items: [...coreKitchen, "Dishes washed and put away", "Appliances wiped inside and out", "Guest leftovers cleared"] },
+      { room: "Bathrooms", items: [...coreBathroom, "Fresh towels laid out", "Supplied amenities restocked"] },
+      { room: "Bedrooms & living", items: ["Beds made with fresh linen", ...coreLiving.filter((i) => !i.startsWith("Beds"))] },
+      { room: "Every turnover", items: ["Laundry of linen and towels", "Property set up to your listing – cushions, throws, welcome items", "Damage, breakages or missing items reported to you", "Lost property set aside"] },
+    ],
+    pricing: [
+      "Property size and the number of beds to make",
+      "How many turnovers you expect each month",
+      "Linen and laundry – washed on site or swapped from your spare sets",
+      "Building access and parking arrangements",
+    ],
+    steps: [
+      { title: "Tell us about the property", body: "Size, beds, typical turnovers per month, check-out and check-in times, and how access works." },
+      { title: "We build your checklist", body: "A turnover checklist set up for your property, with a per-clean price in writing." },
+      { title: "Guest-ready between stays", body: "We clean to the checklist after each check-out and report anything you need to know." },
+    ],
+    faqs: [
+      {
+        q: "Can you clean between same-day check-out and check-in?",
+        a: "That's what turnover cleaning is for. Share your usual check-out and check-in times when you request a quote so we can plan each clean around the window.",
+      },
+      {
+        q: "Do you handle linen and laundry?",
+        a: "Yes. We make the beds with fresh linen and look after laundry of linen and towels. Tell us whether you keep spare sets on site so we can plan the turnaround.",
+      },
+      {
+        q: "Will you tell me if something is damaged or missing?",
+        a: "Yes. Anything broken, missing or needing maintenance is reported to you after the clean, so you can sort it out before the next guest.",
+      },
+      {
+        q: "Do you clean holiday rentals in Tweed Heads?",
+        a: "Yes – along with the Gold Coast and Brisbane. Tweed Heads is in NSW, so during daylight saving we confirm turnover times in NSW time.",
+      },
+    ],
+    recurring: false,
+  },
+  {
+    slug: "carpet-cleaning",
+    name: "Carpet steam cleaning",
+    label: "Carpet cleaning",
+    icon: "carpet",
+    summary: "Professional carpet steam cleaning for bond cleans, high-traffic areas and a fresh start.",
+    bestFor: "Renters moving out, pet owners and busy family homes",
+    metaTitle: "Carpet Steam Cleaning Brisbane, Gold Coast & Tweed | Swept",
+    metaDescription:
+      "Carpet steam cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Ideal with a bond clean, for pet homes or high-traffic rooms. Free written quote.",
+    h1: "Carpet steam cleaning for homes and bond cleans",
+    intro:
+      "Vacuuming keeps carpets tidy, but it doesn't lift the dirt, oils and odours trapped deep in the fibres. A steam clean does. Book it on its own, or add it to a bond clean or deep clean so the whole home is done in one visit.",
+    suits: [
+      "Renters whose lease asks for carpets to be professionally cleaned at the end of the tenancy",
+      "Homes with pets, young kids or high foot traffic",
+      "Sellers preparing a home for inspections",
+      "Anyone adding carpets to a bond clean or deep clean",
+    ],
+    checklist: [
+      { room: "Before we start", items: ["Carpets inspected for stains and wear", "Furniture you've cleared moved aside where safe", "Thorough vacuum to lift loose dirt"] },
+      { room: "Steam clean", items: ["Pre-treatment of high-traffic areas and spots", "Steam cleaning room by room", "Edges and corners worked carefully"] },
+      { room: "After", items: ["Carpets left to dry – we'll tell you how long to expect", "Advice on keeping them fresh between cleans"] },
+      { room: "Pair it with", items: ["Bond cleaning", "Deep cleaning", "Regular home cleaning"] },
+    ],
+    pricing: [
+      "The number of rooms, hallways and stairs to be cleaned",
+      "Carpet condition – heavy staining or pet accidents take longer",
+      "Whether it's booked on its own or with a bond or deep clean",
+    ],
+    steps: [
+      { title: "Tell us the rooms", body: "Bedrooms, living areas, hallways and stairs, plus any stains or pet issues." },
+      { title: "Get your written quote", body: "A clear price, and a time that fits around your move or your week." },
+      { title: "Fresh, clean carpets", body: "We steam clean room by room and let you know how long they'll take to dry." },
+    ],
+    faqs: [
+      {
+        q: "Do I need carpets professionally cleaned when I move out?",
+        a: "Check your lease – some require carpets to be professionally cleaned at the end of the tenancy. If yours does, add carpet steam cleaning to your bond clean and we'll do both in one visit.",
+      },
+      {
+        q: "Can every stain be removed?",
+        a: "Most everyday stains lift well with a steam clean, but some – like bleach marks or old set-in stains – can be permanent. We'll tell you honestly what to expect when we see them.",
+      },
+      {
+        q: "How long do carpets take to dry?",
+        a: "It depends on the carpet, the weather and airflow in the home. We'll give you an estimate on the day; opening windows and running fans helps.",
+      },
+    ],
+    recurring: false,
+  },
+  {
+    slug: "commercial-cleaning",
+    name: "Commercial & office cleaning",
+    label: "Commercial / office cleaning",
+    icon: "city",
+    commercial: true,
+    summary: "Reliable, scheduled cleaning for offices, shops and small business premises.",
+    bestFor: "Offices, shops, studios and small businesses",
+    metaTitle: "Commercial & Office Cleaning Brisbane to Tweed | Swept",
+    metaDescription:
+      "Commercial and office cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Scheduled cleans for offices, shops and small businesses. Free quote.",
+    h1: "Commercial and office cleaning for small businesses",
+    intro:
+      "A clean workplace looks professional to customers and is better for the people who work there. We bring the same written-checklist approach we use in homes to offices, shops, studios and consulting rooms – on a schedule that suits your business.",
+    suits: [
+      "Offices and co-working spaces",
+      "Shops, showrooms and studios",
+      "Consulting rooms and small clinics",
+      "Body corporate common areas – tell us what's included",
+    ],
+    checklist: [
+      { room: "Work areas & reception", items: ["Desks and surfaces dusted and wiped (clear areas)", "Glass doors and partitions spot-cleaned", "Bins emptied", "Skirting boards, sills and vents dusted"] },
+      { room: "Kitchen & breakroom", items: ["Benchtops, sinks and splashbacks", "Appliance exteriors – microwave, fridge, kettle", "Dishes washed or dishwasher loaded", "Cabinet fronts wiped"] },
+      { room: "Bathrooms", items: ["Toilets, basins and mirrors", "Tiles and floors", "Supplied consumables restocked"] },
+      { room: "Floors", items: ["Carpets vacuumed", "Hard floors vacuumed and mopped", "Entry mats cleaned"] },
+    ],
+    pricing: [
+      "The size and layout of the premises",
+      "How often we clean – from weekly to several times a week",
+      "The number of bathrooms and kitchen areas",
+      "Access times and security arrangements",
+    ],
+    steps: [
+      { title: "Tell us about the premises", body: "Type of business, approximate size, how often you'd like us and when we can access the site." },
+      { title: "Agree the scope", body: "A written checklist and price per clean, with times that work around your business." },
+      { title: "A clean workplace, on schedule", body: "We clean to the checklist every visit and keep you in the loop." },
+    ],
+    faqs: [
+      {
+        q: "Can you clean outside business hours?",
+        a: "Tell us your preferred times when you request a quote and we'll agree a schedule that keeps disruption to a minimum.",
+      },
+      {
+        q: "Do you supply cleaning products and equipment?",
+        a: "Yes. If you'd like us to use particular products – for example on special flooring – let us know and we'll use yours.",
+      },
+      {
+        q: "Is there a minimum contract?",
+        a: "No lock-in contract. Regular commercial cleans run visit to visit, and you can change the schedule as your business changes.",
+      },
+    ],
+    recurring: true,
   },
 ];
 

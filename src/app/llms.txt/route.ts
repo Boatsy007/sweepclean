@@ -15,7 +15,7 @@ export function GET() {
     "",
     `> ${site.description}`,
     "",
-    "Swept Cleaning is a residential cleaning service covering South East Queensland and the Tweed in northern NSW: Brisbane, Logan, the Gold Coast and Tweed Heads. Homes can book weekly, fortnightly, monthly or one-off cleans. There are no lock-in contracts, every clean follows a written room-by-room checklist, and customers receive a written quote before booking.",
+    "Swept Cleaning is a cleaning service covering South East Queensland and the Tweed in northern NSW: Brisbane, Logan, the Gold Coast and Tweed Heads. It offers regular home cleaning, deep cleaning, NDIS and home care cleaning, bond cleaning, Airbnb and holiday rental turnovers, carpet steam cleaning and commercial cleaning. Homes can book weekly, fortnightly, monthly or one-off cleans. There are no lock-in contracts, every clean follows a written room-by-room checklist, and customers receive a written quote before booking.",
     "",
     "## Key facts",
     `- Service area: Brisbane, Logan, Gold Coast (QLD) and Tweed Heads (NSW)`,

@@ -13,7 +13,7 @@ export const site = {
   legalName: null as string | null, // e.g. "Swept Cleaning Pty Ltd"
   tagline: "Home cleaning, Brisbane to Tweed Heads",
   description:
-    "Regular, deep and end-of-lease house cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Get a written quote online in about two minutes.",
+    "Regular, deep, bond, Airbnb, carpet and commercial cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Get a written quote online in about two minutes.",
 
   /** Contact details. Leave null until real – the UI hides anything that is null. */
   phone: null as string | null, // display format, e.g. "0400 000 000"

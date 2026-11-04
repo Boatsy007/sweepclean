@@ -5,7 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   EXTRA_OPTIONS,
   FREQUENCY_OPTIONS,
+  PREMISES_OPTIONS,
   PROPERTY_OPTIONS,
+  SIZE_OPTIONS,
   SERVICE_OPTIONS,
   TIME_OPTIONS,
   validateContact,
@@ -97,9 +99,13 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
     const e: Errors = {};
     if (i === 0 && !data.service) e.service = "Choose the type of clean you need.";
     if (i === 1) {
-      if (!data.propertyType) e.propertyType = "Choose a property type.";
-      if (!data.bedrooms) e.bedrooms = "How many bedrooms?";
-      if (!data.bathrooms) e.bathrooms = "How many bathrooms?";
+      if (!data.propertyType) e.propertyType = service?.commercial ? "Choose a type of premises." : "Choose a property type.";
+      if (service?.commercial) {
+        if (!data.size) e.size = "Roughly how big is the space?";
+      } else {
+        if (!data.bedrooms) e.bedrooms = "How many bedrooms?";
+        if (!data.bathrooms) e.bathrooms = "How many bathrooms?";
+      }
     }
     if (i === 2 && service?.recurring && !data.frequency) e.frequency = "How often would you like us to come?";
     if (i === 3) Object.assign(e, validateContact(data, "quote"));
@@ -212,13 +218,24 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
 
             {step === 1 && (
               <div>
-                <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-bold outline-none sm:text-3xl">Tell us about your home</h2>
+                <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-bold outline-none sm:text-3xl">{service?.commercial ? "Tell us about the premises" : "Tell us about your home"}</h2>
+                {service?.commercial ? (
+                  <>
+                    <Pills label="Type of premises" name="propertyType" options={PREMISES_OPTIONS} value={data.propertyType} onChange={(v) => set("propertyType", v)} error={errors.propertyType} />
+                    <Pills label="Approximate size" name="size" options={SIZE_OPTIONS} value={data.size} onChange={(v) => set("size", v)} error={errors.size} />
+                    <Pills label="Bathrooms" name="bathrooms" options={["1", "2", "3", "4+"]} value={data.bathrooms} onChange={(v) => set("bathrooms", v)} compact optional />
+                  </>
+                ) : (
+                <>
                 <Pills label="Property type" name="propertyType" options={PROPERTY_OPTIONS} value={data.propertyType} onChange={(v) => set("propertyType", v)} error={errors.propertyType} />
                 <div className="grid gap-x-6 sm:grid-cols-2">
                   <Pills label="Bedrooms" name="bedrooms" options={["1", "2", "3", "4", "5+"]} value={data.bedrooms} onChange={(v) => set("bedrooms", v)} error={errors.bedrooms} compact />
                   <Pills label="Bathrooms" name="bathrooms" options={["1", "2", "3", "4+"]} value={data.bathrooms} onChange={(v) => set("bathrooms", v)} error={errors.bathrooms} compact />
                 </div>
                 <Pills label="Any pets at home?" name="pets" options={["No", "Yes"]} value={data.pets} onChange={(v) => set("pets", v)} compact optional />
+                </>
+                )}
+                {!service?.commercial && service?.slug !== "carpet-cleaning" && (
                 <fieldset className="mt-7">
                   <legend className="label">Anything extra to include? <span className="font-normal text-slate">(optional)</span></legend>
                   <div className="mt-1 flex flex-wrap gap-2.5">
@@ -233,6 +250,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
                     })}
                   </div>
                 </fieldset>
+                )}
               </div>
             )}
 

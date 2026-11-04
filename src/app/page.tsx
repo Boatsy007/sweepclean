@@ -83,11 +83,11 @@ export default function Home() {
       {/* SERVICES */}
       <section className="container-x py-16 sm:py-20" aria-labelledby="services-h">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 id="services-h" className="text-3xl font-extrabold sm:text-[2.6rem]">Our residential cleaning services</h2>
+          <h2 id="services-h" className="text-3xl font-extrabold sm:text-[2.6rem]">Our cleaning services</h2>
           <p className="mt-3 text-lg">A complete range of home cleaning services to keep your home fresh, clean and comfortable.</p>
         </div>
         <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((s) => {
+          {services.slice(0, 4).map((s) => {
             return (
               <li key={s.slug}>
                 <Link href={`/services/${s.slug}`} className="card group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lift">
@@ -110,6 +110,18 @@ export default function Home() {
             );
           })}
         </ul>
+        <div className="mt-6 flex flex-col gap-4 rounded-[var(--radius-card)] border border-lilac bg-white p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
+          <p className="shrink-0 font-display text-lg font-bold text-navy">Also available</p>
+          <ul className="flex flex-wrap gap-3">
+            {services.slice(4).map((s) => (
+              <li key={s.slug}>
+                <Link href={`/services/${s.slug}`} className="inline-flex items-center gap-2 rounded-full border-2 border-lilac px-4 py-2 font-medium text-navy transition-colors hover:border-violet hover:text-violet">
+                  <Icon name={s.icon} className="size-5 text-violet" />{s.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       {/* YOUR CLEAN, YOUR WAY */}
