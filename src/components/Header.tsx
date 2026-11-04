@@ -36,8 +36,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-violet text-white shadow-[0_1px_0_rgb(255_255_255/0.08)]">
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
-      <div className="container-x flex h-[76px] items-center justify-between gap-6">
-        <Link href="/" className="shrink-0"><Logo tone="white" priority /></Link>
+      <div className="container-x flex h-[76px] items-center justify-between gap-6 lg:h-[96px]">
+        <Link href="/" className="shrink-0"><Logo tone="white" size="header" priority /></Link>
 
         <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-1">
@@ -49,7 +49,7 @@ export function Header() {
                     aria-expanded={svcOpen}
                     aria-controls="svc-menu"
                     onClick={() => setSvcOpen((v) => !v)}
-                    className={`flex items-center gap-1 rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 ${active("/services") ? "underline decoration-2 underline-offset-[10px]" : ""}`}
+                    className={`flex items-center gap-1 rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:text-[1.05rem] ${active("/services") ? "underline decoration-2 underline-offset-[10px]" : ""}`}
                   >
                     Services <Icon name="chevron" className={`size-4 transition-transform ${svcOpen ? "rotate-180" : ""}`} />
                   </button>
@@ -68,7 +68,7 @@ export function Header() {
                 </li>
               ) : (
                 <li key={n.href}>
-                  <Link href={n.href} aria-current={active(n.href) ? "page" : undefined} className={`block rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 ${active(n.href) ? "underline decoration-2 underline-offset-[10px]" : ""}`}>
+                  <Link href={n.href} aria-current={active(n.href) ? "page" : undefined} className={`block rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:text-[1.05rem] ${active(n.href) ? "underline decoration-2 underline-offset-[10px]" : ""}`}>
                     {n.label}
                   </Link>
                 </li>
@@ -78,7 +78,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-white hidden !min-h-11 !px-5 sm:inline-flex">
+          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-white hidden !min-h-11 !px-5 sm:inline-flex lg:!min-h-12 lg:!px-6 lg:text-[1.05rem]">
             Book a clean <Icon name="arrow" className="size-4" />
           </Link>
           <button type="button" className="grid size-11 place-items-center rounded-full hover:bg-white/10 lg:hidden" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
