@@ -4,7 +4,7 @@ import { siteUrl } from "@/lib/site";
 export default function robots(): MetadataRoute.Robots {
   const isProd = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === "production" : true;
   return {
-    rules: isProd ? [{ userAgent: "*", allow: "/", disallow: ["/api/", "/quote/thanks"] }] : [{ userAgent: "*", disallow: "/" }],
+    rules: isProd ? [{ userAgent: "*", allow: "/", disallow: ["/api/", "/quote/thanks", "/motion-check"] }] : [{ userAgent: "*", disallow: "/" }],
     sitemap: `${siteUrl()}/sitemap.xml`,
   };
 }

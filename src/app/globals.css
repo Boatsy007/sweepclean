@@ -27,7 +27,8 @@ html {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  /* Kill UI transitions; our own animations below are handled explicitly (gentle fades only). */
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 
 body {
@@ -183,5 +184,24 @@ html.lenis { scroll-behavior: auto; }
       animation: swept-progress linear both;
       animation-timeline: scroll(root);
     }
+  }
+}
+
+/* Reduced motion: no movement, zoom, parallax or smooth scrolling – just gentle fades. */
+@keyframes swept-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .intro, .intro-right { animation: swept-fade 0.8s ease-out both; animation-delay: var(--d, 0ms); }
+  @supports (animation-timeline: view()) {
+    .reveal,
+    main .card:not(form),
+    main .band,
+    .reveal-stagger > *,
+    main section > div > h2,
+    main section > h2 {
+      animation: swept-fade linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    .reveal-stagger > * .card { animation: none; }
   }
 }
