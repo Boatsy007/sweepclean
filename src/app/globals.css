@@ -216,3 +216,24 @@ html.lenis { scroll-behavior: auto; }
      stays clear of the header even when Chrome's scroll offset bug (~113px) kicks in. */
   html.crios main > section:first-of-type { padding-top: 112px; }
 }
+
+/* Cleaning guide article body (GuideContent.tsx) */
+@layer components {
+  .prose-guide { font-size: 1.075rem; line-height: 1.75; }
+  .prose-guide > * + * { margin-top: 1.15rem; }
+  .prose-guide h2 { margin-top: 2.75rem; font-size: 1.75rem; font-weight: 800; line-height: 1.2; scroll-margin-top: 7rem; }
+  .prose-guide h3 { margin-top: 2rem; font-size: 1.3rem; font-weight: 700; line-height: 1.3; }
+  .prose-guide h2 + *, .prose-guide h3 + * { margin-top: 0.75rem; }
+  .prose-guide a { color: var(--color-violet); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(76 2 150 / 0.35); }
+  .prose-guide a:hover { text-decoration-color: currentColor; }
+  .prose-guide strong { color: var(--color-navy); font-weight: 700; }
+  .prose-guide ul, .prose-guide ol { padding-left: 1.4rem; }
+  .prose-guide ul { list-style: disc; }
+  .prose-guide ol { list-style: decimal; }
+  .prose-guide li + li { margin-top: 0.45rem; }
+  .prose-guide li::marker { color: var(--color-violet); }
+  .prose-guide figure { margin-top: 2rem; margin-bottom: 2rem; overflow: hidden; border-radius: 1.25rem; border: 1px solid var(--color-lilac); }
+  .prose-guide figcaption { padding: 0.75rem 1rem; font-size: 0.9rem; background: var(--color-lavender); }
+  .prose-guide .guide-tip { display: flex; gap: 0.9rem; border-radius: 1.25rem; border: 1px solid var(--color-lilac); background: var(--color-lavender); padding: 1.1rem 1.25rem; }
+  .prose-guide .guide-tip p + p { margin-top: 0.25rem; }
+}

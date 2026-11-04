@@ -13,6 +13,7 @@ const nav = [
   { href: "/services", label: "Services", children: true },
   { href: "/why-swept", label: "Why Swept" },
   { href: "/areas", label: "Areas" },
+  { href: "/cleaning-guides", label: "Cleaning Guides" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -51,7 +52,7 @@ export function Header() {
                     aria-expanded={svcOpen}
                     aria-controls="svc-menu"
                     onClick={() => setSvcOpen((v) => !v)}
-                    className={`flex items-center gap-1 rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:text-[1.05rem] ${active("/services") ? "underline decoration-2 underline-offset-[10px]" : ""}`}
+                    className={`flex items-center gap-1 whitespace-nowrap rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:px-2.5 lg:text-[1rem] xl:px-3 xl:text-[1.05rem] 2xl:px-4 ${active("/services") ? "underline decoration-2 underline-offset-[10px]" : ""}`}
                   >
                     Services <Icon name="chevron" className={`size-4 transition-transform ${svcOpen ? "rotate-180" : ""}`} />
                   </button>
@@ -70,7 +71,7 @@ export function Header() {
                 </li>
               ) : (
                 <li key={n.href}>
-                  <Link href={n.href} aria-current={active(n.href) ? "page" : undefined} className={`block rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:text-[1.05rem] ${active(n.href) ? "underline decoration-2 underline-offset-[10px]" : ""}`}>
+                  <Link href={n.href} aria-current={active(n.href) ? "page" : undefined} className={`block whitespace-nowrap rounded-full px-4 py-2 font-display font-medium hover:bg-white/10 lg:px-2.5 lg:text-[1rem] xl:px-3 xl:text-[1.05rem] 2xl:px-4 ${active(n.href) ? "underline decoration-2 underline-offset-[10px]" : ""}`}>
                     {n.label}
                   </Link>
                 </li>
@@ -82,7 +83,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           {site.phone && (
             <>
-              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-white/10 xl:inline-flex">
+              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-white/10 xl:inline-flex">
                 <Icon name="phone" className="size-5" />{site.phone}
               </a>
               <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header_mobile" })} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-lavender lg:hover:bg-white/10 xl:hidden">
@@ -90,7 +91,7 @@ export function Header() {
               </a>
             </>
           )}
-          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-primary hidden !min-h-11 !px-5 sm:inline-flex lg:btn-white lg:!min-h-12 lg:!px-6 lg:text-[1.05rem]">
+          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-primary hidden !min-h-11 whitespace-nowrap !px-5 sm:inline-flex lg:btn-white lg:!min-h-12 lg:!px-5 lg:text-[1rem] xl:!px-6 xl:text-[1.05rem]">
             Book a clean <Icon name="arrow" className="size-4" />
           </Link>
           <button type="button" className="grid size-11 place-items-center rounded-full hover:bg-lavender lg:hidden" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>

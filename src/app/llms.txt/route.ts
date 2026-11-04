@@ -4,6 +4,7 @@ import { areas } from "@/lib/areas";
 import { generalFaqs } from "@/lib/faqs";
 import { suburbPath, suburbsIn } from "@/lib/suburbs";
 import { tasks } from "@/lib/tasks";
+import { guidePath, guides } from "@/lib/guides";
 
 export const dynamic = "force-static";
 
@@ -37,6 +38,9 @@ export function GET() {
       ...suburbsIn(a.slug).map((s) => `- [${s.name} ${a.state} ${s.postcode}](${u}${suburbPath(s)}) – ${s.council}`),
       "",
     ]),
+    ...(guides.length
+      ? ["## Cleaning guides", ...guides.map((g) => `- [${g.title}](${u}${guidePath(g.slug)}): ${g.description}`), ""]
+      : []),
     "## Frequently asked questions",
     ...generalFaqs.flatMap((f) => [`- Q: ${f.q}`, `  A: ${f.a}`]),
     "",

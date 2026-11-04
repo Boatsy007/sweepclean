@@ -22,6 +22,7 @@ export function Footer() {
             {site.email && <li><a href={`mailto:${site.email}`} className="hover:text-white">{site.email}</a></li>}
             <li><Link href="/contact" className="hover:text-white">Contact us</Link></li>
             <li><Link href="/faq" className="hover:text-white">FAQs</Link></li>
+            <li><Link href="/cleaning-guides" className="hover:text-white">Cleaning guides</Link></li>
             <li className="text-sm text-white/60">{site.responseHours}</li>
           </ul>
         </div>
