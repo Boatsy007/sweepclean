@@ -35,8 +35,8 @@ export function Header() {
   const active = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 
   return (
-    <header className="header-elevate sticky top-0 z-50 bg-violet text-white shadow-[0_1px_0_rgb(255_255_255/0.08)]">
-      <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-white/90" />
+    <header className="header-elevate sticky top-0 z-50 border-b border-lilac bg-white text-violet lg:border-b-0 lg:bg-violet lg:text-white lg:shadow-[0_1px_0_rgb(255_255_255/0.08)]">
+      <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-violet lg:to-white/90" />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
       <div className="container-x flex h-[76px] items-center justify-between gap-6 lg:h-[96px]">
         <Link href="/" className="shrink-0"><Logo tone="white" size="header" priority /></Link>
@@ -85,21 +85,21 @@ export function Header() {
               <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-white/10 xl:inline-flex">
                 <Icon name="phone" className="size-5" />{site.phone}
               </a>
-              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header_mobile" })} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-white/10 xl:hidden">
+              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header_mobile" })} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-lavender lg:hover:bg-white/10 xl:hidden">
                 <Icon name="phone" className="size-6" />
               </a>
             </>
           )}
-          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-white hidden !min-h-11 !px-5 sm:inline-flex lg:!min-h-12 lg:!px-6 lg:text-[1.05rem]">
+          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-primary hidden !min-h-11 !px-5 sm:inline-flex lg:btn-white lg:!min-h-12 lg:!px-6 lg:text-[1.05rem]">
             Book a clean <Icon name="arrow" className="size-4" />
           </Link>
-          <button type="button" className="grid size-11 place-items-center rounded-full hover:bg-white/10 lg:hidden" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
+          <button type="button" className="grid size-11 place-items-center rounded-full hover:bg-lavender lg:hidden" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
             <Icon name={open ? "close" : "menu"} className="size-7" />
           </button>
         </div>
       </div>
 
-      <div id="mobile-nav" data-lenis-prevent hidden={!open} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto bg-violet px-4 pb-10 pt-2 lg:hidden">
+      <div id="mobile-nav" data-lenis-prevent hidden={!open} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto bg-violet px-4 pb-10 pt-2 text-white lg:hidden">
         <nav aria-label="Mobile">
           <ul className="divide-y divide-white/15 font-display text-xl font-semibold">
             {nav.filter((n) => !n.children).slice(0, 1).map((n) => (

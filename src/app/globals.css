@@ -70,6 +70,7 @@ p { text-wrap: pretty; }
 
 /* Focus ring stays visible on dark purple surfaces */
 .bg-violet :focus-visible, .band :focus-visible, .bg-navy :focus-visible { outline-color: #fff; }
+@media (min-width: 1024px) { header :focus-visible { outline-color: #fff; } }
 
 /* ------------------------------------------------------------------
  * Scroll-driven motion (CSS only – no JS, no layout shift).
