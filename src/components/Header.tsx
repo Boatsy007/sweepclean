@@ -100,13 +100,6 @@ export function Header() {
       </div>
 
       <div id="mobile-nav" data-lenis-prevent hidden={!open} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto bg-violet px-4 pb-10 pt-2 text-white lg:hidden">
-        {/* Chrome on iPhone only: the header may be scrolled away, so the menu has its own close row */}
-        <div className="crios-only -mx-4 -mt-2 mb-2 h-[76px] items-center justify-between border-b border-white/15 px-4">
-          <Link href="/" onClick={() => setOpen(false)}><Logo tone="white" /></Link>
-          <button type="button" onClick={() => setOpen(false)} aria-label="Close menu" className="grid size-11 place-items-center rounded-full hover:bg-white/10">
-            <Icon name="close" className="size-7" />
-          </button>
-        </div>
         <nav aria-label="Mobile">
           <ul className="divide-y divide-white/15 font-display text-xl font-semibold">
             {nav.filter((n) => !n.children).slice(0, 1).map((n) => (

@@ -207,11 +207,9 @@ html.lenis { scroll-behavior: auto; }
   }
 }
 
-/* Chrome on iPhone only (html.crios, set in layout <head>): header scrolls with the page on
-   phones/tablets to avoid an iOS 26 WebKit bug with top-pinned headers. Everyone else: sticky. */
-.crios-only { display: none; }
+/* Chrome on iPhone only (html.crios, set in layout <head>): fixed header with matching top
+   padding so the page always starts below it. Everyone else keeps the sticky header. */
 @media (max-width: 1023px) {
-  html.crios header { position: relative; }
-  html.crios #mobile-nav { top: 0; z-index: 60; }
-  html.crios .crios-only { display: flex; }
+  html.crios header { position: fixed; top: 0; left: 0; right: 0; }
+  html.crios body { padding-top: 77px; }
 }
