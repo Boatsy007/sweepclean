@@ -10,6 +10,7 @@ import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
 import { HeroQuoteForm } from "@/components/HeroQuoteForm";
 import { HeroBackground } from "@/components/HeroBackground";
+import { PromiseBacked, PromisePanel } from "@/components/SweptPromise";
 import { TrackedLink } from "@/components/TrackedLink";
 import { tasks } from "@/lib/tasks";
 import { pageMeta } from "@/lib/seo";
@@ -72,6 +73,7 @@ export default function Home() {
                 <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
               ))}
             </ul>
+            <PromiseBacked className="intro mt-4 text-[1rem] text-violet [--d:340ms] lg:mt-5" />
             {/* Mobile: one clear primary action, phone as secondary, services as a text link */}
             <div className="intro mt-6 lg:hidden [--d:400ms]">
               <a href="#quote" className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem]">Get my free quote <Icon name="arrow" className="size-[1.1rem] rotate-90" /></a>
@@ -96,7 +98,7 @@ export default function Home() {
           </div>
 
           <div className="intro-right [--d:220ms]">
-            <HeroQuoteForm />
+            <HeroQuoteForm promiseNote />
           </div>
         </div>
       </section>
@@ -225,6 +227,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <PromisePanel className="lg:col-span-2" />
         </div>
       </section>
 

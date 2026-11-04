@@ -21,6 +21,7 @@ export function Footer() {
             {site.phone && <li><a href={telHref(site.phone)} className="hover:text-white">{site.phone}</a></li>}
             {site.email && <li><a href={`mailto:${site.email}`} className="hover:text-white">{site.email}</a></li>}
             <li><Link href="/contact" className="hover:text-white">Contact us</Link></li>
+            <li><Link href={site.promise.path} className="hover:text-white">{site.promise.name}</Link></li>
             <li><Link href="/faq" className="hover:text-white">FAQs</Link></li>
             <li><Link href="/cleaning-guides" className="hover:text-white">Cleaning guides</Link></li>
             <li className="text-sm text-white/60">{site.responseHours}</li>

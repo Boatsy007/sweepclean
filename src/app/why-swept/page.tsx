@@ -8,6 +8,7 @@ import Image from "next/image";
 import { SweptMark } from "@/components/SweptMark";
 import { photos } from "@/lib/photos";
 import { pageMeta } from "@/lib/seo";
+import { PromisePanel } from "@/components/SweptPromise";
 
 export const metadata = pageMeta({
   title: "Why Choose Swept Cleaning | Our Commitments",
@@ -55,6 +56,7 @@ export default function WhySwept() {
             {site.insured && <li className="flex gap-3"><Icon name="shield" className="mt-0.5 size-7 shrink-0" /><span><strong className="block font-display text-xl font-semibold text-white">Fully insured</strong><span className="mt-1 block text-white/85">We hold current public liability insurance.</span></span></li>}
             {site.policeChecked && <li className="flex gap-3"><Icon name="shield" className="mt-0.5 size-7 shrink-0" /><span><strong className="block font-display text-xl font-semibold text-white">Police-checked cleaners</strong><span className="mt-1 block text-white/85">Every cleaner holds a current national police check.</span></span></li>}
           </ul>
+          <PromisePanel className="mt-10" />
         </div>
       </section>
 

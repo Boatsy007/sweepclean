@@ -14,7 +14,7 @@ import { photos } from "@/lib/photos";
 type Data = Partial<QuoteRequest>;
 
 /** Single-step quote form for the home page hero. Posts to the same API as the full quote. */
-export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote" }: { defaultSuburb?: string; title?: string } = {}) {
+export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote", promiseNote = false }: { defaultSuburb?: string; title?: string; promiseNote?: boolean } = {}) {
   const router = useRouter();
   const [d, setD] = useState<Data>({ kind: "quote", consent: false, frequency: "fortnightly", suburb: defaultSuburb });
   const [errors, setErrors] = useState<Errors>({});
@@ -139,7 +139,13 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
       <button type="submit" disabled={status === "sending"} className="btn-primary mt-6 w-full !min-h-14 text-lg disabled:opacity-60">
         {status === "sending" ? "Sending…" : "Get my free quote"} <Icon name="arrow" className="size-5" />
       </button>
-      <p className="mt-3 text-center text-sm">
+      {promiseNote && (
+        <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-sm font-medium text-navy">
+          <Icon name="shieldSparkle" className="size-4 shrink-0 text-violet" />
+          Something missed? <a href={site.promise.path} className="font-semibold text-violet underline underline-offset-2">We&apos;ll come back and fix it.</a>
+        </p>
+      )}
+      <p className={`${promiseNote ? "mt-2" : "mt-3"} text-center text-sm`}>
         Want to add more detail? <a href="/quote" className="font-semibold text-violet underline underline-offset-2">Use the full quote form</a>
       </p>
     </form>

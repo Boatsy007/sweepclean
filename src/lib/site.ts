@@ -63,6 +63,38 @@ export const site = {
     },
   ],
 
+  /**
+   * The Swept Promise – Swept's service guarantee, shown across the site.
+   * This is a commitment to customers: only change it if the way you handle
+   * re-cleans changes too. Keep the ACL note – the promise must never read as
+   * limiting customers' statutory rights.
+   */
+  promise: {
+    name: "The Swept Promise",
+    tagline: "A clean you can count on.",
+    body: "If something we've agreed to clean isn't done right, let us know by the end of the next business day. We'll come back and put it right at no extra charge.",
+    path: "/swept-promise",
+    steps: [
+      {
+        title: "Every clean follows an agreed checklist",
+        body: "Before your first clean we agree exactly what's included, room by room or area by area. That checklist is what we clean – and what we hold ourselves to.",
+      },
+      {
+        title: "Tell us by the end of the next business day",
+        body: "If an agreed task was missed or not done properly, contact us by the end of the next business day. Let us know what needs attention – a quick photo helps.",
+      },
+      {
+        title: "We come back and put it right",
+        body: "We'll arrange a time to return and re-clean the affected area, at no extra charge.",
+      },
+      {
+        title: "Management reviews anything unresolved",
+        body: "If you're still not happy, a member of our management team personally reviews your concern and works through it with you.",
+      },
+    ],
+    acl: "The Swept Promise is in addition to your rights under the Australian Consumer Law and does not limit those rights.",
+  },
+
   /** Optional incentive for recurring bookings, e.g. "10% off every regular clean". null = hidden. */
   recurringOffer: null as string | null,
 } as const;

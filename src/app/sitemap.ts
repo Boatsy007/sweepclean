@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Guides: the listing joins the sitemap once the first guide is published
     ...(guides.length ? [page("/cleaning-guides", 0.6)] : []),
     ...guides.map((g) => ({ url: `${base}${guidePath(g.slug)}`, lastModified: new Date(g.updated ?? g.published), priority: 0.6 })),
+    page(site.promise.path, 0.7),
     page("/why-swept", 0.6),
     page("/faq", 0.6),
     page("/contact", 0.6),
