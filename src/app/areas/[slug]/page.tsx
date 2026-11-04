@@ -11,6 +11,7 @@ import { Faqs } from "@/components/Faqs";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { QuickStart } from "@/components/QuickStart";
+import { suburbPath, suburbsIn } from "@/lib/suburbs";
 
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() {
@@ -30,13 +31,15 @@ export default async function AreaPage({ params }: Props) {
   const a = getArea((await params).slug);
   if (!a) notFound();
   const crumbs = [{ name: "Home", path: "/" }, { name: "Areas", path: "/areas" }, { name: a.name, path: `/areas/${a.slug}` }];
+  const list = suburbsIn(a.slug);
+  const groups = [...new Set(list.map((sb) => sb.group))].map((g) => ({ name: g, suburbs: list.filter((sb) => sb.group === g) }));
   const placeSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
     name: `House cleaning in ${a.name}`,
     serviceType: "House cleaning",
     provider: { "@id": `${siteUrl()}/#business` },
-    areaServed: a.suburbGroups.flatMap((g) => g.suburbs).map((name) => ({ "@type": "Place", name: `${name}, ${a.state}` })),
+    areaServed: suburbsIn(a.slug).map((sb) => ({ "@type": "Place", name: `${sb.name} ${a.state} ${sb.postcode}`, url: `${siteUrl()}${suburbPath(sb)}` })),
     url: `${siteUrl()}/areas/${a.slug}`,
   };
   return (
@@ -79,13 +82,19 @@ export default async function AreaPage({ params }: Props) {
       <section className="bg-lavender py-16" aria-labelledby="suburbs-h">
         <div className="container-x">
           <h2 id="suburbs-h" className="text-3xl font-extrabold">Suburbs we clean in {a.name}</h2>
-          <p className="mt-3 max-w-2xl">Including, but not limited to, the suburbs below. Don&apos;t see yours? Request a quote and we&apos;ll confirm.</p>
+          <p className="mt-3 max-w-2xl">Choose your suburb for local cleaning details and a quote form ready to go. Don&apos;t see yours? Request a quote and we&apos;ll confirm.</p>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {a.suburbGroups.map((g) => (
+            {groups.map((g) => (
               <div key={g.name} id={anchor(g.name)} className="card scroll-mt-24 p-6">
                 <h3 className="flex items-center gap-2 text-lg font-bold"><Icon name="pin" className="size-5 text-violet" />{g.name}</h3>
                 <ul className="mt-3 flex flex-wrap gap-2">
-                  {g.suburbs.map((sb) => <li key={sb} className="rounded-full bg-lavender px-3 py-1 text-sm font-medium text-violet-ink">{sb}</li>)}
+                  {g.suburbs.map((sb) => (
+                    <li key={sb.slug}>
+                      <Link href={suburbPath(sb)} className="inline-flex rounded-full bg-lavender px-3 py-1 text-sm font-medium text-violet-ink underline-offset-2 transition-colors hover:bg-violet hover:text-white focus-visible:bg-violet focus-visible:text-white">
+                        {sb.name}<span className="sr-only"> house cleaning</span>
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             ))}

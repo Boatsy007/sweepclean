@@ -11,9 +11,9 @@ import { Icon } from "./Icon";
 type Data = Partial<QuoteRequest>;
 
 /** Single-step quote form for the home page hero. Posts to the same API as the full quote. */
-export function HeroQuoteForm() {
+export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote" }: { defaultSuburb?: string; title?: string } = {}) {
   const router = useRouter();
-  const [d, setD] = useState<Data>({ kind: "quote", consent: false, frequency: "fortnightly" });
+  const [d, setD] = useState<Data>({ kind: "quote", consent: false, frequency: "fortnightly", suburb: defaultSuburb });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const [hp, setHp] = useState("");
@@ -77,7 +77,7 @@ export function HeroQuoteForm() {
         <label>Website<input tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} name="website" /></label>
       </div>
 
-      <h2 id="hq-title" className="text-center text-2xl font-extrabold uppercase tracking-wide sm:text-[1.65rem]">Request your free quote</h2>
+      <h2 id="hq-title" className="text-center text-2xl font-extrabold uppercase tracking-wide sm:text-[1.65rem]">{title}</h2>
       <p className="mt-1 text-center text-sm">No obligation · We reply {site.quoteResponse}</p>
 
       <div className="mt-5 grid gap-3.5">

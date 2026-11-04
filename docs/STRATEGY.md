@@ -49,7 +49,21 @@ Differentiators to **earn** and then switch on: insurance, police checks, review
 | `/quote` | get a cleaning quote | – (conversion page) |
 | `/faq`, `/why-swept`, `/contact` | support / trust | – |
 
-To avoid cannibalisation, each page owns one intent. Service pages target the service, area pages target the place. **No suburb doorway pages.** Suburbs are listed inside region pages until there is genuinely local content to justify separate pages (see roadmap).
+To avoid cannibalisation, each page owns one intent. Service pages target the service, area pages target the region, and **112 suburb pages** (`/areas/[area]/[suburb]`) target "house cleaning + suburb" searches.
+
+**Suburb pages and doorway-page risk.** Google penalises near-identical location pages. Each suburb page therefore carries:
+- its real postcode and council
+- a unique note on local housing and what it means for cleaning
+- the region's cleaning notes
+- bond-cleaning rules for the right state
+- five suburb-specific FAQs
+- structured data (Service + Place/PostalAddress + FAQPage + BreadcrumbList)
+- a quote form with the suburb pre-filled
+- links to 8 nearby suburbs
+
+All suburb data lives in `src/lib/suburbs.ts`. The strongest thing that can be added to a suburb page is **real local proof**: jobs completed there, before/after photos, and reviews from customers in that suburb.
+
+**AI discoverability.** `/llms.txt` gives AI assistants a plain-text summary of the business, its services, and every area and suburb with its postcode and council. The structured data and "at a glance" fact tables on suburb pages give answer engines clean, extractable facts.
 
 Every page is within two clicks of home. Service and area pages cross-link. Breadcrumbs are on every page.
 
@@ -131,7 +145,7 @@ Blocked on owner input (highest remaining commercial impact): phone number, real
 9. **Google Ads landing pages:** `/lp/bond-cleaning-gold-coast` etc., noindex, single CTA, with UTM source recorded on the lead.
 
 **90+ days**
-10. **Suburb pages** for the top 10–15 suburbs by lead volume, but only with genuinely local content (jobs done there, local photos, reviews from that suburb).
+10. **Strengthen suburb pages** for the suburbs with the most leads: add jobs completed there, local photos and reviews from that suburb.
 11. **CRM** (HubSpot or similar) via `LEAD_WEBHOOK_URL`, with automated follow-up: quote sent → day-2 nudge → booked → review request after the 2nd clean.
 12. **Online booking and payments** for repeat customers once operations are stable.
 13. **Field Core Web Vitals:** monitor through Vercel Speed Insights or the CrUX report once there is traffic.

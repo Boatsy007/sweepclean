@@ -10,15 +10,10 @@ export type Area = {
   intro: string;
   /** Genuinely local, practical notes – what makes cleaning here different */
   notes: { title: string; body: string }[];
-  suburbGroups: { name: string; suburbs: string[] }[];
   faqs: Faq[];
 };
 
-/*
- * Suburb lists are representative, not exhaustive – the quote form accepts any
- * suburb and we confirm coverage. Owner: confirm the edges of your service area
- * (e.g. Ipswich, Redlands islands, Kingscliff and south) before launch.
- */
+/* Suburbs for each area live in ./suburbs.ts. */
 export const areas: Area[] = [
   {
     slug: "brisbane",
@@ -43,13 +38,6 @@ export const areas: Area[] = [
         title: "Humidity, mould and storm season",
         body: "Brisbane's wet summers mean bathrooms, laundries and window tracks need extra attention. Mention any mould spots in your quote request and we'll plan time for them.",
       },
-    ],
-    suburbGroups: [
-      { name: "Inner City", suburbs: ["Brisbane City", "New Farm", "Fortitude Valley", "Kangaroo Point", "South Brisbane", "West End", "Spring Hill", "Newstead", "Teneriffe"] },
-      { name: "Northside", suburbs: ["Chermside", "Aspley", "Kedron", "Stafford", "Everton Park", "Nundah", "Clayfield", "Ascot", "Hamilton", "Albany Creek", "Bridgeman Downs"] },
-      { name: "Southside", suburbs: ["Mount Gravatt", "Sunnybank", "Holland Park", "Coorparoo", "Annerley", "Greenslopes", "Moorooka", "Carina", "Eight Mile Plains", "Calamvale"] },
-      { name: "East & Bayside", suburbs: ["Bulimba", "Hawthorne", "Camp Hill", "Carindale", "Wynnum", "Manly", "Morningside", "Cannon Hill"] },
-      { name: "West", suburbs: ["Paddington", "Red Hill", "Ashgrove", "Bardon", "Toowong", "Indooroopilly", "Kenmore", "Chapel Hill", "St Lucia", "Graceville"] },
     ],
     faqs: [
       {
@@ -86,11 +74,6 @@ export const areas: Area[] = [
         body: "Plenty of Logan homes have dogs and big outdoor areas, which means hair and tracked-in dirt. Tell us about pets and we'll plan the vacuuming and floor time accordingly.",
       },
     ],
-    suburbGroups: [
-      { name: "North Logan", suburbs: ["Springwood", "Daisy Hill", "Shailer Park", "Rochedale South", "Slacks Creek", "Underwood", "Kingston"] },
-      { name: "Central Logan", suburbs: ["Logan Central", "Woodridge", "Browns Plains", "Marsden", "Crestmead", "Regents Park", "Meadowbrook", "Loganholme"] },
-      { name: "South & growth areas", suburbs: ["Beenleigh", "Eagleby", "Bethania", "Waterford", "Park Ridge", "Jimboomba", "Yarrabilba", "Flagstone"] },
-    ],
     faqs: [
       {
         q: "Do you service the new estates like Yarrabilba and Flagstone?",
@@ -126,12 +109,6 @@ export const areas: Area[] = [
         body: "With so many renters on the Coast, bond cleans book out around the end of each month. If you're moving, request your quote as soon as you know your vacate date.",
       },
     ],
-    suburbGroups: [
-      { name: "Northern Gold Coast", suburbs: ["Ormeau", "Pimpama", "Coomera", "Upper Coomera", "Oxenford", "Helensvale", "Hope Island", "Sanctuary Cove"] },
-      { name: "Central Gold Coast", suburbs: ["Southport", "Labrador", "Runaway Bay", "Biggera Waters", "Main Beach", "Surfers Paradise", "Broadbeach", "Mermaid Beach", "Benowa", "Ashmore"] },
-      { name: "Hinterland edge", suburbs: ["Nerang", "Carrara", "Highland Park", "Mudgeeraba", "Worongary"] },
-      { name: "Southern Gold Coast", suburbs: ["Robina", "Varsity Lakes", "Burleigh Heads", "Burleigh Waters", "Miami", "Palm Beach", "Elanora", "Currumbin", "Tugun", "Coolangatta"] },
-    ],
     faqs: [
       {
         q: "Do you clean high-rise apartments on the Gold Coast?",
@@ -166,9 +143,6 @@ export const areas: Area[] = [
         title: "Waterside living",
         body: "Canal and river homes in Tweed Heads West and Banora Point see a lot of outdoor living and humidity. We pay attention to sliding doors, glass and damp-prone bathrooms.",
       },
-    ],
-    suburbGroups: [
-      { name: "Tweed Heads & surrounds", suburbs: ["Tweed Heads", "Tweed Heads West", "Tweed Heads South", "Banora Point", "Terranora", "Bilambil Heights", "Fingal Head", "Chinderah"] },
     ],
     faqs: [
       {

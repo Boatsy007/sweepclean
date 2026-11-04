@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
 import { siteUrl } from "@/lib/site";
+import { suburbPath, suburbs } from "@/lib/suburbs";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
@@ -14,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...services.map((s) => page(`/services/${s.slug}`, 0.9)),
     page("/areas", 0.7),
     ...areas.map((a) => page(`/areas/${a.slug}`, 0.8)),
+    ...suburbs.map((s) => page(suburbPath(s), 0.7)),
     page("/why-swept", 0.6),
     page("/faq", 0.6),
     page("/contact", 0.6),
