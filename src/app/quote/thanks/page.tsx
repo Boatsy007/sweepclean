@@ -3,8 +3,9 @@ import { Icon } from "@/components/Icon";
 import { SweptMark } from "@/components/SweptMark";
 import { services } from "@/lib/services";
 import { site } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = { title: "Thanks – We've Got Your Request", robots: { index: false, follow: false } };
+export const metadata = pageMeta({ title: "Thanks – We've Got Your Request | Swept Cleaning", description: "Thanks for requesting a quote from Swept Cleaning. Here is what happens next.", path: "/quote/thanks", noindex: true });
 
 type Props = { searchParams: Promise<{ type?: string; service?: string; name?: string }> };
 

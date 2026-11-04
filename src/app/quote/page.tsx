@@ -2,12 +2,13 @@ import { Suspense } from "react";
 import { QuoteForm } from "@/components/QuoteForm";
 import { Icon } from "@/components/Icon";
 import { site } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Get a Free House Cleaning Quote",
+export const metadata = pageMeta({
+  title: "Free House Cleaning Quote | Swept Cleaning",
   description: "Request a free, no-obligation house cleaning quote from Swept. Tell us about your home in about two minutes – Brisbane, Logan, Gold Coast and Tweed Heads.",
-  alternates: { canonical: "/quote" },
-};
+  path: "/quote",
+});
 
 export default function QuotePage() {
   return (

@@ -1,6 +1,11 @@
 import { site } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = { title: "Privacy Policy", description: "How Swept Cleaning collects, uses and protects your personal information.", alternates: { canonical: "/privacy" } };
+export const metadata = pageMeta({
+  title: "Privacy Policy | Swept Cleaning",
+  description: "How Swept Cleaning collects, uses, stores and protects the personal information you share when you request a quote, under the Australian Privacy Principles.",
+  path: "/privacy",
+});
 
 export default function Privacy() {
   return (

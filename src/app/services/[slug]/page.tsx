@@ -12,6 +12,8 @@ import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { ServiceVisual } from "@/components/ServiceVisual";
 import { TrackedLink } from "@/components/TrackedLink";
+import { pageMeta } from "@/lib/seo";
+import { servicePhotos } from "@/lib/photos";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -23,12 +25,7 @@ export const dynamicParams = false;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = getService((await params).slug);
   if (!s) return {};
-  return {
-    title: { absolute: s.metaTitle },
-    description: s.metaDescription,
-    alternates: { canonical: `/services/${s.slug}` },
-    openGraph: { title: s.metaTitle, description: s.metaDescription, url: `/services/${s.slug}` },
-  };
+  return pageMeta({ title: s.metaTitle, description: s.metaDescription, path: `/services/${s.slug}`, image: servicePhotos[s.slug] });
 }
 
 export default async function ServicePage({ params }: Props) {

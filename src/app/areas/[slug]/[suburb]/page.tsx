@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { areaFor, getSuburb, nearby, stateName, suburbPath, suburbs } from "@/lib/suburbs";
+import { areaFor, getSuburb, nearby, stateName, suburbPath, suburbs, suburbsIn } from "@/lib/suburbs";
 import { services } from "@/lib/services";
 import { site, siteUrl } from "@/lib/site";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
@@ -12,6 +12,7 @@ import { Faqs } from "@/components/Faqs";
 import { HeroQuoteForm } from "@/components/HeroQuoteForm";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
+import { pageMeta } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string; suburb: string }> };
 
@@ -25,14 +26,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = getSuburb(slug, suburb);
   if (!s) return {};
   const a = areaFor(s);
-  const title = `House Cleaning ${s.name} ${s.postcode} – Regular & Bond Cleans | Swept`;
-  const description = `House cleaning in ${s.name} ${a.state} ${s.postcode}: weekly, fortnightly or monthly cleans, deep cleans and bond cleaning across ${s.group === s.name ? a.name : s.group}. Free written quote.`;
-  return {
-    title: { absolute: title },
-    description,
-    alternates: { canonical: suburbPath(s) },
-    openGraph: { title, description, url: suburbPath(s) },
-  };
+  return pageMeta({
+    title: `House Cleaning ${s.name} ${s.postcode} | Swept Cleaning`,
+    description: `House cleaning in ${s.name} ${a.state} ${s.postcode}: weekly, fortnightly or monthly cleans, deep cleans and bond cleaning. No lock-in contract. Free written quote.`,
+    path: suburbPath(s),
+  });
 }
 
 export default async function SuburbPage({ params }: Props) {
@@ -66,8 +64,8 @@ export default async function SuburbPage({ params }: Props) {
         : `Yes. In Queensland your entry condition report (Form 1a) is compared with the exit condition report (Form 14a) when you move out. We clean the ${s.name} property room by room against your entry report – send it with your quote request.`,
     },
     {
-      q: `How often should I book a cleaner in ${s.name}?`,
-      a: `Weekly suits busy homes with kids or pets, fortnightly suits most households, and monthly is a regular reset for tidy homes. There's no lock-in contract, so you can change frequency or pause at any time.`,
+      q: `What kinds of homes do you clean in ${s.name}?`,
+      a: `${s.note} Whatever the home, we work from a written room-by-room checklist and tailor it to your priorities, weekly, fortnightly or monthly.`,
     },
     {
       q: `Which council area is ${s.name} in?`,
@@ -147,15 +145,10 @@ export default async function SuburbPage({ params }: Props) {
             ))}
           </dl>
         </div>
-        <div>
-          <h2 className="text-3xl font-extrabold">What we look out for in {a.name} homes</h2>
-          <div className="mt-6 space-y-4">
-            {a.notes.map((n) => (
-              <div key={n.title} className="card p-5">
-                <h3 className="text-lg font-bold">{n.title}</h3>
-                <p className="mt-1.5 leading-relaxed">{n.body}</p>
-              </div>
-            ))}
+        <div className="lg:pt-16">
+          <div className="card p-6">
+            <h2 className="text-xl font-bold">Cleaning across {a.name}</h2>
+            <p className="mt-2 leading-relaxed">{s.name} is one of {suburbsIn(a.slug).length} {a.name} suburbs we clean. For what we look out for in {a.name} homes – from {a.notes.map((n) => n.title.toLowerCase()).slice(0, 2).join(" to ")} – see our <Link href={`/areas/${a.slug}`} className="font-semibold text-violet underline underline-offset-2">{a.name} cleaning guide</Link>.</p>
           </div>
         </div>
       </section>
@@ -168,7 +161,7 @@ export default async function SuburbPage({ params }: Props) {
               <li key={sv.slug} className="card flex flex-col p-6">
                 <Icon name={sv.icon} className="size-8 text-violet" />
                 <h3 className="mt-3 text-lg font-bold">{sv.name} in {s.name}</h3>
-                <p className="mt-2 flex-1 leading-relaxed">{sv.summary}</p>
+                <span className="flex-1" />
                 <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
                   <Link href={`/quote?service=${sv.slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote</Link>
                   <Link href={`/services/${sv.slug}`} className="text-navy underline underline-offset-2">What&apos;s included<span className="sr-only"> in {sv.name.toLowerCase()}</span></Link>

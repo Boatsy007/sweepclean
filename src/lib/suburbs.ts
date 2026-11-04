@@ -196,11 +196,27 @@ export function areaFor(s: Suburb) {
   return areas.find((a) => a.slug === s.area)!;
 }
 
-/** Nearby suburbs: same group first, then others in the same area. */
+/**
+ * Nearby suburbs: the suburbs either side of this one in its group's list (lists are
+ * ordered roughly geographically), wrapping around, then the rest of the area.
+ * The symmetric window means every suburb receives about as many links as it gives.
+ */
 export function nearby(s: Suburb, n = 8) {
-  const same = suburbs.filter((o) => o.area === s.area && o.group === s.group && o.slug !== s.slug);
-  const rest = suburbs.filter((o) => o.area === s.area && o.group !== s.group);
-  return [...same, ...rest].slice(0, n);
+  const group = suburbs.filter((o) => o.area === s.area && o.group === s.group);
+  const i = group.findIndex((o) => o.slug === s.slug);
+  const picked: Suburb[] = [];
+  for (let k = 1; picked.length < Math.min(n, group.length - 1); k++) {
+    for (const j of [i + k, i - k]) {
+      const o = group[((j % group.length) + group.length) % group.length];
+      if (o.slug !== s.slug && !picked.includes(o) && picked.length < n) picked.push(o);
+    }
+  }
+  if (picked.length < n) {
+    const rest = suburbs.filter((o) => o.area === s.area && o.group !== s.group);
+    const start = rest.length ? (i * 3) % rest.length : 0;
+    for (let k = 0; k < rest.length && picked.length < n; k++) picked.push(rest[(start + k) % rest.length]);
+  }
+  return picked;
 }
 
 export const suburbPath = (s: Suburb) => `/areas/${s.area}/${s.slug}`;

@@ -1,0 +1,1 @@
+D = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "audit.json")))  

@@ -22,6 +22,16 @@ export const site = {
 
   /** Hours you answer enquiries (shown on contact surfaces + schema). */
   responseHours: "Monday to Saturday, 7am–6pm (AEST)",
+  /** Same hours in machine-readable form for structured data. */
+  openingHours: { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "07:00", closes: "18:00" },
+  /**
+   * Official profiles, e.g. Google Business Profile, Facebook, Instagram, LinkedIn.
+   * Add each one as it goes live – these feed `sameAs` in structured data, which
+   * helps Google and AI assistants connect the profiles to this site.
+   */
+  profiles: [] as string[],
+  /** Date the site content was last meaningfully updated (used for sitemap lastmod). */
+  contentUpdated: "2026-11-04",
   /** How quickly you reply to a quote request. Only promise what you can keep. */
   quoteResponse: "within one business day",
 

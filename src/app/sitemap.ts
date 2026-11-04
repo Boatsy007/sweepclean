@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
-import { siteUrl } from "@/lib/site";
+import { site, siteUrl } from "@/lib/site";
 import { suburbPath, suburbs } from "@/lib/suburbs";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
-  const now = new Date();
+  const now = new Date(site.contentUpdated);
   const page = (path: string, priority: number) => ({ url: `${base}${path}`, lastModified: now, priority });
   return [
     page("/", 1),

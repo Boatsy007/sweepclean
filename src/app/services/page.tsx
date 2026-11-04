@@ -6,12 +6,13 @@ import { CtaBand } from "@/components/CtaBand";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { ServiceVisual } from "@/components/ServiceVisual";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Home Cleaning Services – Regular, Deep, NDIS & Bond",
-  description: "Explore Swept's residential cleaning services from Brisbane to Tweed Heads: regular home cleaning, detailed deep cleans, NDIS and home care cleaning, and bond cleaning.",
-  alternates: { canonical: "/services" },
-};
+export const metadata = pageMeta({
+  title: "Cleaning Services: Regular, Deep, NDIS & Bond | Swept",
+  description: "Residential cleaning from Brisbane to Tweed Heads: regular home cleaning, detailed deep cleans, NDIS and home care cleaning, and bond cleaning.",
+  path: "/services",
+});
 
 export default function Services() {
   const crumbs = [{ name: "Home", path: "/" }, { name: "Services", path: "/services" }];

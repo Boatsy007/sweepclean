@@ -7,12 +7,14 @@ import { JsonLd } from "@/components/JsonLd";
 import Image from "next/image";
 import { SweptMark } from "@/components/SweptMark";
 import { photos } from "@/lib/photos";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Why Swept – How We Clean & What We Commit To",
-  description: "Swept is a new residential cleaning service from Brisbane to Tweed Heads. Here's how we work, what we commit to on every clean, and what to expect.",
-  alternates: { canonical: "/why-swept" },
-};
+export const metadata = pageMeta({
+  title: "Why Choose Swept Cleaning | Our Commitments",
+  description: "Swept is a new residential cleaning service from Brisbane to Tweed Heads. Here is how we work, what we commit to on every clean, and what to expect.",
+  path: "/why-swept",
+  image: photos.cleaner,
+});
 
 const approach = [
   { icon: "doc", title: "A written plan for your home", body: "Your quote spells out what we'll clean, how long we expect to take and the price. That plan becomes the checklist for every visit." },

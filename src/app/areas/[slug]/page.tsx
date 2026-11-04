@@ -12,6 +12,7 @@ import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { QuickStart } from "@/components/QuickStart";
 import { suburbPath, suburbsIn } from "@/lib/suburbs";
+import { pageMeta } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() {
@@ -24,7 +25,7 @@ const anchor = (s: string) => s.toLowerCase().replace(/&/g, "and").replace(/[^a-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const a = getArea((await params).slug);
   if (!a) return {};
-  return { title: { absolute: a.metaTitle }, description: a.metaDescription, alternates: { canonical: `/areas/${a.slug}` }, openGraph: { title: a.metaTitle, description: a.metaDescription, url: `/areas/${a.slug}` } };
+  return pageMeta({ title: a.metaTitle, description: a.metaDescription, path: `/areas/${a.slug}` });
 }
 
 export default async function AreaPage({ params }: Props) {

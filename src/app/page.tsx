@@ -2,22 +2,22 @@ import Link from "next/link";
 import { services } from "@/lib/services";
 import { generalFaqs } from "@/lib/faqs";
 import { site, telHref } from "@/lib/site";
-import { faqSchema } from "@/lib/schema";
 import { Icon } from "@/components/Icon";
 import { SweptMark } from "@/components/SweptMark";
 import { ServiceVisual } from "@/components/ServiceVisual";
 import { photos } from "@/lib/photos";
 import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
-import { JsonLd } from "@/components/JsonLd";
 import { HeroQuoteForm } from "@/components/HeroQuoteForm";
 import { HeroBackground } from "@/components/HeroBackground";
 import { TrackedLink } from "@/components/TrackedLink";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: { absolute: "House Cleaning Brisbane to Tweed Heads | Swept Cleaning" },
-  alternates: { canonical: "/" },
-};
+export const metadata = pageMeta({
+  title: "House Cleaning Brisbane to Tweed Heads | Swept Cleaning",
+  description: "Weekly, fortnightly and monthly house cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. No lock-in contracts. Get a free written quote online.",
+  path: "/",
+});
 
 const tasks = ["Dusting", "Kitchens", "Bathrooms", "Floors", "Blinds and fans", "Windows and tracks", "Beds", "Laundry and general tidy"];
 
@@ -40,7 +40,6 @@ export default function Home() {
   const homeFaqs = generalFaqs.slice(0, 6);
   return (
     <>
-      <JsonLd data={faqSchema(homeFaqs)} />
 
       {/* HERO – headline + quote form above the fold */}
       <section className="relative isolate overflow-hidden bg-violet text-white">
@@ -49,11 +48,12 @@ export default function Home() {
         <SweptMark tone="white" size={360} className="pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
         <div className="container-x grid items-center gap-10 pb-14 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2 font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em]">
-              <Icon name="sparkle" className="size-4" /> House cleaning · Brisbane to Tweed Heads
-            </p>
-            <h1 className="mt-6 text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
-              A beautifully clean home.{" "}
+            <h1 className="text-[2.5rem] font-extrabold leading-[1.04] !text-white sm:text-6xl lg:text-[3.9rem]">
+              <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2 font-display text-[0.8rem] font-semibold uppercase leading-normal tracking-[0.14em]">
+                <Icon name="sparkle" className="size-4" /> House cleaning · Brisbane to Tweed Heads
+              </span>{" "}
+              <span className="sr-only">– </span>
+              <span className="block">A beautifully clean home.</span>{" "}
               <span className="relative inline-block text-[#e9d8ff]">
                 More time for you.
                 <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3.5 w-full text-[#c9a8ff]"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>

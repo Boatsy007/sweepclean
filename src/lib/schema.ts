@@ -1,6 +1,6 @@
 import { site, siteUrl } from "./site";
 import { areas } from "./areas";
-import type { Faq, Service } from "./services";
+import { services, type Faq, type Service } from "./services";
 
 const id = (frag: string) => `${siteUrl()}/#${frag}`;
 
@@ -22,7 +22,28 @@ export function businessSchema() {
       containedInPlace: { "@type": "State", name: a.state === "QLD" ? "Queensland" : "New South Wales" },
     })),
     knowsLanguage: "en-AU",
+    slogan: "A beautifully clean home. More time for you.",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: site.openingHours.days.map((d) => `https://schema.org/${d}`),
+      opens: site.openingHours.opens,
+      closes: site.openingHours.closes,
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Residential cleaning services",
+      itemListElement: services.map((s) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: s.name, url: `${siteUrl()}/services/${s.slug}` },
+      })),
+    },
+    potentialAction: {
+      "@type": "QuoteAction",
+      target: `${siteUrl()}/quote`,
+      name: "Request a free cleaning quote",
+    },
   };
+  if (site.profiles.length) b.sameAs = site.profiles;
   if (site.phone) b.telephone = site.phone;
   if (site.email) b.email = site.email;
   if (site.legalName) b.legalName = site.legalName;

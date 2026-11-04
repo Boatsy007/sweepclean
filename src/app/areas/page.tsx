@@ -6,12 +6,13 @@ import { CtaBand } from "@/components/CtaBand";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { suburbPath, suburbsIn } from "@/lib/suburbs";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Areas We Clean – Brisbane, Logan, Gold Coast & Tweed Heads",
-  description: "Swept cleans homes from Brisbane to Tweed Heads: Brisbane's northside, southside and inner city, Logan, the Gold Coast and Tweed Heads.",
-  alternates: { canonical: "/areas" },
-};
+export const metadata = pageMeta({
+  title: "Areas We Clean: Brisbane to Tweed Heads | Swept Cleaning",
+  description: "Swept cleans homes in 112 suburbs from Brisbane to Tweed Heads – Brisbane, Logan, the Gold Coast and Tweed Heads. Find your suburb and get a free quote.",
+  path: "/areas",
+});
 
 const icons: Record<string, string> = { brisbane: "city", logan: "home", "gold-coast": "palm", "tweed-heads": "wave" };
 
