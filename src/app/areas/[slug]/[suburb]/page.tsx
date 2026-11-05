@@ -14,8 +14,7 @@ import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { pageMeta } from "@/lib/seo";
 import { AreaGuides } from "@/components/AreaGuides";
-import { Inline } from "@/components/GuideContent";
-import { areaPrices, profiles, profilesFor, servicesFor } from "@/lib/localProfiles";
+import { profiles, profilesFor, servicesFor } from "@/lib/localProfiles";
 
 type Props = { params: Promise<{ slug: string; suburb: string }> };
 
@@ -47,7 +46,6 @@ export default async function SuburbPage({ params }: Props) {
   const keys = profilesFor(s);
   const local = keys.slice(0, 3).map((k) => ({ k, ...profiles[k] }));
   const suits = servicesFor(s, keys).map((x) => ({ ...x, sv: services.find((v) => v.slug === x.slug)! }));
-  const prices = areaPrices[a.slug];
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Areas", path: "/areas" },
@@ -159,15 +157,6 @@ export default async function SuburbPage({ params }: Props) {
             <h2 className="text-xl font-bold">Cleaning across {a.name}</h2>
             <p className="mt-2 leading-relaxed">{s.name} is one of {suburbsIn(a.slug).length} {a.name} suburbs we clean. For what we look out for in {a.name} homes – from {a.notes.map((n) => n.title.toLowerCase()).slice(0, 2).join(" to ")} – see our <Link href={`/areas/${a.slug}`} className="font-semibold text-violet underline underline-offset-2">{a.name} cleaning guide</Link>.</p>
           </div>
-          {prices && (
-            <div className="card mt-5 p-6">
-              <h2 className="flex items-center gap-2 text-xl font-bold"><Icon name="doc" className="size-5 text-violet" />What cleaning costs near {s.name}</h2>
-              <ul className="mt-3 space-y-2.5">
-                {prices.lines.map((l) => <li key={l} className="flex gap-2.5 leading-relaxed"><Icon name="check" className="mt-1 size-4 shrink-0 text-violet" /><span><Inline text={l} /></span></li>)}
-              </ul>
-              <p className="mt-3 text-sm">Prices are a guide from our {a.name} price guides – your written quote is based on your home. Read more: {prices.guides.map((g, i) => <span key={g.href}>{i > 0 && " · "}<Link href={g.href} className="font-semibold text-violet underline underline-offset-2">{g.label}</Link></span>)}.</p>
-            </div>
-          )}
         </div>
       </section>
 
@@ -233,7 +222,7 @@ export default async function SuburbPage({ params }: Props) {
         <Faqs faqs={faqs} />
       </section>
 
-      <AreaGuides area={a.slug} place={s.name} />
+      <AreaGuides area={a.slug} place={s.name} hidePrices />
 
       <section className="container-x" aria-labelledby="near-h">
         <h2 id="near-h" className="text-2xl font-extrabold">We also clean near {s.name}</h2>

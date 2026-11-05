@@ -2,8 +2,11 @@ import Link from "next/link";
 import { guidePath, guidesForArea, readingTime } from "@/lib/guides";
 import { Icon } from "./Icon";
 
-/** Guides tagged for an area – shown on the area page and its suburb pages. Renders nothing if none. */
-export function AreaGuides({ area, place }: { area: string; place: string }) {
+/**
+ * Guides tagged for an area – shown on the area page and its suburb pages. Renders nothing if none.
+ * `hidePrices` (suburb pages) leaves out any guide description that quotes a dollar figure.
+ */
+export function AreaGuides({ area, place, hidePrices = false }: { area: string; place: string; hidePrices?: boolean }) {
   const list = guidesForArea(area);
   if (!list.length) return null;
   return (
@@ -16,7 +19,7 @@ export function AreaGuides({ area, place }: { area: string; place: string }) {
               <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-lavender text-violet"><Icon name="doc" className="size-6" /></span>
               <span className="min-w-0">
                 <span className="block font-display text-lg font-bold leading-snug text-navy group-hover:text-violet">{g.title}</span>
-                <span className="mt-1 block leading-relaxed">{g.description}</span>
+                {!(hidePrices && /\$\d/.test(g.description)) && <span className="mt-1 block leading-relaxed">{g.description}</span>}
                 <span className="mt-3 inline-flex items-center gap-1.5 font-display font-semibold text-violet">
                   Read guide · {readingTime(g)} min <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" />
                 </span>
