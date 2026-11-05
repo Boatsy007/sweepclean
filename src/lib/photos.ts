@@ -5,6 +5,7 @@ import cleaner from "../../public/images/swept-cleaner-benchtop.webp";
 import homeCare from "../../public/images/swept-ndis-home-care.webp";
 import quoteCleaner from "../../public/images/swept-cleaner-quote.webp";
 import regularClean from "../../public/images/swept-regular-clean.webp";
+import ndisSupport from "../../public/images/swept-ndis-support.webp";
 
 export type Photo = { src: StaticImageData; alt: string };
 
@@ -20,6 +21,10 @@ export const photos = {
   cleaner: {
     src: cleaner,
     alt: "Swept Cleaning cleaner in a purple uniform wiping down a stone kitchen benchtop in a bright living area",
+  },
+  ndisSupport: {
+    src: ndisSupport,
+    alt: "Swept Cleaning cleaner in a black Swept polo vacuuming a living room while a smiling older man in a wheelchair looks on",
   },
   regularClean: {
     src: regularClean,
@@ -39,6 +44,6 @@ export const photos = {
 export const servicePhotos: Partial<Record<string, Photo>> = {
   "regular-house-cleaning": photos.regularClean,
   "deep-cleaning": photos.bathroom,
-  "ndis-cleaning": photos.homeCare,
+  "ndis-cleaning": photos.ndisSupport,
   "bond-cleaning": photos.apartment,
 };
