@@ -23,7 +23,7 @@ export const guide: Guide = {
   categories: ["Hiring a cleaner", "Regular cleaning"],
   image: photos.homeCare,
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning", "ndis-cleaning"],
-  related: ["how-much-does-house-cleaning-cost-in-brisbane", "how-much-does-house-cleaning-cost-in-logan", "emergency-cleaning-services-how-quickly-can-you-help"],
+  related: ["how-to-avoid-getting-scammed-by-cleaning-services", "how-much-does-house-cleaning-cost-in-brisbane", "emergency-cleaning-services-how-quickly-can-you-help"],
   sources: [
     { title: "Consumer rights and guarantees", url: "https://www.accc.gov.au/consumers/buying-products-and-services/consumer-rights-and-guarantees", publisher: "ACCC" },
     { title: "ABN Lookup", url: "https://abr.business.gov.au/", publisher: "Australian Business Register" },
@@ -166,6 +166,10 @@ export const guide: Guide = {
         "A price that seems far too low for the size of your home – ask how many hours it includes.",
         "Promises that sound too good, such as a guaranteed full bond refund.",
       ],
+    },
+    {
+      type: "p",
+      text: "For the scams to watch for – fake listings, changed bank details, door-to-door deals and fake reviews – read [how to avoid getting scammed by cleaning services](/cleaning-guides/how-to-avoid-getting-scammed-by-cleaning-services).",
     },
 
     { type: "h2", text: "Your quick checklist" },
