@@ -16,17 +16,18 @@ export function Logo({ tone = "color", size = "md", priority = false }: { tone?:
   const src = tone === "white" ? logoWhite : logoColor;
   const ratio = src.width / src.height;
   if (size === "header") {
-    // Purple logo on the white header: 60px on phones/tablets, 78px on desktop.
-    const wm = Math.round((logoColor.width / logoColor.height) * 60);
-    const wd = Math.round((logoColor.width / logoColor.height) * 78);
+    // Full-colour logo on the white header (proportions kept): 44px tall on phones, 56px on desktop.
+    const r = logoColor.width / logoColor.height;
+    const wm = Math.round(r * 44);
+    const wd = Math.round(r * 56);
     return (
       <>
-        <Image src={logoColor} alt="Swept Cleaning" width={wm} height={60} priority={priority} sizes={`${wm}px`} className="h-[60px] w-auto lg:hidden" />
-        <Image src={logoColor} alt="Swept Cleaning" width={wd} height={78} priority={priority} sizes={`${wd}px`} className="hidden h-[78px] w-auto lg:block" />
+        <Image src={logoColor} alt="Swept Cleaning" width={wm} height={44} priority={priority} sizes={`${wm}px`} className="h-[44px] w-auto max-[389px]:h-[40px] max-[339px]:h-[34px] lg:hidden" />
+        <Image src={logoColor} alt="Swept Cleaning" width={wd} height={56} priority={priority} sizes={`${wd}px`} className="hidden h-[44px] w-auto lg:block xl:h-[56px]" />
       </>
     );
   }
-  const h = size === "lg" ? 88 : 60;
+  const h = size === "lg" ? 64 : 48;
   const w = Math.round(ratio * h);
   return <Image src={src} alt="Swept Cleaning" width={w} height={h} priority={priority} sizes={`${w}px`} style={{ height: h, width: "auto" }} />;
 }

@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand – taken from the Swept logo + mockup */
-  --color-violet: #4c0296;       /* primary deep purple (buttons, bands) – from logo */
-  --color-violet-deep: #3a0174;  /* hover / pressed */
-  --color-violet-ink: #2e0a63;   /* text on lavender */
-  --color-orchid: #c86bf5;       /* gradient start in mark */
-  --color-electric: #8a3ffc;     /* focus ring */
-  --color-navy: #0b1a3a;         /* wordmark + headings */
-  --color-slate: #4a5578;        /* body copy */
-  --color-lavender: #f5effc;     /* soft section bg */
-  --color-lilac: #e6daf6;        /* borders on lavender */
-  --color-cloud: #fcfaff;        /* page bg */
+  /* Brand (2026 identity) – white ~75%, navy ~15%, purple ~10%. Electric blue lives mainly in the logo. */
+  --color-violet: #6500c8;       /* primary purple – buttons, links, icons, accents */
+  --color-violet-deep: #5200a3;  /* hover / pressed */
+  --color-violet-ink: #3d0a80;   /* purple text on lavender chips */
+  --color-orchid: #c86bf5;       /* light end of the logo mark */
+  --color-electric: #0868ff;     /* electric blue – logo, focus ring */
+  --color-navy: #061b49;         /* deep navy – headings, wordmark, strong text */
+  --color-slate: #3f4b6b;        /* body copy (navy-tinted grey) */
+  --color-lavender: #f6f0ff;     /* soft lavender – alternating sections, icon tiles */
+  --color-lilac: #e8dcfb;        /* borders and dividers */
+  --color-cloud: #ffffff;        /* page background */
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-outfit), var(--font-inter), ui-sans-serif, sans-serif;
 
   --radius-card: 1.25rem;
-  --shadow-soft: 0 1px 2px rgb(11 26 58 / 0.04), 0 8px 24px -8px rgb(58 1 116 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(11 26 58 / 0.05), 0 18px 40px -12px rgb(58 1 116 / 0.3);
+  --shadow-soft: 0 1px 2px rgb(6 27 73 / 0.04), 0 8px 24px -10px rgb(101 0 200 / 0.16);
+  --shadow-lift: 0 2px 4px rgb(6 27 73 / 0.05), 0 18px 40px -14px rgb(101 0 200 / 0.26);
 }
 
 html {
@@ -54,11 +54,11 @@ p { text-wrap: pretty; }
 
 @utility container-x { @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8; }
 @utility btn { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-[1.02rem] font-semibold transition-[background-color,box-shadow,transform,color] duration-200 active:scale-[.98]; }
-@utility btn-primary { @apply btn bg-violet text-white shadow-soft hover:bg-violet-deep hover:shadow-lift; }
-@utility btn-outline { @apply btn border-2 border-violet text-violet hover:bg-violet hover:text-white; }
+@utility btn-primary { @apply btn bg-violet font-bold text-white shadow-[0_8px_20px_-8px_rgb(101_0_200/0.55)] hover:bg-violet-deep hover:shadow-[0_12px_26px_-10px_rgb(101_0_200/0.6)]; }
+@utility btn-outline { @apply btn border-2 border-violet bg-white text-violet hover:bg-lavender; }
 @utility btn-white { @apply btn bg-white text-violet shadow-soft hover:bg-lavender; }
 @utility eyebrow { @apply font-display text-[0.8rem] font-bold uppercase tracking-[0.2em] text-violet; }
-@utility band { @apply relative overflow-hidden rounded-[1.75rem] bg-violet text-white; }
+@utility band { @apply relative overflow-hidden rounded-[1.75rem] border border-lilac bg-lavender text-slate; }
 @utility card { @apply rounded-[var(--radius-card)] border border-lilac bg-white shadow-soft; }
 @utility field { @apply block w-full rounded-xl border-2 border-lilac bg-white px-4 py-3 text-navy placeholder:text-slate/60 transition-colors focus:border-violet focus:outline-none; }
 @utility label { @apply mb-1.5 block font-display text-[0.95rem] font-semibold text-navy; }
@@ -68,9 +68,8 @@ p { text-wrap: pretty; }
   .prose-swept h2 { margin-top: 2.5rem; margin-bottom: .75rem; font-size: 1.5rem; font-weight: 700; }
 }
 
-/* Focus ring stays visible on dark purple surfaces */
-.bg-violet :focus-visible, .band :focus-visible, .bg-navy :focus-visible { outline-color: #fff; }
-@media (min-width: 1024px) { header :focus-visible { outline-color: #fff; } }
+/* Focus ring stays visible on dark surfaces */
+.bg-violet :focus-visible, .bg-navy :focus-visible { outline-color: #fff; }
 
 /* ------------------------------------------------------------------
  * Scroll-driven motion (CSS only – no JS, no layout shift).
@@ -228,7 +227,7 @@ html.lenis { scroll-behavior: auto; }
   .prose-guide h2 { margin-top: 2.75rem; font-size: 1.75rem; font-weight: 800; line-height: 1.2; scroll-margin-top: 7rem; }
   .prose-guide h3 { margin-top: 2rem; font-size: 1.3rem; font-weight: 700; line-height: 1.3; }
   .prose-guide h2 + *, .prose-guide h3 + * { margin-top: 0.75rem; }
-  .prose-guide a { color: var(--color-violet); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(76 2 150 / 0.35); }
+  .prose-guide a { color: var(--color-violet); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(101 0 200 / 0.35); }
   .prose-guide a:hover { text-decoration-color: currentColor; }
   .prose-guide strong { color: var(--color-navy); font-weight: 700; }
   .prose-guide ul, .prose-guide ol { padding-left: 1.4rem; }

@@ -37,10 +37,10 @@ export function Header() {
 
   return (
     <header className="header-elevate sticky top-0 z-50 border-b border-lilac bg-white text-violet">
-      <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c9a8ff] to-violet" />
+      <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-violet" />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
-      <div className="container-x flex h-[76px] items-center justify-between gap-3 lg:h-[96px] lg:gap-6">
-        <Link href="/" className="shrink-0"><Logo tone="white" size="header" priority /></Link>
+      <div className="container-x flex h-[76px] items-center justify-between gap-3 lg:h-[96px] lg:gap-4 xl:gap-6">
+        <Link href="/" className="shrink-0"><Logo size="header" priority /></Link>
 
         <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-1">
@@ -118,17 +118,17 @@ export function Header() {
 
       {/* Close as soon as any link is tapped – don't wait for the next page to load
           (and still close when tapping the page you're already on). */}
-      <div id="mobile-nav" data-lenis-prevent hidden={!open} onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); }} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto bg-violet px-4 pb-10 pt-2 text-white lg:hidden">
+      <div id="mobile-nav" data-lenis-prevent hidden={!open} onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); }} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto border-t border-lilac bg-white px-4 pb-10 pt-2 text-navy lg:hidden">
         <nav aria-label="Mobile">
-          <ul className="divide-y divide-white/15 font-display text-xl font-semibold">
+          <ul className="divide-y divide-lilac font-display text-xl font-semibold">
             {nav.filter((n) => !n.children).slice(0, 1).map((n) => (
               <li key={n.href}><Link href={n.href} className="block py-4">{n.label}</Link></li>
             ))}
             <li className="py-4">
-              <span className="text-sm uppercase tracking-[0.2em] text-white/70">Services</span>
+              <span className="text-sm uppercase tracking-[0.2em] text-violet">Services</span>
               <ul className="mt-2 space-y-1 text-lg font-medium">
                 {services.map((s) => (
-                  <li key={s.slug}><Link href={`/services/${s.slug}`} className="flex items-center gap-3 py-2"><Icon name={s.icon} className="size-5 text-white/80" />{s.name}</Link></li>
+                  <li key={s.slug}><Link href={`/services/${s.slug}`} className="flex items-center gap-3 py-2"><Icon name={s.icon} className="size-5 text-violet" />{s.name}</Link></li>
                 ))}
               </ul>
             </li>
@@ -137,7 +137,7 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        <Link href="/quote" onClick={() => track("cta_click", { cta: "mobile_menu_quote" })} className="btn-white mt-6 w-full">Get a free quote <Icon name="arrow" className="size-4" /></Link>
+        <Link href="/quote" onClick={() => track("cta_click", { cta: "mobile_menu_quote" })} className="btn-primary mt-6 w-full">Get a free quote <Icon name="arrow" className="size-4" /></Link>
       </div>
     </header>
   );

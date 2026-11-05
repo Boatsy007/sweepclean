@@ -8,8 +8,8 @@ const SPARKLE = "M11.4 7.4c.3 2.15 1.15 3 3.3 3.3-2.15.3-3 1.15-3.3 3.3-.3-2.15-
 const SPARKLE_SM = "M15.6 13.6c.12.85.45 1.2 1.3 1.3-.85.12-1.18.45-1.3 1.3-.12-.85-.45-1.18-1.3-1.3.85-.1 1.18-.45 1.3-1.3Z";
 
 const tones = {
-  violet: { disc: "#4c0296", inner: "#3a0174", ring: "#ffffff", shield: "#ffffff", spark: "#4c0296" },
-  white: { disc: "#ffffff", inner: "#f5effc", ring: "#4c0296", shield: "#4c0296", spark: "#ffffff" },
+  violet: { disc: "#6500c8", inner: "#5200a3", ring: "#ffffff", shield: "#ffffff", spark: "#6500c8" },
+  white: { disc: "#ffffff", inner: "#f6f0ff", ring: "#6500c8", shield: "#6500c8", spark: "#ffffff" },
 } as const;
 
 /**
@@ -58,21 +58,21 @@ export function PromiseBacked({ className = "" }: { className?: string }) {
 }
 
 /**
- * Feature panel for the violet "Why choose Swept?" band and the Why Swept page:
+ * Feature panel for the "Why choose Swept?" section and the Why Swept page:
  * seal, name, tagline, the promise itself and a link to how it works.
  */
 export function PromisePanel({ className = "" }: { className?: string }) {
   const p = site.promise;
   return (
-    <div className={`relative grid items-center gap-6 rounded-[1.4rem] border border-white/20 bg-white/[0.07] p-6 sm:grid-cols-[auto_1fr] sm:gap-8 sm:p-8 lg:grid-cols-[auto_1fr_auto] ${className}`}>
-      <PromiseSeal tone="white" className="size-28 sm:size-32" />
+    <div className={`relative grid items-center gap-6 rounded-[1.4rem] border border-lilac bg-white p-6 shadow-soft sm:grid-cols-[auto_1fr] sm:gap-8 sm:p-8 lg:grid-cols-[auto_1fr_auto] ${className}`}>
+      <PromiseSeal className="size-28 sm:size-32" />
       <div>
-        <p className="font-display text-[0.75rem] font-bold uppercase tracking-[0.2em] text-white/70">Our promise on every clean</p>
-        <h3 className="mt-1.5 text-2xl font-extrabold !text-white sm:text-[1.9rem]">{p.name}.</h3>
-        <p className="mt-1 font-display text-lg font-semibold text-[#e9d8ff]">{p.tagline}</p>
-        <p className="mt-3 max-w-2xl leading-relaxed text-white/85">{p.body}</p>
+        <p className="font-display text-[0.75rem] font-bold uppercase tracking-[0.2em] text-violet">Our promise on every clean</p>
+        <h3 className="mt-1.5 text-2xl font-extrabold sm:text-[1.9rem]">{p.name}.</h3>
+        <p className="mt-1 font-display text-lg font-semibold text-violet">{p.tagline}</p>
+        <p className="mt-3 max-w-2xl leading-relaxed">{p.body}</p>
       </div>
-      <Link href={p.path} className="btn-white w-full whitespace-nowrap sm:col-span-2 sm:w-auto sm:justify-self-start lg:col-span-1">
+      <Link href={p.path} className="btn-primary w-full whitespace-nowrap sm:col-span-2 sm:w-auto sm:justify-self-start lg:col-span-1">
         How the promise works <Icon name="arrow" className="size-4" />
       </Link>
     </div>

@@ -111,16 +111,15 @@ export default function SweptPromisePage() {
       {/* Homes and businesses */}
       <section className="container-x" aria-labelledby="scope-h">
         <div className="band grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-[1fr_1.3fr] lg:items-center lg:py-12">
-          <SweptMark tone="white" size={260} className="spin-on-scroll pointer-events-none absolute -right-14 -top-16 opacity-15" />
           <div className="relative">
-            <h2 id="scope-h" className="text-3xl font-extrabold !text-white sm:text-[2.3rem]">One standard, home or business</h2>
-            <p className="mt-4 text-lg leading-relaxed text-white/85">{p.name} applies to every service we offer. Whatever we&apos;ve agreed to clean, we stand behind it.</p>
+            <h2 id="scope-h" className="text-3xl font-extrabold sm:text-[2.3rem]">One standard, home or business</h2>
+            <p className="mt-4 text-lg leading-relaxed">{p.name} applies to every service we offer. Whatever we&apos;ve agreed to clean, we stand behind it.</p>
           </div>
           <ul className="relative flex flex-wrap gap-2.5">
             {services.map((s) => (
               <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 font-display font-medium text-white hover:bg-white hover:text-violet">
-                  <Icon name={s.icon} className="size-4" />{s.name}
+                <Link href={`/services/${s.slug}`} className="inline-flex items-center gap-2 rounded-full border border-lilac bg-white px-4 py-2 font-display font-medium text-navy hover:border-violet hover:text-violet">
+                  <Icon name={s.icon} className="size-4 text-violet" />{s.name}
                 </Link>
               </li>
             ))}

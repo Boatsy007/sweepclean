@@ -3,14 +3,12 @@ import { services } from "@/lib/services";
 import { generalFaqs } from "@/lib/faqs";
 import { site, telHref } from "@/lib/site";
 import { Icon } from "@/components/Icon";
-import { SweptMark } from "@/components/SweptMark";
 import { ServiceVisual } from "@/components/ServiceVisual";
 import { photos } from "@/lib/photos";
 import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
 import { HeroQuoteForm } from "@/components/HeroQuoteForm";
-import { HeroBackground } from "@/components/HeroBackground";
-import { PromiseBacked, PromisePanel } from "@/components/SweptPromise";
+import { PromisePanel } from "@/components/SweptPromise";
 import { TrackedLink } from "@/components/TrackedLink";
 import { tasks } from "@/lib/tasks";
 import { pageMeta } from "@/lib/seo";
@@ -43,57 +41,54 @@ export default function Home() {
     <>
 
       {/* HERO – headline + quote form above the fold */}
-      <section className="relative isolate overflow-hidden bg-[#E4D3FC] text-[#390078]">
-        <HeroBackground src={photos.bathroom.src} className="hero-parallax -z-20 object-cover object-[70%_50%]" />
-        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[#E4D3FC] lg:bg-transparent lg:bg-[linear-gradient(90deg,rgb(228_211_252/0.97)_0%,rgb(228_211_252/0.92)_38%,rgb(228_211_252/0.62)_54%,rgb(228_211_252/0.15)_72%,rgb(228_211_252/0)_100%)]" />
-        <SweptMark size={360} className="spin-on-scroll pointer-events-none absolute -left-24 -top-20 -z-10 hidden opacity-[0.07] lg:block" />
-        <div className="container-x grid items-center gap-5 pb-10 pt-4 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
+      <section className="relative isolate overflow-hidden bg-white">
+        {/* Very soft lavender light, top right – the only decoration; the logo carries the personality */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60rem_32rem_at_100%_0%,rgb(246_240_255)_0%,rgb(246_240_255/0.6)_45%,transparent_75%)]" />
+        <div className="container-x grid items-center gap-6 pb-10 pt-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
           <div className="hero-drift min-w-0">
-            <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-[#390078] sm:text-6xl lg:text-[3.9rem]">
-              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[#390078]/25 bg-white/55 px-2.5 py-1 font-display text-[0.62rem] min-[380px]:whitespace-nowrap font-semibold uppercase leading-normal tracking-[0.05em] min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:border-[#390078]/25 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
-                <Icon name="sparkle" className="size-3.5 lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
+            <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-navy sm:text-6xl lg:text-[3.9rem]">
+              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-lilac bg-lavender/70 px-2.5 py-1 font-display text-[0.62rem] font-semibold uppercase leading-normal tracking-[0.05em] text-violet-ink min-[380px]:whitespace-nowrap min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
+                <Icon name="sparkle" className="size-3.5 text-violet lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
               <span className="block">A beautifully clean home.</span>{" "}
               <span className="relative inline-block text-violet">
                 More time for you.
-                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3.5 w-full text-[#a77ff0]"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3 w-[72%] text-violet/70"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
               </span>
             </h1>
-            <p className="intro mt-5 max-w-xl text-[1.05rem] leading-relaxed text-[#390078] [--d:160ms] sm:text-xl lg:mt-7">
+            <p className="intro mt-6 max-w-xl text-[1.05rem] leading-relaxed text-navy [--d:160ms] sm:text-xl lg:mt-8">
               Flexible weekly, fortnightly and monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
             </p>
-            <ul className="intro mt-4 grid gap-2 text-[1rem] font-medium [--d:280ms] lg:hidden">
-              {["No lock-in contracts", "Personalised cleaning checklists", "Free, no-obligation quotes"].map((t) => (
-                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
+            <ul className="intro mt-5 grid gap-2.5 text-[1rem] font-medium text-navy [--d:280ms] sm:text-[1.05rem] lg:mt-7 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-3">
+              {[
+                { icon: "check", text: "No lock-in contracts" },
+                { icon: "doc", text: "Personalised cleaning checklists" },
+                { icon: "sparkle", text: "Free, no-obligation quotes" },
+              ].map((b) => (
+                <li key={b.text} className="flex items-center gap-3">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lavender text-violet"><Icon name={b.icon} className="size-5" strokeWidth={2} /></span>
+                  {b.text}
+                </li>
               ))}
+              <li className="flex items-center gap-3">
+                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lavender text-violet"><Icon name="shieldSparkle" className="size-5" strokeWidth={2} /></span>
+                <Link href={site.promise.path} className="font-display font-semibold text-violet underline decoration-violet/30 underline-offset-4 hover:decoration-violet">Backed by {site.promise.name}</Link>
+              </li>
             </ul>
-            <ul className="intro mt-7 hidden gap-3 text-[1rem] font-medium [--d:280ms] lg:grid lg:grid-cols-2">
-              {["Free, no-obligation quotes", "No lock-in contracts", "The same checklist every visit", `We reply ${site.quoteResponse}`].map((t) => (
-                <li key={t} className="flex items-center gap-2.5"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
-              ))}
-            </ul>
-            <PromiseBacked className="intro mt-3.5 text-[1rem] text-violet [--d:340ms] lg:mt-5" />
-            {/* Mobile: one clear primary action, phone as secondary, services as a text link */}
-            <div className="intro mt-5 lg:hidden [--d:400ms]">
-              <a href="#quote" className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem]">Get my free quote <Icon name="arrow" className="size-[1.1rem] rotate-90" /></a>
-              <div className="mt-3 flex items-center justify-between gap-3">
+            {/* One clear primary action, phone as secondary, services as a text link */}
+            <div className="intro mt-7 [--d:400ms] lg:mt-9 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
+              <a href="#quote" className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem] lg:w-auto lg:!px-9">Get my free quote <Icon name="arrow" className="size-[1.1rem]" /></a>
+              <div className="mt-3 flex items-center justify-between gap-3 lg:mt-0 lg:justify-start lg:gap-6">
                 {site.phone && (
-                  <a href={telHref(site.phone)} className="btn !min-h-12 whitespace-nowrap border-2 border-violet !px-4 text-[0.98rem] text-violet hover:bg-violet hover:text-white">
+                  <a href={telHref(site.phone)} className="btn-outline !min-h-12 whitespace-nowrap !px-5 text-[0.98rem]">
                     <Icon name="phone" className="size-[1.1rem]" />{site.phone}
                   </a>
                 )}
-                <Link href="/services" className="inline-flex items-center gap-1 whitespace-nowrap font-display text-[0.98rem] font-semibold text-[#390078] underline decoration-[#390078]/40 underline-offset-4 hover:decoration-[#390078]">
+                <Link href="/services" className="inline-flex items-center gap-1 whitespace-nowrap font-display text-[0.98rem] font-semibold text-violet underline decoration-violet/40 underline-offset-4 hover:decoration-violet">
                   Explore services <Icon name="arrow" className="size-4" />
                 </Link>
               </div>
-            </div>
-            {/* Desktop (unchanged) */}
-            <div className="intro mt-8 hidden flex-wrap gap-3 [--d:400ms] lg:flex">
-              {site.phone && (
-                <a href={telHref(site.phone)} className="btn-primary"><Icon name="phone" className="size-5" />{site.phone}</a>
-              )}
-              <Link href="/services" className="btn border-2 border-violet text-violet hover:bg-violet hover:text-white">Explore our services</Link>
             </div>
           </div>
 
@@ -150,18 +145,17 @@ export default function Home() {
       {/* YOUR CLEAN, YOUR WAY */}
       <section className="container-x" aria-labelledby="way-h">
         <div className="band grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-[0.75fr_1.65fr] lg:items-center lg:py-12">
-          <SweptMark tone="white" size={260} className="spin-on-scroll pointer-events-none absolute -bottom-16 -right-12 opacity-15" />
-          <div className="relative lg:border-r lg:border-white/25 lg:pr-10">
-            <h2 id="way-h" className="text-3xl font-extrabold !text-white sm:text-[2.5rem]">Your clean, your way</h2>
-            <p className="mt-3 text-lg text-white/90">A flexible, customised clean that covers the areas that matter most to you.</p>
+          <div className="relative lg:border-r lg:border-lilac lg:pr-10">
+            <h2 id="way-h" className="text-3xl font-extrabold !text-navy sm:text-[2.5rem]">Your clean, your way</h2>
+            <p className="mt-3 text-lg">A flexible, customised clean that covers the areas that matter most to you.</p>
           </div>
           <div className="relative">
             <ul className="grid grid-cols-2 gap-x-5 gap-y-3 sm:gap-x-8 lg:grid-cols-3">
               {tasks.map((t) => (
-                <li key={t.name} className="flex items-center gap-2.5 text-[0.98rem] font-medium sm:text-[1.05rem]"><Icon name="checkCircle" className="size-5 shrink-0 sm:size-6" />{t.name}</li>
+                <li key={t.name} className="flex items-center gap-2.5 text-[0.98rem] font-medium text-navy sm:text-[1.05rem]"><Icon name="checkCircle" className="size-5 shrink-0 text-violet sm:size-6" />{t.name}</li>
               ))}
             </ul>
-            <p className="mt-5 italic text-white/85">Customise the tasks to your home and schedule.</p>
+            <p className="mt-5 italic">Customise the tasks to your home and schedule.</p>
           </div>
         </div>
       </section>
@@ -214,22 +208,21 @@ export default function Home() {
       {/* WHY SWEPT */}
       <section className="container-x pt-16 sm:pt-20" aria-labelledby="why-h">
         <div className="band grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-[1fr_1.6fr] lg:items-center lg:py-12">
-          <SweptMark tone="white" size={260} className="spin-on-scroll pointer-events-none absolute -right-14 -top-16 opacity-15" />
-          <div className="relative lg:border-r lg:border-white/25 lg:pr-10">
-            <h2 id="why-h" className="text-3xl font-extrabold !text-white sm:text-[2.5rem]">Why choose Swept?</h2>
-            <Link href="/why-swept" className="mt-4 inline-flex items-center gap-1.5 font-display font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">How we work <Icon name="arrow" className="size-4" /></Link>
+          <div className="relative lg:border-r lg:border-lilac lg:pr-10">
+            <h2 id="why-h" className="text-3xl font-extrabold !text-navy sm:text-[2.5rem]">Why choose Swept?</h2>
+            <Link href="/why-swept" className="mt-4 inline-flex items-center gap-1.5 font-display font-semibold text-violet underline decoration-violet/40 underline-offset-4 hover:decoration-violet">How we work <Icon name="arrow" className="size-4" /></Link>
           </div>
           <ul className="relative space-y-4">
             {site.commitments.map((c) => (
               <li key={c.title} className="flex gap-3">
-                <Icon name="checkCircle" className="mt-0.5 size-6 shrink-0" />
-                <span><strong className="font-display text-lg font-semibold text-white">{c.title}.</strong> <span className="text-white/85">{c.body}</span></span>
+                <Icon name="checkCircle" className="mt-0.5 size-6 shrink-0 text-violet" />
+                <span><strong className="font-display text-lg font-semibold text-navy">{c.title}.</strong> <span>{c.body}</span></span>
               </li>
             ))}
             {(site.insured || site.policeChecked) && (
               <li className="flex gap-3">
-                <Icon name="shield" className="mt-0.5 size-6 shrink-0" />
-                <span><strong className="font-display text-lg font-semibold text-white">{site.insured && site.policeChecked ? "Insured and police-checked." : site.insured ? "Fully insured." : "Police-checked cleaners."}</strong> <span className="text-white/85">{[site.insured && "We hold current public liability insurance", site.policeChecked && "every cleaner holds a current national police check"].filter(Boolean).join(", and ")}.</span></span>
+                <Icon name="shield" className="mt-0.5 size-6 shrink-0 text-violet" />
+                <span><strong className="font-display text-lg font-semibold text-navy">{site.insured && site.policeChecked ? "Insured and police-checked." : site.insured ? "Fully insured." : "Police-checked cleaners."}</strong> <span>{[site.insured && "We hold current public liability insurance", site.policeChecked && "every cleaner holds a current national police check"].filter(Boolean).join(", and ")}.</span></span>
               </li>
             )}
           </ul>

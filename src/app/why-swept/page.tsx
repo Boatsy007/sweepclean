@@ -44,17 +44,16 @@ export default function WhySwept() {
 
       <section className="container-x" aria-labelledby="commit-h">
         <div className="band px-6 py-10 sm:px-10 lg:py-12">
-          <SweptMark tone="white" size={280} className="spin-on-scroll pointer-events-none absolute -bottom-20 -right-16 opacity-15" />
-          <h2 id="commit-h" className="relative text-3xl font-extrabold !text-white">Our commitments on every clean</h2>
+          <h2 id="commit-h" className="relative text-3xl font-extrabold">Our commitments on every clean</h2>
           <ul className="relative mt-8 grid gap-6 md:grid-cols-2">
             {site.commitments.map((c) => (
               <li key={c.title} className="flex gap-3">
-                <Icon name="checkCircle" className="mt-0.5 size-7 shrink-0" />
-                <span><strong className="block font-display text-xl font-semibold text-white">{c.title}</strong><span className="mt-1 block text-white/85">{c.body}</span></span>
+                <Icon name="checkCircle" className="mt-0.5 size-7 shrink-0 text-violet" />
+                <span><strong className="block font-display text-xl font-semibold text-navy">{c.title}</strong><span className="mt-1 block">{c.body}</span></span>
               </li>
             ))}
-            {site.insured && <li className="flex gap-3"><Icon name="shield" className="mt-0.5 size-7 shrink-0" /><span><strong className="block font-display text-xl font-semibold text-white">Fully insured</strong><span className="mt-1 block text-white/85">We hold current public liability insurance.</span></span></li>}
-            {site.policeChecked && <li className="flex gap-3"><Icon name="shield" className="mt-0.5 size-7 shrink-0" /><span><strong className="block font-display text-xl font-semibold text-white">Police-checked cleaners</strong><span className="mt-1 block text-white/85">Every cleaner holds a current national police check.</span></span></li>}
+            {site.insured && <li className="flex gap-3"><Icon name="shield" className="mt-0.5 size-7 shrink-0 text-violet" /><span><strong className="block font-display text-xl font-semibold text-navy">Fully insured</strong><span className="mt-1 block">We hold current public liability insurance.</span></span></li>}
+            {site.policeChecked && <li className="flex gap-3"><Icon name="shield" className="mt-0.5 size-7 shrink-0 text-violet" /><span><strong className="block font-display text-xl font-semibold text-navy">Police-checked cleaners</strong><span className="mt-1 block">Every cleaner holds a current national police check.</span></span></li>}
           </ul>
           <PromisePanel className="mt-10" />
         </div>

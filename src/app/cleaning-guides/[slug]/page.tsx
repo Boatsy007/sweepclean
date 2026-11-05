@@ -166,9 +166,9 @@ export default async function GuidePage({ params }: Props) {
               </nav>
             )}
             <div className="band p-6">
-              <p className="font-display text-lg font-bold">Ready for a beautifully clean home?</p>
-              <p className="mt-2 text-sm text-white/85">Get a clear, written price for your home.</p>
-              <TrackedLink cta={`guide_sidebar_${g.slug}`} href="/quote" className="btn-white mt-4 w-full">Get My Free Quote</TrackedLink>
+              <p className="font-display text-lg font-bold text-navy">Ready for a beautifully clean home?</p>
+              <p className="mt-2 text-sm">Get a clear, written price for your home.</p>
+              <TrackedLink cta={`guide_sidebar_${g.slug}`} href="/quote" className="btn-primary mt-4 w-full">Get My Free Quote</TrackedLink>
             </div>
           </div>
         </aside>
