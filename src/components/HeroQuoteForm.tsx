@@ -81,8 +81,8 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
       </div>
 
       {/* Mobile: a real person front and centre, right where people enquire */}
-      <div className="relative -mx-5 -mt-5 mb-4 aspect-[16/7] overflow-hidden lg:hidden">
-        <Image src={photos.cleaner.src} alt={photos.cleaner.alt} fill sizes="100vw" quality={70} placeholder="blur" className="object-cover object-[50%_14%]" />
+      <div className="relative -mx-5 -mt-5 mb-4 aspect-[16/10] overflow-hidden lg:hidden">
+        <Image src={photos.quoteCleaner.src} alt={photos.quoteCleaner.alt} fill sizes="(min-width: 640px) 600px, 100vw" quality={70} placeholder="blur" className="object-cover object-[50%_20%]" />
       </div>
       <h2 id="hq-title" className="text-center text-[1.3rem] font-extrabold uppercase tracking-wide sm:text-[1.65rem]">{title}</h2>
       <p className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-center text-sm">

@@ -3,6 +3,7 @@ import bathroom from "../../public/images/bathroom-vanity.webp";
 import apartment from "../../public/images/empty-apartment.webp";
 import cleaner from "../../public/images/swept-cleaner-benchtop.webp";
 import homeCare from "../../public/images/swept-ndis-home-care.webp";
+import quoteCleaner from "../../public/images/swept-cleaner-quote.webp";
 
 export type Photo = { src: StaticImageData; alt: string };
 
@@ -18,6 +19,10 @@ export const photos = {
   cleaner: {
     src: cleaner,
     alt: "Swept Cleaning cleaner in a purple uniform wiping down a stone kitchen benchtop in a bright living area",
+  },
+  quoteCleaner: {
+    src: quoteCleaner,
+    alt: "Smiling Swept Cleaning cleaner in a black Swept polo, holding a caddy of cleaning products in a bright living room",
   },
   homeCare: {
     src: homeCare,
