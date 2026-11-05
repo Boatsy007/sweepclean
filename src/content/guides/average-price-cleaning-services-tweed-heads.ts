@@ -18,15 +18,21 @@ import { photos } from "@/lib/photos";
 export const guide: Guide = {
   slug: "average-price-cleaning-services-tweed-heads",
   title: "What's the Average Price for Cleaning Services in Tweed Heads?",
-  metaTitle: "Average Cleaning Prices Tweed Heads (2026) | Swept",
+  metaTitle: "Average Cleaning Prices Tweed Heads (2026) | Swept Cleaning",
   description:
-    "Average cleaning prices in Tweed Heads in 2026 – house, bond, Airbnb and carpet cleaning – plus NSW bond tips and what a good cleaning company charges.",
+    "Average cleaning prices in Tweed Heads for 2026 – house, deep, Airbnb and carpet cleaning – and what a good-quality cleaning company charges an hour.",
   published: "2026-11-04",
-  categories: ["Pricing", "Bond cleaning", "Airbnb hosting"],
+  categories: ["Pricing", "Airbnb hosting"],
   image: photos.apartment,
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning", "airbnb-cleaning", "carpet-cleaning"],
   areas: ["tweed-heads"],
   related: ["bond-cleaning-cost-tweed-heads", "average-price-cleaning-services-gold-coast", "how-much-does-house-cleaning-cost-in-brisbane"],
+  sources: [
+    { title: "House cleaning in Tweed Heads", url: "https://www.maid2match.com.au/cleaners-tweed-heads/", publisher: "Maid2Match" },
+    { title: "House cleaning in Tweed Heads", url: "https://www.airtasker.com/au/services/house-cleaning/tweed-heads-nsw/", publisher: "Airtasker" },
+    { title: "End of lease cleaning in Tweed Heads", url: "https://www.airtasker.com/au/services/end-of-lease-cleaning/tweed-heads-nsw/", publisher: "Airtasker" },
+    { title: "Bond cleaning Tweed Heads", url: "https://thequoteguys.com.au/bond-cleaning/tweed-heads-nsw", publisher: "The Quote Guys" },
+  ],
   body: [
     {
       type: "p",
@@ -48,7 +54,7 @@ export const guide: Guide = {
       items: [
         "**Regular house cleaning:** roughly $33–$66 an hour. Good-quality companies: $65–$70 an hour.",
         "**Regular clean per visit:** roughly $70–$220, depending on the home. Marketplace jobs for a full house clean commonly land around $150–$375, with a median near $210.",
-        "**Bond (end-of-lease) clean:** most cost around $280–$700 for a standard home, and about $280–$380 for a two-bedroom apartment.",
+        "**Bond (end-of-lease) clean:** a fixed price by home size, under NSW rules – see our [Tweed Heads bond cleaning cost guide](/cleaning-guides/bond-cleaning-cost-tweed-heads).",
         "**Airbnb and holiday rental turnover:** typically similar to the neighbouring Gold Coast, where most turnovers cost $80–$240 per clean.",
         "**Carpet steam cleaning:** typically similar to the Gold Coast, at about $29–$59 per room plus a minimum call-out charge.",
       ],
@@ -72,21 +78,7 @@ export const guide: Guide = {
     { type: "h2", text: "Bond cleaning prices in Tweed Heads" },
     {
       type: "p",
-      text: "Bond cleans are usually quoted as a fixed price. In Tweed Heads, most cost around **$280 to $700** for a standard home, with a two-bedroom apartment typically around $280 to $380. Marketplace listings put the median bond clean near $300, with most jobs between about $212 and $430 – though very cheap bond cleans often leave out the details an agent checks at the final inspection.",
-    },
-    { type: "h3", text: "Tweed is in NSW – here's what that means for your bond" },
-    {
-      type: "ul",
-      items: [
-        "**You must leave the property reasonably clean.** In NSW, that's judged against the **ingoing condition report** you signed at the start of your lease, allowing for fair wear and tear – not Queensland's RTA Form 1a and Form 14a.",
-        "**Your bond is held by NSW Fair Trading**, and claims are made through Rental Bonds Online. If you disagree with a claim, it can go to the NSW Civil and Administrative Tribunal (NCAT).",
-        "**Check your lease for carpet cleaning.** Some leases ask for carpets to be professionally cleaned when you move out – if yours does, add [carpet steam cleaning](/services/carpet-cleaning) to your bond clean.",
-        "**Keep evidence.** Take dated photos of every room after the clean and keep your cleaning invoice.",
-      ],
-    },
-    {
-      type: "p",
-      text: "A good [bond clean](/services/bond-cleaning) is done room by room against your condition report. Send it with your quote request so nothing is missed.",
+      text: "Bond cleans are usually a fixed price, and because Tweed Heads is in NSW, the bond process is different from the Gold Coast – your bond is held by NSW Fair Trading and disputes go to NCAT. Our [Tweed Heads bond cleaning cost guide](/cleaning-guides/bond-cleaning-cost-tweed-heads) covers 2026 prices, NSW carpet rules and how to protect your bond.",
     },
 
     { type: "h2", text: "Airbnb and holiday rental cleaning prices" },
@@ -168,14 +160,6 @@ export const guide: Guide = {
     {
       q: "What is the average cost of a house cleaner in Tweed Heads?",
       a: "Published guides put house cleaning in Tweed Heads at roughly $33 to $66 an hour, with most regular cleans costing $70 to $220 a visit. A good-quality cleaning company typically charges $65 to $70 an hour.",
-    },
-    {
-      q: "How much is a bond clean in Tweed Heads?",
-      a: "Most bond cleans in Tweed Heads cost around $280 to $700 for a standard home, and about $280 to $380 for a two-bedroom apartment. Carpets and the condition of the property can add to the price.",
-    },
-    {
-      q: "Do NSW bond rules apply in Tweed Heads?",
-      a: "Yes. Tweed Heads is in NSW, so you need to leave the property reasonably clean compared with your ingoing condition report, allowing for fair wear and tear. Your bond is held by NSW Fair Trading, and disputes can go to NCAT.",
     },
     {
       q: "Is cleaning cheaper in Tweed Heads than on the Gold Coast?",

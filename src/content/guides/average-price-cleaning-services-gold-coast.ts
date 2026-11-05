@@ -15,15 +15,21 @@ import { photos } from "@/lib/photos";
 export const guide: Guide = {
   slug: "average-price-cleaning-services-gold-coast",
   title: "What's the Average Price for Cleaning Services on the Gold Coast?",
-  metaTitle: "Average Cleaning Prices Gold Coast (2026) | Swept",
+  metaTitle: "Average Cleaning Prices Gold Coast (2026) | Swept Cleaning",
   description:
     "Average cleaning prices on the Gold Coast in 2026 – house, deep, bond, Airbnb and carpet cleaning – plus what a good-quality cleaning company charges.",
   published: "2026-11-04",
-  categories: ["Pricing", "Bond cleaning", "Airbnb hosting"],
+  categories: ["Pricing", "Airbnb hosting"],
   image: photos.bathroom,
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning", "airbnb-cleaning", "carpet-cleaning"],
   areas: ["gold-coast"],
   related: ["bond-cleaning-cost-gold-coast", "how-much-does-house-cleaning-cost-in-brisbane", "average-price-cleaning-services-tweed-heads"],
+  sources: [
+    { title: "House cleaning on the Gold Coast", url: "https://www.maid2match.com.au/cleaners-gold-coast/", publisher: "Maid2Match" },
+    { title: "House cleaning cost Gold Coast 2026", url: "https://whatsthedamage.com.au/house-cleaning-cost-gold-coast/", publisher: "What's the Damage" },
+    { title: "Cleaning services cost Gold Coast QLD 2026", url: "https://www.thequoteyard.com.au/services/cleaning-services-cost-gold-coast-qld", publisher: "The Quote Yard" },
+    { title: "Bond cleaning Gold Coast prices (2026)", url: "https://clean4you.com.au/how-much-does-bond-cleaning-cost-in-gold-coast/", publisher: "Clean4You" },
+  ],
   body: [
     {
       type: "p",
@@ -46,7 +52,7 @@ export const guide: Guide = {
         "**Regular house cleaning:** around $54 an hour on average ($34–$78). Good-quality companies: $65–$70 an hour.",
         "**Regular clean, three-bedroom home:** roughly $140–$255 per visit.",
         "**Deep clean, three-bedroom home:** roughly $360–$560.",
-        "**Bond (end-of-lease) clean:** about $215–$370 for one bedroom, $245–$490 for two, $345–$685 for three and $490–$835 for four.",
+        "**Bond (end-of-lease) clean:** a fixed price by home size – see our [Gold Coast bond cleaning cost guide](/cleaning-guides/bond-cleaning-cost-gold-coast).",
         "**Airbnb and holiday rental turnover:** most turnovers cost $80–$240 per clean, with linen and consumables often $20–$60 extra.",
         "**Carpet steam cleaning:** about $29–$59 per room, usually with a minimum call-out charge.",
       ],
@@ -76,25 +82,7 @@ export const guide: Guide = {
     { type: "h2", text: "Bond cleaning prices on the Gold Coast" },
     {
       type: "p",
-      text: "With a large rental market, bond cleans are one of the most-booked cleaning services on the Coast. They're usually priced as a fixed amount rather than by the hour:",
-    },
-    {
-      type: "ul",
-      items: [
-        "**One bedroom:** about $215–$370",
-        "**Two bedrooms:** about $245–$490 (a two-bedroom apartment including carpets often lands around $320–$480)",
-        "**Three bedrooms:** about $345–$685",
-        "**Four bedrooms:** about $490–$835",
-      ],
-    },
-    {
-      type: "p",
-      text: "Carpet steam cleaning, heavy oven grease and the condition of the property can all add to the price, so check exactly what each quote includes. Be wary of rock-bottom bond-clean prices – an incomplete clean can cost you far more at the final inspection. A good [bond clean](/services/bond-cleaning) is done against your entry condition report, room by room.",
-    },
-    {
-      type: "tip",
-      title: "Book early at the end of the month",
-      text: "End-of-month vacate dates are the busiest time for bond cleans on the Gold Coast. Request your quote as soon as you know your moving date.",
+      text: "Bond cleans are priced differently from regular cleans – usually as a fixed amount based on the size of the home, its condition and whether carpets are included. We cover them in detail, with 2026 prices by home size and Queensland's RTA bond process, in our [Gold Coast bond cleaning cost guide](/cleaning-guides/bond-cleaning-cost-gold-coast).",
     },
 
     { type: "h2", text: "Airbnb and holiday rental cleaning prices" },
@@ -183,10 +171,6 @@ export const guide: Guide = {
     {
       q: "How much is a regular clean for a three-bedroom house on the Gold Coast?",
       a: "Most households pay roughly $140 to $255 per visit for a three-bedroom home, depending on its size, condition and how often it's cleaned. At $65 to $70 an hour, a typical three-hour clean costs about $195 to $210.",
-    },
-    {
-      q: "How much does a bond clean cost on the Gold Coast?",
-      a: "Bond cleans are usually a fixed price: about $215–$370 for one bedroom, $245–$490 for two, $345–$685 for three and $490–$835 for four. Carpets, heavy oven grease and the condition of the property can add to the price.",
     },
     {
       q: "How much does Airbnb cleaning cost on the Gold Coast?",

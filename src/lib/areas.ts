@@ -19,7 +19,7 @@ export const areas: Area[] = [
     slug: "brisbane",
     name: "Brisbane",
     state: "QLD",
-    metaTitle: "House Cleaning Brisbane: North, South & Inner City | Swept",
+    metaTitle: "House Cleaning Brisbane: North & Southside | Swept Cleaning",
     metaDescription:
       "Regular, deep and bond cleaning across Brisbane's northside, southside, inner city, east and west. Weekly, fortnightly or monthly. Get a free quote.",
     h1: "House cleaning across Brisbane",
@@ -54,7 +54,7 @@ export const areas: Area[] = [
     slug: "logan",
     name: "Logan",
     state: "QLD",
-    metaTitle: "House Cleaning Logan: Springwood to Yarrabilba | Swept",
+    metaTitle: "House Cleaning Logan: Regular & Bond Cleans | Swept Cleaning",
     metaDescription:
       "Home cleaning across Logan, from Springwood and Shailer Park to Yarrabilba and Flagstone. Regular, deep, NDIS and bond cleaning. Free quote online.",
     h1: "House cleaning across Logan",
@@ -89,7 +89,7 @@ export const areas: Area[] = [
     slug: "gold-coast",
     name: "Gold Coast",
     state: "QLD",
-    metaTitle: "House Cleaning Gold Coast: Regular & Bond Cleans | Swept",
+    metaTitle: "House Cleaning Gold Coast: Regular & Bond | Swept Cleaning",
     metaDescription:
       "Home cleaning across the Gold Coast, from Coomera to Burleigh, Robina and Coolangatta. Weekly, fortnightly or monthly cleans and bond cleaning. Free quote.",
     h1: "House cleaning across the Gold Coast",
@@ -124,7 +124,7 @@ export const areas: Area[] = [
     slug: "tweed-heads",
     name: "Tweed Heads",
     state: "NSW",
-    metaTitle: "House Cleaning Tweed Heads & Banora Point | Swept",
+    metaTitle: "House Cleaning Tweed Heads & Banora Point | Swept Cleaning",
     metaDescription:
       "Home cleaning in Tweed Heads, Tweed Heads South, Banora Point and Terranora. Regular, deep, NDIS and end-of-lease cleaning over the border. Free quote.",
     h1: "House cleaning in Tweed Heads and surrounds",

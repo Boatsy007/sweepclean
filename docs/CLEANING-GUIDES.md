@@ -24,7 +24,7 @@ import { photos } from "@/lib/photos"; // optional – reuse site photos, or imp
 export const guide: Guide = {
   slug: "how-often-should-you-clean-your-home",
   title: "How Often Should You Clean Your Home?",
-  // metaTitle: "Optional shorter <title> | Swept Cleaning",   // keep ≤ 60 characters
+  // metaTitle: "Optional shorter <title> | Swept Cleaning",   // keep ≤ 60 characters, always end "| Swept Cleaning"
   description: "One or two sentences (110–160 characters). Shown under the title, on the card and as the meta description.",
   published: "2026-11-20",
   // updated: "2026-12-05",
@@ -33,6 +33,9 @@ export const guide: Guide = {
   services: ["regular-house-cleaning"], // service slugs to link at the end
   // areas: ["brisbane"],               // feature on that area page + all its suburb pages
   // related: ["another-guide-slug"],    // otherwise picked by shared category
+  sources: [                              // every fact or price that came from somewhere else
+    { title: "Rental bonds fact sheet", url: "https://www.rta.qld.gov.au/…", publisher: "Residential Tenancies Authority (QLD)" },
+  ],
   body: [
     { type: "p", text: "Opening paragraph. Links look like [this](/services/regular-house-cleaning); **bold** works too." },
     { type: "h2", text: "A main section" },          // h2s build the 'In this guide' contents list
@@ -75,6 +78,8 @@ Commit and push. Vercel deploys automatically.
 
 - **Accurate and original.** Don't invent statistics, prices, reviews, guarantees or credentials. Don't copy text from other sites, including Bloom's.
 - **Prices and rates:** only when the owner asks for them, backed by current sources (e.g. the Fair Work award and published market guides). Review them every July after the Annual Wage Review. No promotions.
+- **Show your sources.** List every external source in `sources` – it renders as a "Sources" list under the article (government and tenant-advocacy links are followed, commercial sites are `nofollow`) and as `citation` in the structured data. Every guide carries the "Swept Cleaning team" byline automatically.
+- **Don't duplicate another guide's topic.** If a price guide touches on bond cleaning, keep it to a short summary and link to the area's bond cleaning guide (and the reverse), so each question has one clear page.
 - **Australian English.** For bond cleaning, use QLD (RTA Form 1a/14a) and NSW (Tweed) specifics where relevant.
 - **Link internally.** Link to at least one relevant service page and, where natural, an area page or another guide.
 - **One topic per guide,** so guides don't compete with each other or with service pages for the same search. Never create one guide per suburb. Instead, tag a city-wide guide with `areas` and link to a few relevant suburb pages from the text.

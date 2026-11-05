@@ -14,7 +14,7 @@ import { PromiseSeal } from "@/components/SweptPromise";
 const p = site.promise;
 
 export const metadata = pageMeta({
-  title: "The Swept Promise: Our Cleaning Guarantee | Swept",
+  title: "The Swept Promise: Our Cleaning Guarantee | Swept Cleaning",
   description: "If an agreed cleaning task isn't done right, tell us by the end of the next business day and we'll come back and fix it at no extra charge.",
   path: p.path,
 });

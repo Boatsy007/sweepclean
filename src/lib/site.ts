@@ -17,7 +17,7 @@ export const site = {
 
   /** Contact details. Leave null until real – the UI hides anything that is null. */
   phone: "0490 216 363" as string | null, // display format
-  email: null as string | null, // e.g. "hello@swept.com.au"
+  email: "hey@swept.com.au" as string | null,
   abn: null as string | null,
 
   /** Hours you answer enquiries (shown on contact surfaces + schema). */

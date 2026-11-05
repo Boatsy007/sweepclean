@@ -7,7 +7,7 @@ Next.js 16 (App Router) + Tailwind 4 site for Swept Cleaning (residential cleani
 Follow `docs/CLEANING-GUIDES.md` exactly:
 
 1. Write original, accurate content in Australian English. No invented stats, reviews or guarantees, and nothing copied from other sites. Include prices or rates only when the owner asks, sourced and dated. No promotions.
-2. Create `src/content/guides/<slug>.ts` exporting `const guide: Guide`. Set a `description` of 110–160 characters, and a `metaTitle` if `${title} | Swept Cleaning` would be over 60 characters.
+2. Create `src/content/guides/<slug>.ts` exporting `const guide: Guide`. Set a `description` of 110–160 characters, a `metaTitle` ending "| Swept Cleaning" if `${title} | Swept Cleaning` would be over 60 characters, and a `sources` list for every fact or price taken from elsewhere.
 3. Register it in `src/content/guides/index.ts`.
 4. Add internal links to the relevant service pages (`services: [...]` plus inline `[text](/services/...)` links), and to other guides or area pages where natural. For a location-specific guide, set `areas: [...]` so it appears on that area's suburb pages. Never make per-suburb copies.
 5. Don't create custom page layouts. The template at `src/app/cleaning-guides/[slug]/page.tsx` handles every guide.

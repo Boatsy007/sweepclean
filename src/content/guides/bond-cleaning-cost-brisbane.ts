@@ -20,7 +20,7 @@ const b = (slug: string, name: string) => `[${name}](/areas/brisbane/${slug})`;
 export const guide: Guide = {
   slug: "bond-cleaning-cost-brisbane",
   title: "Bond Cleaning Cost in Brisbane: What Should You Expect to Pay?",
-  metaTitle: "Bond Cleaning Cost Brisbane (2026 Prices) | Swept",
+  metaTitle: "Bond Cleaning Cost Brisbane (2026 Prices) | Swept Cleaning",
   description:
     "Brisbane bond cleaning prices for 2026 by home size, what a quality end-of-lease clean includes, and how Queensland's RTA bond process works when you move out.",
   published: "2026-11-04",
@@ -29,6 +29,19 @@ export const guide: Guide = {
   services: ["bond-cleaning", "carpet-cleaning"],
   areas: ["brisbane"],
   related: ["bond-cleaning-cost-logan", "bond-cleaning-cost-gold-coast", "how-much-does-house-cleaning-cost-in-brisbane"],
+  sources: [
+    { title: "How much does a bond clean cost in Brisbane? (2026 guide)", url: "https://www.absolutedomestics.com.au/blog/how-much-does-a-bond-clean-cost-in-brisbane/", publisher: "Absolute Domestics" },
+    { title: "Bond cleaning cost Brisbane 2026", url: "https://sparkleclean.au/blog/how-much-does-bond-cleaning-cost-in-brisbane", publisher: "SparkleClean" },
+    { title: "How much does bond cleaning cost in Brisbane? (2026 price guide)", url: "https://proshinebondcleaning.com.au/blogs/bond-cleaning-cost-brisbane-2026-price-guide/", publisher: "ProShine Bond Cleaning" },
+    { title: "Bond cleaning Brisbane cost guide 2026", url: "https://www.thebondcleaningbrisbane.com.au/bond-cleaning-brisbane-cost-guide-2026-exact-prices-by-property-size-no-hidden-charges/", publisher: "The Bond Cleaning Brisbane" },
+    { title: "Bond cleaning Brisbane cost guide 2026", url: "https://deepbondclean.com.au/bond-cleaning-brisbane-cost-guide-2026/", publisher: "Deep Bond Clean" },
+    { title: "Bond cleaning cost Brisbane 2026", url: "https://bnecleaners.com/guides/bond-cleaning-cost-brisbane", publisher: "BNE Cleaners" },
+    { title: "Bond cleaning calculator and price list Australia 2026", url: "https://cleaningsearch.com.au/tools/bond-cleaning-estimator", publisher: "Cleaning Search" },
+    { title: "Bond refunds", url: "https://www.rta.qld.gov.au/renting/ending-a-tenancy/bond-refunds", publisher: "Residential Tenancies Authority (QLD)" },
+    { title: "Rental bonds fact sheet", url: "https://www.rta.qld.gov.au/forms-resources/fact-sheets/general-tenancy-fact-sheets/rental-bonds-fact-sheet", publisher: "Residential Tenancies Authority (QLD)" },
+    { title: "Carpet cleaning and pest control", url: "https://www.rta.qld.gov.au/renting/ending-a-tenancy/bond-refunds/carpet-cleaning-and-pest-control", publisher: "Residential Tenancies Authority (QLD)" },
+    { title: "New Queensland rental laws in effect from 1 May 2025", url: "https://www.rta.qld.gov.au/news/2025/04/30/new-queensland-rental-laws-in-effect-from-1-may-2025-and-updated-rta-forms", publisher: "Residential Tenancies Authority (QLD)" },
+  ],
   body: [
     {
       type: "p",

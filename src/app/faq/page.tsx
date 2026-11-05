@@ -8,7 +8,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "House Cleaning FAQs: Pricing, Bond & NDIS | Swept",
+  title: "House Cleaning FAQs: Pricing, Bond & NDIS | Swept Cleaning",
   description: "Answers to common questions about Swept house cleaning: pricing, scheduling, contracts, access, products, bond cleaning and NDIS cleaning.",
   path: "/faq",
 });

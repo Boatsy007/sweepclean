@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatDate, getGuide, guidePath, guides, headingId, readingTime, relatedGuides, wordCount } from "@/lib/guides";
+import { formatDate, getGuide, guideAuthor, guidePath, guides, headingId, isOfficialSource, readingTime, relatedGuides, wordCount } from "@/lib/guides";
 import { services } from "@/lib/services";
 import { siteUrl } from "@/lib/site";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
@@ -57,13 +57,14 @@ export default async function GuidePage({ params }: Props) {
     image: imageUrl,
     datePublished: g.published,
     dateModified: g.updated ?? g.published,
-    author: { "@id": `${siteUrl()}/#business` },
+    author: { "@type": "Organization", name: guideAuthor.name, url: `${siteUrl()}/why-swept`, parentOrganization: { "@id": `${siteUrl()}/#business` } },
     publisher: { "@id": `${siteUrl()}/#business` },
     mainEntityOfPage: url,
     articleSection: g.categories,
     keywords: g.categories.join(", "),
     wordCount: wordCount(g),
     inLanguage: "en-AU",
+    ...(g.sources?.length ? { citation: g.sources.map((s) => ({ "@type": "CreativeWork", name: s.title, url: s.url, ...(s.publisher ? { publisher: { "@type": "Organization", name: s.publisher } } : {}) })) } : {}),
   };
 
   return (
@@ -79,6 +80,7 @@ export default async function GuidePage({ params }: Props) {
           <h1 className="mt-4 text-4xl font-extrabold leading-[1.08] sm:text-5xl">{g.title}</h1>
           <p className="mt-5 text-lg leading-relaxed sm:text-xl">{g.description}</p>
           <p className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+            <span className="inline-flex items-center gap-1.5"><Icon name="sparkle" className="size-4 text-violet" />By <Link href="/why-swept" className="font-semibold text-navy underline decoration-lilac underline-offset-2 hover:decoration-violet">{guideAuthor.name}</Link></span>
             <span className="inline-flex items-center gap-1.5"><Icon name="calendar" className="size-4 text-violet" />Published <time dateTime={g.published}>{formatDate(g.published)}</time></span>
             {g.updated && g.updated !== g.published && (
               <span className="inline-flex items-center gap-1.5">Updated <time dateTime={g.updated}>{formatDate(g.updated)}</time></span>
@@ -112,6 +114,22 @@ export default async function GuidePage({ params }: Props) {
           )}
 
           <GuideContent blocks={g.body} />
+
+          {g.sources && g.sources.length > 0 && (
+            <section className="mt-12 rounded-2xl border border-lilac bg-white p-6" aria-labelledby="guide-src-h">
+              <h2 id="guide-src-h" className="text-xl font-extrabold">Sources</h2>
+              <p className="mt-1 text-sm">Prices and rules checked <time dateTime={g.updated ?? g.published}>{formatDate(g.updated ?? g.published)}</time>. Prices are a guide only and change over time.</p>
+              <ol className="mt-4 list-decimal space-y-2 pl-5 text-[0.95rem]">
+                {g.sources.map((s) => (
+                  <li key={s.url}>
+                    <a href={s.url} target="_blank" rel={isOfficialSource(s.url) ? "noopener" : "nofollow noopener noreferrer"} className="font-medium text-violet underline decoration-lilac underline-offset-2 hover:decoration-violet">{s.title}</a>
+                    {s.publisher && <span className="text-slate"> – {s.publisher}</span>}
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-4 text-sm">{guideAuthor.role}. Tenancy information is general, not legal advice – check the official sources above for your situation.</p>
+            </section>
+          )}
 
           {g.faqs && g.faqs.length > 0 && (
             <section className="mt-14" aria-labelledby="guide-faq-h">

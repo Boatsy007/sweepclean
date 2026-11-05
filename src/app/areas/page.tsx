@@ -9,7 +9,7 @@ import { suburbPath, suburbsIn } from "@/lib/suburbs";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Areas We Clean: Brisbane, Logan & Gold Coast | Swept",
+  title: "Areas We Clean: Brisbane to Tweed Heads | Swept Cleaning",
   description: "Swept cleans homes in 112 suburbs across Brisbane, Logan, the Gold Coast and Tweed Heads. Find your suburb and get a free, no-obligation quote.",
   path: "/areas",
 });

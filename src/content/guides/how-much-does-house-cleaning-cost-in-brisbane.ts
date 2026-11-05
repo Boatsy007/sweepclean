@@ -12,7 +12,7 @@ import { photos } from "@/lib/photos";
 export const guide: Guide = {
   slug: "how-much-does-house-cleaning-cost-in-brisbane",
   title: "How Much Does House Cleaning Cost in Brisbane?",
-  metaTitle: "House Cleaning Cost in Brisbane (2026 Guide) | Swept",
+  metaTitle: "House Cleaning Cost Brisbane (2026 Guide) | Swept Cleaning",
   description:
     "What a good cleaning company charges in Brisbane in 2026 – $65 to $70 an hour – what you get for it, and what a cheap quote can end up costing you.",
   published: "2026-11-04",
@@ -21,6 +21,11 @@ export const guide: Guide = {
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning"],
   areas: ["brisbane"],
   related: ["bond-cleaning-cost-brisbane", "how-much-does-house-cleaning-cost-in-logan", "average-price-cleaning-services-gold-coast"],
+  sources: [
+    { title: "House cleaning costs in Brisbane", url: "https://familyclean.com.au/house-cleaning-costs-brisbane/", publisher: "Family Clean" },
+    { title: "How much does a cleaner cost in Brisbane? 2026 guide", url: "https://clean4you.com.au/how-much-does-a-cleaner-cost-in-brisbane-brisbane-cleaning-prices-guide/", publisher: "Clean4You" },
+    { title: "Cleaning services cost Brisbane QLD 2026", url: "https://www.thequoteyard.com.au/services/cleaning-services-cost-brisbane-qld", publisher: "The Quote Yard" },
+  ],
   body: [
     {
       type: "p",
@@ -43,7 +48,7 @@ export const guide: Guide = {
         "**Marketplace and cash-in-hand cleaners:** around $30–$45 an hour. Often cheaper because insurance, training and back-up cover aren't part of the price.",
         "**Established, insured cleaning services:** around $50–$75 an hour, with Brisbane averages sitting in the mid-$50s.",
         "**Good-quality cleaning companies:** $65–$70 an hour – experienced, insured cleaners, a consistent checklist, reliable bookings and someone accountable if anything goes wrong.",
-        "**Bond (end-of-lease) cleans:** usually a fixed price rather than hourly – from about $250 for a one-bedroom unit to $650 or more for a four-bedroom house, depending on condition and extras such as carpets.",
+        "**Bond (end-of-lease) cleans:** usually a fixed price based on the size and condition of the home – see our [Brisbane bond cleaning cost guide](/cleaning-guides/bond-cleaning-cost-brisbane) for 2026 prices by home size.",
       ],
     },
     {
@@ -205,10 +210,6 @@ export const guide: Guide = {
     {
       q: "Is it better to pay a cleaner by the hour or a fixed price?",
       a: "Either can work. What matters is knowing the total price per clean, how long it's based on and exactly what's included. A higher hourly rate can cost less overall if the cleaner is experienced and efficient.",
-    },
-    {
-      q: "How much is a bond clean in Brisbane?",
-      a: "Bond cleans are usually quoted as a fixed price – from about $250 for a one-bedroom unit to $650 or more for a four-bedroom house, depending on the condition of the property and extras such as carpet steam cleaning.",
     },
     {
       q: "Do cleaning prices include GST?",

@@ -11,7 +11,7 @@ import { pageMeta } from "@/lib/seo";
 import { PromisePanel } from "@/components/SweptPromise";
 
 export const metadata = pageMeta({
-  title: "Why Choose Swept Cleaning | Our Commitments",
+  title: "Why Choose Us: Our Commitments | Swept Cleaning",
   description: "Swept is a new residential cleaning service for Brisbane, Logan, the Gold Coast and Tweed Heads. Here is how we work and what we commit to on every clean.",
   path: "/why-swept",
   image: photos.cleaner,

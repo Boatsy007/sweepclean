@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { FREQUENCY_OPTIONS, SERVICE_OPTIONS, labelFor, sanitise, validateContact, type QuoteRequest } from "@/lib/quote";
 import { postcodeInArea } from "@/lib/areas";
 import { site } from "@/lib/site";
+import { leadFrom, leadTo } from "@/lib/leads";
 
 export const runtime = "nodejs";
 
@@ -44,7 +45,7 @@ function summary(q: QuoteRequest) {
 
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.LEAD_FROM_EMAIL;
+  const from = leadFrom();
   if (!key || !from) return false;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -83,7 +84,7 @@ export async function POST(req: Request) {
     .join("")}</table>`;
 
   const delivered: string[] = [];
-  const to = process.env.LEAD_TO_EMAIL;
+  const to = leadTo();
   try {
     if (to && (await sendEmail(to, title, `<h2 style="font-family:sans-serif">${esc(title)}</h2>${table}`, q.email))) delivered.push("email");
     const hook = process.env.LEAD_WEBHOOK_URL;
@@ -101,7 +102,7 @@ export async function POST(req: Request) {
       console.info("[lead] (no delivery configured – logged only)", JSON.stringify(Object.fromEntries(rows)));
       return NextResponse.json({ ok: true, delivered: ["log"] });
     }
-    console.error("[lead] NOT DELIVERED – configure RESEND_API_KEY/LEAD_TO_EMAIL or LEAD_WEBHOOK_URL", JSON.stringify(Object.fromEntries(rows)));
+    console.error("[lead] NOT DELIVERED – configure RESEND_API_KEY (and verify swept.com.au in Resend) or LEAD_WEBHOOK_URL", JSON.stringify(Object.fromEntries(rows)));
     return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 502 });
   }
 

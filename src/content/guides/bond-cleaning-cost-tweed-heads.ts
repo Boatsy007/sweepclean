@@ -21,7 +21,7 @@ const t = (slug: string, name: string) => `[${name}](/areas/tweed-heads/${slug})
 export const guide: Guide = {
   slug: "bond-cleaning-cost-tweed-heads",
   title: "Bond Cleaning Cost in Tweed Heads: What Should You Expect to Pay?",
-  metaTitle: "Bond Cleaning Cost Tweed Heads (2026 Prices) | Swept",
+  metaTitle: "Bond Cleaning Cost Tweed Heads (2026) | Swept Cleaning",
   description:
     "Tweed Heads bond cleaning prices for 2026 and how NSW rules differ from Queensland – condition reports, carpet cleaning, Rental Bonds Online and NCAT.",
   published: "2026-11-04",
@@ -30,6 +30,16 @@ export const guide: Guide = {
   services: ["bond-cleaning", "carpet-cleaning"],
   areas: ["tweed-heads"],
   related: ["average-price-cleaning-services-tweed-heads", "bond-cleaning-cost-gold-coast"],
+  sources: [
+    { title: "End of lease cleaning in Tweed Heads", url: "https://www.airtasker.com/au/services/end-of-lease-cleaning/tweed-heads-nsw/", publisher: "Airtasker" },
+    { title: "Bond cleaning Tweed Heads", url: "https://thequoteguys.com.au/bond-cleaning/tweed-heads-nsw", publisher: "The Quote Guys" },
+    { title: "Professional cleaners in Tweed Heads", url: "https://tasklegend.com.au/find/local-cleaners-in-tweed-heads-nsw", publisher: "TaskLegend" },
+    { title: "Dealing with bond disputes for tenants", url: "https://www.nsw.gov.au/housing-and-construction/renting-a-place-to-live/residential-rental-bonds/dealing-bond-disputes-for-tenants", publisher: "NSW Government" },
+    { title: "The easy way to claim your bond", url: "https://www.tenants.org.au/node/427", publisher: "Tenants' Union of NSW" },
+    { title: "Bond factsheet", url: "https://www.tenants.org.au/factsheet-bond", publisher: "Tenants' Union of NSW" },
+    { title: "Lodge a residential bond claim", url: "https://www.service.nsw.gov.au/transaction/lodge-residential-bond-claim-landlords-or-managing-agents", publisher: "Service NSW" },
+    { title: "Residential Tenancies Act 2010 (NSW)", url: "https://legislation.nsw.gov.au/view/html/inforce/current/act-2010-042", publisher: "NSW Legislation" },
+  ],
   body: [
     {
       type: "p",

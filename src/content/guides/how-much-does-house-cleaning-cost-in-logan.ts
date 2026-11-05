@@ -22,15 +22,23 @@ const s = (slug: string, name: string) => `[${name}](/areas/logan/${slug})`;
 export const guide: Guide = {
   slug: "how-much-does-house-cleaning-cost-in-logan",
   title: "How Much Does House Cleaning Cost in Logan?",
-  metaTitle: "House Cleaning Cost in Logan (2026 Guide) | Swept",
+  metaTitle: "House Cleaning Cost in Logan (2026 Guide) | Swept Cleaning",
   description:
     "What house cleaning costs in Logan in 2026, what a good cleaning company charges – $65 to $70 an hour – and how to compare quotes for bigger family homes.",
   published: "2026-11-04",
-  categories: ["Pricing", "Regular cleaning", "Bond cleaning"],
+  categories: ["Pricing", "Regular cleaning"],
   image: photos.bathroom,
   services: ["regular-house-cleaning", "deep-cleaning", "bond-cleaning", "ndis-cleaning", "carpet-cleaning"],
   areas: ["logan"],
   related: ["bond-cleaning-cost-logan", "how-much-does-house-cleaning-cost-in-brisbane", "average-price-cleaning-services-gold-coast"],
+  sources: [
+    { title: "House cleaners in Logan City", url: "https://www.bark.com/en/au/cleaners/queensland/logan-city/", publisher: "Bark" },
+    { title: "House cleaning costs in Brisbane", url: "https://familyclean.com.au/house-cleaning-costs-brisbane/", publisher: "Family Clean" },
+    { title: "House cleaning in Logan Central", url: "https://www.airtasker.com/au/services/house-cleaning/logan-central-qld/", publisher: "Airtasker" },
+    { title: "House cleaning in the Logan area", url: "https://www.gumtree.com.au/s-cleaning/logan/house+cleaning/k0c18442l3005927", publisher: "Gumtree" },
+    { title: "NDIS cleaning rates 2026\u201327", url: "https://humminghomeservices.au/ndis-cleaning-rates-2026-27/", publisher: "Humming Home Services" },
+    { title: "Pricing arrangements and price limits", url: "https://www.ndis.gov.au/providers/pricing-arrangements", publisher: "NDIS" },
+  ],
   body: [
     {
       type: "p",
@@ -54,7 +62,7 @@ export const guide: Guide = {
         "**Vetted, insured cleaning services:** around $45–$65 an hour. Some services add a travel fee for outer suburbs.",
         "**Good-quality cleaning companies:** $65–$70 an hour, for trained, insured and police-checked cleaners working from a written checklist, with someone accountable for the result.",
         "**Per job on marketplace apps:** Airtasker's Logan Central cost guide puts a typical house clean at about $115–$312, with a median of around $195.",
-        "**Bond (end-of-lease) cleans:** usually a fixed price. Posted marketplace jobs for three-bedroom Logan homes mostly ask $210–$450, while local cleaning companies quote from about $300 up to $800 depending on size, condition and carpets.",
+        "**Bond (end-of-lease) cleans:** a fixed price based on size and condition – see our [Logan bond cleaning cost guide](/cleaning-guides/bond-cleaning-cost-logan) for 2026 prices.",
       ],
     },
 
@@ -128,19 +136,7 @@ export const guide: Guide = {
     { type: "h2", text: "Bond cleaning costs in Logan" },
     {
       type: "p",
-      text: "Logan has plenty of rental homes, so bond cleans are a common request. They're almost always quoted as a fixed price because the job is defined by your entry condition report, not by the hour.",
-    },
-    {
-      type: "ul",
-      items: [
-        "**Posted marketplace jobs** for three-bedroom Logan homes mostly ask $210–$450. These are asking prices, so the final cost and what's included can vary.",
-        "**Cleaning companies** quote from about $300 to $800 for a three-bedroom house, depending on the number of bathrooms, the home's condition and whether carpets, the oven and windows are included.",
-        "**Carpet steam cleaning** is often priced separately – check whether your lease requires it and whether it's in the quote.",
-      ],
-    },
-    {
-      type: "p",
-      text: "In Queensland, your property manager compares the home with your entry condition report (Form 1a) when you move out, using the exit condition report (Form 14a). Give your cleaner a copy of your entry report so they clean against it room by room. Read more about our [bond cleaning](/services/bond-cleaning).",
+      text: "Logan has plenty of rental homes, so bond cleans are a common request. They're priced as a fixed amount rather than by the hour, and they're measured against your entry condition report. For 2026 prices by home size, pets and carpets, and Queensland's RTA bond process, read our [Logan bond cleaning cost guide](/cleaning-guides/bond-cleaning-cost-logan).",
     },
 
     { type: "h2", text: "NDIS and home care cleaning in Logan" },
@@ -205,10 +201,6 @@ export const guide: Guide = {
     {
       q: "How much is a fortnightly clean for a four-bedroom house in Logan?",
       a: "A four-bedroom, two-bathroom home usually takes about 3.5–4 hours. At a good-quality company's rate of $65–$70 an hour, that's roughly $228–$280 a visit. The exact price depends on the home's condition, pets and what's on your checklist.",
-    },
-    {
-      q: "How much does a bond clean cost in Logan?",
-      a: "For a three-bedroom house, posted marketplace jobs mostly ask $210–$450, while cleaning companies quote from about $300 to $800 depending on bathrooms, condition and whether carpets and the oven are included. Always check what the price covers.",
     },
     {
       q: "Why does my first clean cost more?",

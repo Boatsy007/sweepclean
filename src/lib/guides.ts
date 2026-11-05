@@ -50,7 +50,17 @@ export type Guide = {
   services?: string[];
   /** Area slugs (e.g. "brisbane") – the guide is featured on that area page and all its suburb pages */
   areas?: string[];
+  /** Where the facts and prices came from – shown as a "Sources" list and as `citation` in structured data */
+  sources?: GuideSource[];
 };
+
+export type GuideSource = { title: string; url: string; publisher?: string };
+
+/** Byline shown on every guide (also the BlogPosting author). */
+export const guideAuthor = { name: "Swept Cleaning team", role: "Written and reviewed by the Swept Cleaning team in South East Queensland" };
+
+/** Government and tenancy-advocate sources get a followed link; commercial sites are nofollow. */
+export const isOfficialSource = (url: string) => /\.gov\.au|tenants\.org\.au|tenantsqld\.org\.au|ndis\.gov\.au/.test(url);
 
 export const guidePath = (slug: string) => `/cleaning-guides/${slug}`;
 

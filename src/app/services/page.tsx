@@ -9,7 +9,7 @@ import { ServiceVisual } from "@/components/ServiceVisual";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Cleaning Services: Regular, Deep, NDIS & Bond | Swept",
+  title: "Our Cleaning Services: Regular, Deep & Bond | Swept Cleaning",
   description: "House cleaning in Brisbane, Logan and the Gold Coast: regular, deep, NDIS, bond, Airbnb and carpet cleaning, plus commercial cleaning for small businesses.",
   path: "/services",
 });

@@ -19,7 +19,7 @@ const g = (slug: string, name: string) => `[${name}](/areas/gold-coast/${slug})`
 export const guide: Guide = {
   slug: "bond-cleaning-cost-gold-coast",
   title: "Bond Cleaning Cost on the Gold Coast: What Should You Expect to Pay?",
-  metaTitle: "Bond Cleaning Cost Gold Coast (2026 Prices) | Swept",
+  metaTitle: "Bond Cleaning Cost Gold Coast (2026 Prices) | Swept Cleaning",
   description:
     "Gold Coast bond cleaning prices for 2026, from beachside apartments to family homes, plus sand, salt and building access tips and the QLD RTA bond process.",
   published: "2026-11-04",
@@ -28,6 +28,15 @@ export const guide: Guide = {
   services: ["bond-cleaning", "carpet-cleaning"],
   areas: ["gold-coast"],
   related: ["average-price-cleaning-services-gold-coast", "bond-cleaning-cost-tweed-heads", "bond-cleaning-cost-brisbane"],
+  sources: [
+    { title: "House cleaning cost Gold Coast 2026", url: "https://whatsthedamage.com.au/house-cleaning-cost-gold-coast/", publisher: "What's the Damage" },
+    { title: "Bond cleaning Gold Coast apartments 2026", url: "https://sparkleclean.au/blog/bond-cleaning-gold-coast-for-apartments", publisher: "SparkleClean" },
+    { title: "Bond cleaning calculator and price list Australia 2026", url: "https://cleaningsearch.com.au/tools/bond-cleaning-estimator", publisher: "Cleaning Search" },
+    { title: "Bond cleaning Gold Coast prices (2026)", url: "https://clean4you.com.au/how-much-does-bond-cleaning-cost-in-gold-coast/", publisher: "Clean4You" },
+    { title: "Bond refunds", url: "https://www.rta.qld.gov.au/renting/ending-a-tenancy/bond-refunds", publisher: "Residential Tenancies Authority (QLD)" },
+    { title: "Rental bonds fact sheet", url: "https://www.rta.qld.gov.au/forms-resources/fact-sheets/general-tenancy-fact-sheets/rental-bonds-fact-sheet", publisher: "Residential Tenancies Authority (QLD)" },
+    { title: "Carpet cleaning and pest control", url: "https://www.rta.qld.gov.au/renting/ending-a-tenancy/bond-refunds/carpet-cleaning-and-pest-control", publisher: "Residential Tenancies Authority (QLD)" },
+  ],
   body: [
     {
       type: "p",

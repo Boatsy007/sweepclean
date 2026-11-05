@@ -4,7 +4,7 @@ Nothing below is optional. The site hides anything that isn't set, but it can't 
 
 ## 1. Business facts – `src/lib/site.ts`
 - [x] `phone`: 0490 216 363 (click-to-call everywhere)
-- [ ] `email`
+- [x] `email` – hey@swept.com.au
 - [ ] `abn` and `legalName` once registered
 - [ ] `quoteResponse` / `responseHours`: only promise what you can keep
 - [ ] Review each of the 4 `commitments`. Delete any you won't honour every time.
@@ -22,8 +22,8 @@ Nothing below is optional. The site hides anything that isn't set, but it can't 
 - [ ] Service-area edges: Ipswich? Redland islands? Kingscliff and south of Tweed? Adjust suburb lists and `postcodeInArea()`.
 
 ## 3. Lead delivery (Vercel → Project → Settings → Environment Variables)
-- [ ] `NEXT_PUBLIC_SITE_URL` = https://your-domain.com.au
-- [ ] Resend account, domain verified → `RESEND_API_KEY`, `LEAD_FROM_EMAIL`, `LEAD_TO_EMAIL`
+- [ ] Connect swept.com.au in Vercel (Domains) and redirect the `vercel.app` address to it. Optionally set `NEXT_PUBLIC_SITE_URL` = https://swept.com.au – otherwise the production domain Vercel reports is used for canonicals, the sitemap and structured data
+- [ ] Resend account with swept.com.au verified → set `RESEND_API_KEY` in Vercel. Leads go to hey@swept.com.au from quotes@swept.com.au by default (`LEAD_TO_EMAIL` / `LEAD_FROM_EMAIL` override). Check `/api/lead-status` shows `"ready": true`
 - [ ] and/or `LEAD_WEBHOOK_URL` (Zapier, Make, HubSpot, Google Sheets)
 - [ ] Submit a real test quote on production and confirm the email arrives (owner copy and customer confirmation)
 

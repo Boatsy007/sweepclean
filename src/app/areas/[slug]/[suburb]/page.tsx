@@ -14,6 +14,8 @@ import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { pageMeta } from "@/lib/seo";
 import { AreaGuides } from "@/components/AreaGuides";
+import { Inline } from "@/components/GuideContent";
+import { areaPrices, profiles, profilesFor, servicesFor } from "@/lib/localProfiles";
 
 type Props = { params: Promise<{ slug: string; suburb: string }> };
 
@@ -42,6 +44,10 @@ export default async function SuburbPage({ params }: Props) {
   const near = nearby(s);
   const nsw = a.state === "NSW";
   const path = suburbPath(s);
+  const keys = profilesFor(s);
+  const local = keys.slice(0, 3).map((k) => ({ k, ...profiles[k] }));
+  const suits = servicesFor(s, keys).map((x) => ({ ...x, sv: services.find((v) => v.slug === x.slug)! }));
+  const prices = areaPrices[a.slug];
   const crumbs = [
     { name: "Home", path: "/" },
     { name: "Areas", path: "/areas" },
@@ -68,6 +74,8 @@ export default async function SuburbPage({ params }: Props) {
       q: `What kinds of homes do you clean in ${s.name}?`,
       a: `${s.note} Whatever the home, we work from a written room-by-room checklist and tailor it to your priorities, weekly, fortnightly or monthly.`,
     },
+    // Suburb-specific questions from the home types this suburb's note mentions
+    ...keys.filter((k) => k !== "rentals").slice(0, 2).map((k) => profiles[k].faq({ s: s.name, nsw })),
     {
       q: `Which council area is ${s.name} in?`,
       a: `${s.name} (postcode ${s.postcode}) is in the ${s.council} area${nsw ? ", New South Wales, just across the border from Coolangatta" : `, ${stateName(a.state)}`}. ${nsw ? "From October to April NSW runs on daylight saving time, so we confirm your booking in NSW time." : `We clean right across ${a.name}.`}`,
@@ -151,7 +159,54 @@ export default async function SuburbPage({ params }: Props) {
             <h2 className="text-xl font-bold">Cleaning across {a.name}</h2>
             <p className="mt-2 leading-relaxed">{s.name} is one of {suburbsIn(a.slug).length} {a.name} suburbs we clean. For what we look out for in {a.name} homes – from {a.notes.map((n) => n.title.toLowerCase()).slice(0, 2).join(" to ")} – see our <Link href={`/areas/${a.slug}`} className="font-semibold text-violet underline underline-offset-2">{a.name} cleaning guide</Link>.</p>
           </div>
+          {prices && (
+            <div className="card mt-5 p-6">
+              <h2 className="flex items-center gap-2 text-xl font-bold"><Icon name="doc" className="size-5 text-violet" />What cleaning costs near {s.name}</h2>
+              <ul className="mt-3 space-y-2.5">
+                {prices.lines.map((l) => <li key={l} className="flex gap-2.5 leading-relaxed"><Icon name="check" className="mt-1 size-4 shrink-0 text-violet" /><span><Inline text={l} /></span></li>)}
+              </ul>
+              <p className="mt-3 text-sm">Prices are a guide from our {a.name} price guides – your written quote is based on your home. Read more: {prices.guides.map((g, i) => <span key={g.href}>{i > 0 && " · "}<Link href={g.href} className="font-semibold text-violet underline underline-offset-2">{g.label}</Link></span>)}.</p>
+            </div>
+          )}
         </div>
+      </section>
+
+      {local.length > 0 && (
+        <section className="container-x pb-16" aria-labelledby="local-h">
+          <h2 id="local-h" className="text-3xl font-extrabold sm:text-[2.4rem]">Cleaning {s.name} homes: what&apos;s different</h2>
+          <p className="mt-3 max-w-2xl text-lg leading-relaxed">Every suburb has its own mix of homes. Here&apos;s what we plan for in {s.name}, and what to mention when you ask for a quote.</p>
+          <ul className="reveal-stagger mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {local.map((p) => (
+              <li key={p.k} className="card flex flex-col p-6">
+                <span className="grid size-11 place-items-center rounded-xl bg-lavender text-violet"><Icon name={p.icon} className="size-6" /></span>
+                <h3 className="mt-4 text-lg font-bold">{p.title}</h3>
+                <p className="mt-2 flex-1 leading-relaxed">{p.body({ s: s.name, nsw })}</p>
+                <p className="mt-4 rounded-xl bg-lavender/70 px-4 py-3 text-sm"><strong className="text-navy">Tell us:</strong> {p.tellUs.toLowerCase()}.</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section className="container-x pb-16" aria-labelledby="suits-h">
+        <h2 id="suits-h" className="text-3xl font-extrabold sm:text-[2.4rem]">Which clean suits your {s.name} home?</h2>
+        <ol className="mt-8 grid gap-5 lg:grid-cols-3">
+          {suits.map(({ slug, why, sv }, i) => (
+            <li key={slug} className="card flex flex-col p-6">
+              <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-violet">{i === 0 ? "Best fit" : i === 1 ? "Also suits" : "Also available"}</p>
+              <h3 className="mt-2 flex items-center gap-2 text-xl font-bold"><Icon name={sv.icon} className="size-6 text-violet" />{sv.name}</h3>
+              <p className="mt-2 leading-relaxed">{why}</p>
+              <p className="mt-4 font-display text-sm font-semibold text-navy">Includes</p>
+              <ul className="mt-2 flex-1 space-y-1.5 text-[0.95rem]">
+                {sv.checklist.filter((c) => !/^add/i.test(c.room)).flatMap((c) => c.items.slice(0, 1)).slice(0, 4).map((t) => <li key={t} className="flex gap-2"><Icon name="check" className="mt-0.5 size-4 shrink-0 text-violet" />{t}</li>)}
+              </ul>
+              <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
+                <Link href={`/quote?service=${slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote<span className="sr-only"> for {sv.name.toLowerCase()} in {s.name}</span></Link>
+                <Link href={`/services/${slug}`} className="text-navy underline underline-offset-2">Full checklist<span className="sr-only"> for {sv.name.toLowerCase()}</span></Link>
+              </div>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <section className="bg-lavender py-16" aria-labelledby="svc-h">

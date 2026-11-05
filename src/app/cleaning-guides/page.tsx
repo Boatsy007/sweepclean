@@ -61,7 +61,7 @@ export default function CleaningGuides() {
         {guides.length > 0 ? (
           <ul className="reveal-stagger grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {guides.map((g, i) => (
-              <li key={g.slug}><GuideCard guide={g} priority={i < 3} /></li>
+              <li key={g.slug} className={i === 0 ? "![animation:none]" : undefined}><GuideCard guide={g} priority={i === 0} /></li>
             ))}
           </ul>
         ) : (

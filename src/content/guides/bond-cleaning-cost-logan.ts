@@ -19,7 +19,7 @@ const l = (slug: string, name: string) => `[${name}](/areas/logan/${slug})`;
 export const guide: Guide = {
   slug: "bond-cleaning-cost-logan",
   title: "Bond Cleaning Cost in Logan: What Should You Expect to Pay?",
-  metaTitle: "Bond Cleaning Cost Logan (2026 Prices) | Swept",
+  metaTitle: "Bond Cleaning Cost Logan (2026 Prices) | Swept Cleaning",
   description:
     "Logan bond cleaning prices for 2026 – from units to four-bedroom family homes – plus pets, carpets and how to protect your bond under Queensland's RTA rules.",
   published: "2026-11-04",
@@ -28,6 +28,15 @@ export const guide: Guide = {
   services: ["bond-cleaning", "carpet-cleaning"],
   areas: ["logan"],
   related: ["bond-cleaning-cost-brisbane", "how-much-does-house-cleaning-cost-in-logan", "bond-cleaning-cost-gold-coast"],
+  sources: [
+    { title: "End of lease cleaning in Logan Central", url: "https://www.airtasker.com/cleaning/end-of-lease-cleaning/logan-central-qld", publisher: "Airtasker" },
+    { title: "End of lease cleaning services cost", url: "https://bondcleaningloganarea-com-au.pages.dev/end-of-lease-cleaning-services-cost-what-does-it-really-cost", publisher: "Bond Cleaning Logan Area" },
+    { title: "How much does a bond clean cost in Brisbane? (2026 guide)", url: "https://www.absolutedomestics.com.au/blog/how-much-does-a-bond-clean-cost-in-brisbane/", publisher: "Absolute Domestics" },
+    { title: "Bond cleaning cost Brisbane 2026", url: "https://sparkleclean.au/blog/how-much-does-bond-cleaning-cost-in-brisbane", publisher: "SparkleClean" },
+    { title: "Bond refunds", url: "https://www.rta.qld.gov.au/renting/ending-a-tenancy/bond-refunds", publisher: "Residential Tenancies Authority (QLD)" },
+    { title: "Rental bonds fact sheet", url: "https://www.rta.qld.gov.au/forms-resources/fact-sheets/general-tenancy-fact-sheets/rental-bonds-fact-sheet", publisher: "Residential Tenancies Authority (QLD)" },
+    { title: "Carpet cleaning and pest control", url: "https://www.rta.qld.gov.au/renting/ending-a-tenancy/bond-refunds/carpet-cleaning-and-pest-control", publisher: "Residential Tenancies Authority (QLD)" },
+  ],
   body: [
     {
       type: "p",
