@@ -7,6 +7,7 @@ import { siteUrl } from "@/lib/site";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { GuideCard } from "@/components/GuideCard";
+import { GuideGrid, GuideTopicProvider, TopicChips } from "@/components/GuideFilter";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 export default function CleaningGuides() {
   const crumbs = [{ name: "Home", path: "/" }, { name: "Cleaning Guides", path: "/cleaning-guides" }];
   const categories = allCategories();
+  const counts = Object.fromEntries(categories.map((c) => [c, guides.filter((g) => g.categories.includes(c)).length]));
   const collection = guides.length
     ? {
         "@context": "https://schema.org",
@@ -41,29 +43,20 @@ export default function CleaningGuides() {
     <>
       <JsonLd data={collection ? [collection, breadcrumbSchema(crumbs)] : breadcrumbSchema(crumbs)} />
 
+      <GuideTopicProvider topics={categories}>
       <section className="bg-gradient-to-b from-white to-lavender/70">
         <div className="container-x pb-12 pt-8 lg:pb-16 lg:pt-12">
           <Breadcrumbs items={crumbs} />
           <p className="eyebrow">Cleaning guides</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-[1.05] sm:text-5xl">Cleaning Guides &amp; Advice</h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed">Helpful tips, practical advice and answers to your house cleaning questions.</p>
-          {categories.length > 0 && (
-            <ul className="mt-7 flex flex-wrap gap-2" aria-label="Topics">
-              {categories.map((c) => (
-                <li key={c} className="rounded-full border border-lilac bg-white px-3.5 py-1.5 text-sm font-medium text-violet-ink">{c}</li>
-              ))}
-            </ul>
-          )}
+          {categories.length > 0 && <TopicChips topics={categories} counts={counts} total={guides.length} />}
         </div>
       </section>
 
       <section className="container-x py-12 sm:py-16" aria-label="Guides">
         {guides.length > 0 ? (
-          <ul className="reveal-stagger grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {guides.map((g, i) => (
-              <li key={g.slug} className={i === 0 ? "![animation:none]" : undefined}><GuideCard guide={g} priority={i === 0} /></li>
-            ))}
-          </ul>
+          <GuideGrid items={guides.map((g, i) => ({ slug: g.slug, categories: g.categories, card: <GuideCard guide={g} priority={i === 0} /> }))} />
         ) : (
           <div className="card mx-auto max-w-3xl px-6 py-12 text-center sm:px-12">
             <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-lavender text-violet"><Icon name="doc" className="size-8" /></span>
@@ -78,6 +71,7 @@ export default function CleaningGuides() {
           </div>
         )}
       </section>
+      </GuideTopicProvider>
 
       <CtaBand title="Ready for a beautifully clean home?" body="Tell us about your home and we'll send a clear, written price." href="/quote" cta="Get My Free Quote" id="guides_index_band" />
     </>
