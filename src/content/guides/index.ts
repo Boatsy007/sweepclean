@@ -7,6 +7,7 @@ import { guide as bondBrisbane } from "./bond-cleaning-cost-brisbane";
 import { guide as bondLogan } from "./bond-cleaning-cost-logan";
 import { guide as bondGoldCoast } from "./bond-cleaning-cost-gold-coast";
 import { guide as bondTweed } from "./bond-cleaning-cost-tweed-heads";
+import { guide as emergencyCleaning } from "./emergency-cleaning-services-how-quickly-can-you-help";
 
 /*
  * Published Cleaning Guides.
@@ -17,4 +18,4 @@ import { guide as bondTweed } from "./bond-cleaning-cost-tweed-heads";
  * Full instructions: docs/CLEANING-GUIDES.md
  */
 
-export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices, tweedCleaningPrices, loganCleaningCost, bondBrisbane, bondLogan, bondGoldCoast, bondTweed];
+export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices, tweedCleaningPrices, loganCleaningCost, bondBrisbane, bondLogan, bondGoldCoast, bondTweed, emergencyCleaning];
