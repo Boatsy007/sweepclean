@@ -10,6 +10,7 @@ import { guide as bondTweed } from "./bond-cleaning-cost-tweed-heads";
 import { guide as emergencyCleaning } from "./emergency-cleaning-services-how-quickly-can-you-help";
 import { guide as hiringQuestions } from "./questions-to-ask-before-hiring-a-house-cleaner";
 import { guide as avoidScams } from "./how-to-avoid-getting-scammed-by-cleaning-services";
+import { guide as inspectionCleaning } from "./rental-inspection-cleaning-what-should-be-done";
 
 /*
  * Published Cleaning Guides.
@@ -20,4 +21,4 @@ import { guide as avoidScams } from "./how-to-avoid-getting-scammed-by-cleaning-
  * Full instructions: docs/CLEANING-GUIDES.md
  */
 
-export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices, tweedCleaningPrices, loganCleaningCost, bondBrisbane, bondLogan, bondGoldCoast, bondTweed, emergencyCleaning, hiringQuestions, avoidScams];
+export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices, tweedCleaningPrices, loganCleaningCost, bondBrisbane, bondLogan, bondGoldCoast, bondTweed, emergencyCleaning, hiringQuestions, avoidScams, inspectionCleaning];
