@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import { services } from "@/lib/services";
 import { generalFaqs } from "@/lib/faqs";
 import { site, telHref } from "@/lib/site";
@@ -35,6 +37,26 @@ const regions = [
   { href: "/areas/tweed-heads", label: "Tweed Heads", icon: "wave" },
 ];
 
+/**
+ * Mobile-only hero photo: a <picture> whose only source applies below 1024px, so desktop never downloads it.
+ * One fixed 750px file (it sits under a white veil, so more detail isn't visible), preloaded for phones only,
+ * so the preload and the image are always the same download.
+ */
+function MobileHeroPhoto() {
+  const w = 750;
+  const h = Math.round((photos.bathroom.src.height / photos.bathroom.src.width) * w);
+  const { props } = getImageProps({ src: photos.bathroom.src, alt: "", width: w, height: h, quality: 70 });
+  const url = (props.srcSet ?? props.src).split(",")[0].trim().split(" ")[0]; // the 1x (≈750px) file
+  preload(url, { as: "image", fetchPriority: "high", media: "(max-width: 1023px)" });
+  return (
+    <picture>
+      <source media="(max-width: 1023px)" srcSet={url} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" loading="eager" decoding="async" fetchPriority="high" className="absolute inset-0 size-full object-cover object-[72%_40%]" />
+    </picture>
+  );
+}
+
 export default function Home() {
   const homeFaqs = generalFaqs.slice(0, 6);
   return (
@@ -43,11 +65,16 @@ export default function Home() {
       {/* HERO – headline + quote form above the fold */}
       <section className="relative isolate overflow-hidden bg-white">
         {/* Very soft lavender light, top right – the only decoration; the logo carries the personality */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60rem_32rem_at_100%_0%,rgb(246_240_255)_0%,rgb(246_240_255/0.6)_45%,transparent_75%)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 hidden lg:block bg-[radial-gradient(60rem_32rem_at_100%_0%,rgb(246_240_255)_0%,rgb(246_240_255/0.6)_45%,transparent_75%)]" />
         <div className="container-x grid items-center gap-6 pb-10 pt-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
-          <div className="hero-drift min-w-0">
+          <div className="hero-drift relative min-w-0">
+            {/* Phones/tablets: a bright, airy photo behind the headline under a soft white veil, fading into white */}
+            <div aria-hidden="true" className="pointer-events-none absolute -left-4 -right-4 -top-5 bottom-[-1.5rem] -z-10 overflow-hidden sm:-left-6 sm:-right-6 lg:hidden">
+              <MobileHeroPhoto />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(255_255_255/0.74)_0%,rgb(255_255_255/0.6)_40%,rgb(255_255_255/0.72)_72%,#fff_100%)]" />
+            </div>
             <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-navy sm:text-6xl lg:text-[3.9rem]">
-              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-lilac bg-lavender/70 px-2.5 py-1 font-display text-[0.62rem] font-semibold uppercase leading-normal tracking-[0.05em] text-violet-ink min-[380px]:whitespace-nowrap min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
+              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-lilac bg-white/90 px-2.5 py-1 font-display shadow-[0_2px_10px_-6px_rgb(6_27_73/0.25)] lg:bg-lavender/70 lg:shadow-none text-[0.62rem] font-semibold uppercase leading-normal tracking-[0.05em] text-violet-ink min-[380px]:whitespace-nowrap min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
                 <Icon name="sparkle" className="size-3.5 text-violet lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
@@ -67,12 +94,12 @@ export default function Home() {
                 { icon: "sparkle", text: "Free, no-obligation quotes" },
               ].map((b) => (
                 <li key={b.text} className="flex items-center gap-3">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lavender text-violet"><Icon name={b.icon} className="size-5" strokeWidth={2} /></span>
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-violet shadow-[0_2px_10px_-6px_rgb(6_27_73/0.3)] ring-1 ring-lilac lg:bg-lavender lg:shadow-none lg:ring-0"><Icon name={b.icon} className="size-5" strokeWidth={2} /></span>
                   {b.text}
                 </li>
               ))}
               <li className="flex items-center gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lavender text-violet"><Icon name="shieldSparkle" className="size-5" strokeWidth={2} /></span>
+                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-violet shadow-[0_2px_10px_-6px_rgb(6_27_73/0.3)] ring-1 ring-lilac lg:bg-lavender lg:shadow-none lg:ring-0"><Icon name="shieldSparkle" className="size-5" strokeWidth={2} /></span>
                 <Link href={site.promise.path} className="font-display font-semibold text-violet underline decoration-violet/30 underline-offset-4 hover:decoration-violet">Backed by {site.promise.name}</Link>
               </li>
             </ul>
