@@ -73,40 +73,35 @@ export default function Home() {
               <MobileHeroPhoto />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(255_255_255/0.74)_0%,rgb(255_255_255/0.6)_40%,rgb(255_255_255/0.72)_72%,#fff_100%)]" />
             </div>
-            <h1 className="intro-solid text-[2.5rem] font-extrabold leading-[1.04] !text-navy sm:text-6xl lg:text-[3.9rem]">
-              <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-lilac bg-white/90 px-2.5 py-1 font-display shadow-[0_2px_10px_-6px_rgb(6_27_73/0.25)] lg:bg-lavender/70 lg:shadow-none text-[0.62rem] font-semibold uppercase leading-normal tracking-[0.05em] text-violet-ink min-[380px]:whitespace-nowrap min-[400px]:tracking-[0.09em] lg:mb-6 lg:gap-2 lg:px-4 lg:py-2 lg:text-[0.8rem] lg:tracking-[0.14em]">
-                <Icon name="sparkle" className="size-3.5 text-violet lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
+            <h1 className="intro-solid text-[2.6rem] font-extrabold leading-[1.02] !text-navy sm:text-6xl lg:text-[3.9rem]">
+              {/* Quiet eyebrow (part of the H1 for search): plain text, no pill */}
+              <span className="mb-5 flex items-center gap-1.5 font-display text-[0.66rem] font-semibold uppercase leading-normal tracking-[0.08em] text-violet min-[360px]:whitespace-nowrap min-[400px]:tracking-[0.12em] lg:mb-6 lg:gap-2 lg:text-[0.8rem] lg:tracking-[0.18em]">
+                <Icon name="sparkle" className="size-3.5 lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
               <span className="block">A beautifully clean home.</span>{" "}
               <span className="relative inline-block text-violet">
                 More time for you.
-                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3 w-[72%] text-violet/70"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3 w-[72%] text-violet/60"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
               </span>
             </h1>
-            <p className="intro mt-6 max-w-xl text-[1.05rem] leading-relaxed text-navy [--d:160ms] sm:text-xl lg:mt-8">
-              Flexible weekly, fortnightly and monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
+            <p className="intro mt-7 max-w-md text-[1.06rem] leading-relaxed text-navy/85 [--d:160ms] sm:max-w-xl sm:text-xl lg:mt-8">
+              Weekly, fortnightly or monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
             </p>
-            <ul className="intro mt-5 grid gap-2.5 text-[1rem] font-medium text-navy [--d:280ms] sm:text-[1.05rem] lg:mt-7 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-3">
-              {[
-                { icon: "check", text: "No lock-in contracts" },
-                { icon: "doc", text: "Personalised cleaning checklists" },
-                { icon: "sparkle", text: "Free, no-obligation quotes" },
-              ].map((b) => (
-                <li key={b.text} className="flex items-center gap-3">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-violet shadow-[0_2px_10px_-6px_rgb(6_27_73/0.3)] ring-1 ring-lilac lg:bg-lavender lg:shadow-none lg:ring-0"><Icon name={b.icon} className="size-5" strokeWidth={2} /></span>
-                  {b.text}
-                </li>
+            {/* Four short benefits as small ticks in a 2×2 grid – calm, scannable, no tiles */}
+            <ul className="intro mt-6 grid grid-cols-2 gap-x-3 gap-y-2.5 text-[0.84rem] font-medium min-[380px]:gap-x-4 min-[380px]:text-[0.92rem] text-navy [--d:280ms] sm:text-[1rem] lg:mt-8 lg:max-w-lg lg:gap-x-8 lg:gap-y-3">
+              {[["No lock-in contracts"], ["Tailored checklists"], ["Free quotes", "Free, no-obligation quotes"]].map(([t, lg]) => (
+                <li key={t} className="flex items-start gap-2"><Icon name="check" className="mt-[0.2em] size-[1.05em] shrink-0 text-violet" strokeWidth={2.4} />{lg ? <><span className="lg:hidden">{t}</span><span className="hidden lg:inline">{lg}</span></> : t}</li>
               ))}
-              <li className="flex items-center gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-violet shadow-[0_2px_10px_-6px_rgb(6_27_73/0.3)] ring-1 ring-lilac lg:bg-lavender lg:shadow-none lg:ring-0"><Icon name="shieldSparkle" className="size-5" strokeWidth={2} /></span>
-                <Link href={site.promise.path} className="font-display font-semibold text-violet underline decoration-violet/30 underline-offset-4 hover:decoration-violet">Backed by {site.promise.name}</Link>
+              <li className="flex items-start gap-2">
+                <Icon name="shieldSparkle" className="mt-[0.15em] size-[1.1em] shrink-0 text-violet" strokeWidth={2} />
+                <Link href={site.promise.path} className="text-violet underline decoration-violet/30 underline-offset-4 hover:decoration-violet">{site.promise.name}</Link>
               </li>
             </ul>
-            {/* One clear primary action, phone as secondary, services as a text link */}
-            <div className="intro mt-7 [--d:400ms] lg:mt-9 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
+            {/* Phones: one clear action (Call and Get a quote also live in the bottom bar). Desktop adds phone + services. */}
+            <div className="intro mt-8 [--d:400ms] lg:mt-10 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
               <a href="#quote" className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem] lg:w-auto lg:!px-9">Get my free quote <Icon name="arrow" className="size-[1.1rem]" /></a>
-              <div className="mt-3 flex items-center justify-between gap-3 lg:mt-0 lg:justify-start lg:gap-6">
+              <div className="hidden items-center gap-6 lg:flex">
                 {site.phone && (
                   <a href={telHref(site.phone)} className="btn-outline !min-h-12 whitespace-nowrap !px-5 text-[0.98rem]">
                     <Icon name="phone" className="size-[1.1rem]" />{site.phone}
