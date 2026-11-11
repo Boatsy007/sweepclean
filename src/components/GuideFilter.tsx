@@ -60,7 +60,7 @@ export function TopicChips({ topics, counts, total }: { topics: string[]; counts
           }`}
         >
           {label}
-          <span className={`rounded-full px-1.5 text-xs font-semibold ${on ? "bg-white/20 text-white" : "bg-lavender text-violet"}`}>{n}</span>
+          <span className={`rounded-full px-1.5 text-xs font-semibold ${on ? "bg-violet-deep text-white" : "bg-lavender text-violet-ink"}`}>{n}</span>
         </button>
       </li>
     );

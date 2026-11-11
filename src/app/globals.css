@@ -1,24 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand (2026 identity) – white ~75%, navy ~15%, purple ~10%. Electric blue lives mainly in the logo. */
-  --color-violet: #6500c8;       /* primary purple – buttons, links, icons, accents */
-  --color-violet-deep: #5200a3;  /* hover / pressed */
-  --color-violet-ink: #3d0a80;   /* purple text on lavender chips */
-  --color-orchid: #c86bf5;       /* light end of the logo mark */
-  --color-electric: #0868ff;     /* electric blue – logo, focus ring */
+  /* Brand – coastal blue identity. White ~75%, navy ~15%, coastal blue ~10%.
+     Token names are historical ("violet" = primary brand colour) so the markup didn't need to change. */
+  --color-violet: #527c91;       /* coastal blue – primary: buttons, links, icons, accents */
+  --color-violet-deep: #436a7d;  /* hover / pressed */
+  --color-violet-ink: #2e5566;   /* deeper blue for small text on tinted chips (contrast) */
+  --color-orchid: #8fb3c3;       /* light end of the logo mark */
+  --color-electric: #527c91;     /* focus ring */
   --color-navy: #061b49;         /* deep navy – headings, wordmark, strong text */
   --color-slate: #3f4b6b;        /* body copy (navy-tinted grey) */
-  --color-lavender: #f6f0ff;     /* soft lavender – alternating sections, icon tiles */
-  --color-lilac: #e8dcfb;        /* borders and dividers */
+  --color-lavender: #f3f8f9;     /* subtle background – alternating sections, icon tiles */
+  --color-lilac: #e5eff2;        /* light accent – borders and dividers */
   --color-cloud: #ffffff;        /* page background */
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-outfit), var(--font-inter), ui-sans-serif, sans-serif;
 
   --radius-card: 1.25rem;
-  --shadow-soft: 0 1px 2px rgb(6 27 73 / 0.04), 0 8px 24px -10px rgb(101 0 200 / 0.16);
-  --shadow-lift: 0 2px 4px rgb(6 27 73 / 0.05), 0 18px 40px -14px rgb(101 0 200 / 0.26);
+  --shadow-soft: 0 1px 2px rgb(6 27 73 / 0.04), 0 8px 24px -10px rgb(82 124 145 / 0.16);
+  --shadow-lift: 0 2px 4px rgb(6 27 73 / 0.05), 0 18px 40px -14px rgb(82 124 145 / 0.24);
 }
 
 html {
@@ -54,7 +55,7 @@ p { text-wrap: pretty; }
 
 @utility container-x { @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8; }
 @utility btn { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-display text-[1.02rem] font-semibold transition-[background-color,box-shadow,transform,color] duration-200 active:scale-[.98]; }
-@utility btn-primary { @apply btn bg-violet font-bold text-white shadow-[0_8px_20px_-8px_rgb(101_0_200/0.55)] hover:bg-violet-deep hover:shadow-[0_12px_26px_-10px_rgb(101_0_200/0.6)]; }
+@utility btn-primary { @apply btn bg-violet font-bold text-white shadow-[0_4px_12px_-6px_rgb(82_124_145/0.35)] hover:bg-violet-deep hover:shadow-[0_6px_16px_-8px_rgb(82_124_145/0.4)]; }
 @utility btn-outline { @apply btn border-2 border-violet bg-white text-violet hover:bg-lavender; }
 @utility btn-white { @apply btn bg-white text-violet shadow-soft hover:bg-lavender; }
 @utility eyebrow { @apply font-display text-[0.8rem] font-bold uppercase tracking-[0.2em] text-violet; }
@@ -67,6 +68,10 @@ p { text-wrap: pretty; }
   .prose-swept p { margin-bottom: 1rem; line-height: 1.7; }
   .prose-swept h2 { margin-top: 2.5rem; margin-bottom: .75rem; font-size: 1.5rem; font-weight: 700; }
 }
+
+/* Coastal blue (#527c91) is ~4.2:1 on the subtle background, just under the 4.5:1 needed for small text.
+   On tinted surfaces, small blue text uses the deeper brand blue instead (buttons and icons are unchanged). */
+.bg-lavender .text-violet, .band .text-violet { color: var(--color-violet-ink); }
 
 /* Focus ring stays visible on dark surfaces */
 .bg-violet :focus-visible, .bg-navy :focus-visible { outline-color: #fff; }
@@ -88,7 +93,7 @@ p { text-wrap: pretty; }
 @keyframes swept-ring { from { transform: rotate(-50deg); } to { transform: rotate(40deg); } }
 @keyframes swept-spin { from { transform: rotate(-25deg) scale(0.9); } to { transform: rotate(35deg) scale(1.1); } }
 @keyframes swept-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes swept-elevate { from { box-shadow: 0 0 0 rgb(20 0 50 / 0); } to { box-shadow: 0 10px 30px -12px rgb(20 0 50 / 0.55); } }
+@keyframes swept-elevate { from { box-shadow: 0 0 0 rgb(6 27 73 / 0); } to { box-shadow: 0 10px 30px -12px rgb(6 27 73 / 0.35); } }
 
 .scroll-progress { display: none; }
 
@@ -220,6 +225,22 @@ html.lenis { scroll-behavior: auto; }
   html.crios body { padding-top: 77px; }
 }
 
+/* Homepage hero, phones/tablets: the hero text column is at least the visible screen height minus the
+   header (76px) and the hero's top padding (20px), so the quote form's photo starts just below the first view.
+   It's a minimum, not a fixed height – taller content simply grows. svh = viewport with browser toolbars shown. */
+@media (max-width: 1023px) {
+  .hero-fill { min-height: calc(100vh - 6rem); min-height: calc(100svh - 6rem); }
+}
+/* Short phones only: slightly tighter vertical gaps in the hero (same fonts and sizes), so the
+   "Get my free quote" button sits above the bottom Call/Quote bar on first view. */
+@media (max-width: 1023px) and (max-height: 700px) {
+  .hero-fill h1 > span:first-child { margin-bottom: 0.75rem; }
+  .hero-fill > p { margin-top: 1rem; }
+  .hero-fill > ul { margin-top: 1rem; }
+  .hero-fill > div.intro { margin-top: 1.25rem; }
+  div:has(> .hero-fill) { padding-top: 0.75rem; }
+}
+
 /* Cleaning guide article body (GuideContent.tsx) */
 @layer components {
   .prose-guide { font-size: 1.075rem; line-height: 1.75; }
@@ -227,7 +248,7 @@ html.lenis { scroll-behavior: auto; }
   .prose-guide h2 { margin-top: 2.75rem; font-size: 1.75rem; font-weight: 800; line-height: 1.2; scroll-margin-top: 7rem; }
   .prose-guide h3 { margin-top: 2rem; font-size: 1.3rem; font-weight: 700; line-height: 1.3; }
   .prose-guide h2 + *, .prose-guide h3 + * { margin-top: 0.75rem; }
-  .prose-guide a { color: var(--color-violet); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(101 0 200 / 0.35); }
+  .prose-guide a { color: var(--color-violet); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(82 124 145 / 0.4); }
   .prose-guide a:hover { text-decoration-color: currentColor; }
   .prose-guide strong { color: var(--color-navy); font-weight: 700; }
   .prose-guide ul, .prose-guide ol { padding-left: 1.4rem; }

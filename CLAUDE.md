@@ -17,7 +17,7 @@ The sitemap, `llms.txt`, structured data, related guides and the guides listing 
 
 ## Other conventions
 
-- Brand (2026): purple #6500C8, deep navy #061B49, electric blue #0868FF (logo only), soft lavender #F6F0FF, white – as tokens in `src/app/globals.css` (`violet`, `navy`, `electric`, `lavender`). Mostly white pages, lavender for alternating sections, no large purple panels or heavy gradients. Logo files are in `public/brand/` (`swept-logo`, `swept-logo-white` for the navy footer, `swept-mark`).
+- Brand: coastal blue #527C91 (primary – buttons, links, icons, logo mark), dark navy #061B49 (headings/text), white, subtle background #F3F8F9, light accent #E5EFF2 – as tokens in `src/app/globals.css` (token names are historical: `violet` = coastal blue, `violet-ink` = deeper blue for small text on tinted backgrounds, `lavender` = subtle background, `lilac` = light accent). No purple anywhere. Mostly white pages, no large coloured panels or heavy gradients. Logo files are in `public/brand/` (`swept-logo`, `swept-logo-white` for the navy footer, `swept-mark`).
 - Every page's metadata goes through `pageMeta()` in `src/lib/seo.ts`.
 - Don't change the homepage, branding, forms or lead API unless asked.
 - Chrome on iPhone has a header workaround (`html.crios` in `globals.css` and `layout.tsx`). Leave it in place until Chrome fixes the iOS 26 bug.

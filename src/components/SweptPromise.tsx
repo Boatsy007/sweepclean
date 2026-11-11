@@ -8,8 +8,8 @@ const SPARKLE = "M11.4 7.4c.3 2.15 1.15 3 3.3 3.3-2.15.3-3 1.15-3.3 3.3-.3-2.15-
 const SPARKLE_SM = "M15.6 13.6c.12.85.45 1.2 1.3 1.3-.85.12-1.18.45-1.3 1.3-.12-.85-.45-1.18-1.3-1.3.85-.1 1.18-.45 1.3-1.3Z";
 
 const tones = {
-  violet: { disc: "#6500c8", inner: "#5200a3", ring: "#ffffff", shield: "#ffffff", spark: "#6500c8" },
-  white: { disc: "#ffffff", inner: "#f6f0ff", ring: "#6500c8", shield: "#6500c8", spark: "#ffffff" },
+  violet: { disc: "#527c91", inner: "#436a7d", ring: "#ffffff", shield: "#ffffff", spark: "#527c91" },
+  white: { disc: "#ffffff", inner: "#f3f8f9", ring: "#527c91", shield: "#527c91", spark: "#ffffff" },
 } as const;
 
 /**
@@ -22,7 +22,7 @@ export function PromiseSeal({ tone = "violet", className = "size-40", label = fa
   const a11y = label ? { role: "img", "aria-label": `${site.promise.name} – ${site.promise.tagline}` } : { "aria-hidden": true };
   return (
     <span className={`relative inline-block shrink-0 ${className}`} {...a11y}>
-      <svg viewBox="0 0 240 240" className="absolute inset-0 size-full drop-shadow-[0_14px_30px_rgb(46_10_99/0.22)]">
+      <svg viewBox="0 0 240 240" className="absolute inset-0 size-full drop-shadow-[0_14px_30px_rgb(6_27_73/0.18)]">
         <circle cx="120" cy="120" r="119" fill={t.disc} />
         <circle cx="120" cy="120" r="111" fill="none" stroke={t.ring} strokeOpacity="0.3" strokeWidth="1.2" />
         <circle cx="120" cy="120" r="72" fill={t.inner} />

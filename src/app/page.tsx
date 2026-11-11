@@ -65,9 +65,9 @@ export default function Home() {
       {/* HERO – headline + quote form above the fold */}
       <section className="relative isolate overflow-hidden bg-white">
         {/* Very soft lavender light, top right – the only decoration; the logo carries the personality */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 hidden lg:block bg-[radial-gradient(60rem_32rem_at_100%_0%,rgb(246_240_255)_0%,rgb(246_240_255/0.6)_45%,transparent_75%)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 hidden lg:block bg-[radial-gradient(60rem_32rem_at_100%_0%,rgb(243_248_249)_0%,rgb(243_248_249/0.6)_45%,transparent_75%)]" />
         <div className="container-x grid items-center gap-6 pb-10 pt-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
-          <div className="hero-drift relative min-w-0">
+          <div className="hero-drift hero-fill relative min-w-0">
             {/* Phones/tablets: a bright, airy photo behind the headline under a soft white veil, fading into white */}
             <div aria-hidden="true" className="pointer-events-none absolute -left-4 -right-4 -top-5 bottom-[-1.5rem] -z-10 overflow-hidden sm:-left-6 sm:-right-6 lg:hidden">
               <MobileHeroPhoto />
@@ -75,7 +75,7 @@ export default function Home() {
             </div>
             <h1 className="intro-solid text-[2.75rem] font-semibold leading-[1.02] tracking-[-0.035em] !text-navy sm:text-[3.6rem] lg:text-[4.1rem]">
               {/* Quiet eyebrow (part of the H1 for search): plain text, no pill */}
-              <span className="mb-5 flex items-center gap-1.5 font-display text-[0.66rem] font-semibold uppercase leading-normal tracking-[0.08em] text-violet min-[360px]:whitespace-nowrap min-[400px]:tracking-[0.12em] lg:mb-6 lg:gap-2 lg:text-[0.8rem] lg:tracking-[0.18em]">
+              <span className="mb-5 flex items-center gap-1.5 font-display text-[0.66rem] font-semibold uppercase leading-normal tracking-[0.08em] text-violet-ink lg:text-violet min-[360px]:whitespace-nowrap min-[400px]:tracking-[0.12em] lg:mb-6 lg:gap-2 lg:text-[0.8rem] lg:tracking-[0.18em]">
                 <Icon name="sparkle" className="size-3.5 lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
