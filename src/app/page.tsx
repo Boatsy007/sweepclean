@@ -73,17 +73,14 @@ export default function Home() {
               <MobileHeroPhoto />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(255_255_255/0.74)_0%,rgb(255_255_255/0.6)_40%,rgb(255_255_255/0.72)_72%,#fff_100%)]" />
             </div>
-            <h1 className="intro-solid text-[2.6rem] font-extrabold leading-[1.02] !text-navy sm:text-6xl lg:text-[3.9rem]">
+            <h1 className="intro-solid text-[2.75rem] font-semibold leading-[1.02] tracking-[-0.035em] !text-navy sm:text-[3.6rem] lg:text-[4.1rem]">
               {/* Quiet eyebrow (part of the H1 for search): plain text, no pill */}
               <span className="mb-5 flex items-center gap-1.5 font-display text-[0.66rem] font-semibold uppercase leading-normal tracking-[0.08em] text-violet min-[360px]:whitespace-nowrap min-[400px]:tracking-[0.12em] lg:mb-6 lg:gap-2 lg:text-[0.8rem] lg:tracking-[0.18em]">
                 <Icon name="sparkle" className="size-3.5 lg:size-4" /> House cleaning · Brisbane, Logan & Gold Coast
               </span>{" "}
               <span className="sr-only">– </span>
               <span className="block">A beautifully clean home.</span>{" "}
-              <span className="relative inline-block text-violet">
-                More time for you.
-                <svg aria-hidden="true" viewBox="0 0 300 18" preserveAspectRatio="none" className="absolute -bottom-3 left-0 h-3 w-[72%] text-violet/60"><path d="M3 14C70 4 190 0 297 9" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
-              </span>
+              <span className="block text-violet">More time for you.</span>
             </h1>
             <p className="intro mt-7 max-w-md text-[1.06rem] leading-relaxed text-navy/85 [--d:160ms] sm:max-w-xl sm:text-xl lg:mt-8">
               Weekly, fortnightly or monthly home cleaning, tailored to your home – across Brisbane, Logan, the Gold Coast and Tweed Heads.
