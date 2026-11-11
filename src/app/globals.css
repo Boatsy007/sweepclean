@@ -231,6 +231,11 @@ html.lenis { scroll-behavior: auto; }
 @media (max-width: 1023px) {
   .hero-fill { min-height: calc(100vh - 6rem); min-height: calc(100svh - 6rem); }
 }
+/* Phones: spread the hero content over that height so the quote button sits just above the
+   fixed bottom Call/Quote bar (bar ≈ 3.75rem + safe area), instead of leaving an empty band. */
+@media (max-width: 1023px) {
+  .hero-fill { display: flex; flex-direction: column; justify-content: space-between; padding-bottom: calc(4.5rem + max(env(safe-area-inset-bottom), 0.5rem)); }
+}
 /* Short phones only: slightly tighter vertical gaps in the hero (same fonts and sizes), so the
    "Get my free quote" button sits above the bottom Call/Quote bar on first view. */
 @media (max-width: 1023px) and (max-height: 700px) {
@@ -239,6 +244,10 @@ html.lenis { scroll-behavior: auto; }
   .hero-fill > ul { margin-top: 1rem; }
   .hero-fill > div.intro { margin-top: 1.25rem; }
   div:has(> .hero-fill) { padding-top: 0.75rem; }
+}
+/* Very short phones: the hero is already taller than the screen, so keep only a small gap below the button. */
+@media (max-width: 1023px) and (max-height: 600px) {
+  .hero-fill { padding-bottom: 1.5rem; }
 }
 
 /* Cleaning guide article body (GuideContent.tsx) */
