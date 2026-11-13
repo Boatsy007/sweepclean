@@ -122,6 +122,8 @@ const ok = (m) => console.log("  ✓ " + m);
   if (await page.isVisible("text=Thanks, Test")) ok("thank-you personalised"); else fail("thank-you not personalised");
   const ev = await events().catch(() => []);
   // dataLayer resets on navigation in the new page; check events on the quote page via sessionless approach:
+  // Client navigations (with the page crossfade) update <head> a moment after the URL changes – wait for it.
+  await page.waitForFunction(() => (document.querySelector('meta[name="robots"]')?.content || "").includes("noindex"), null, { timeout: 4000 }).catch(() => {});
   const robots = await page.evaluate(() => document.querySelector('meta[name="robots"]')?.content || "");
   if (robots.includes("noindex")) ok("thank-you page is noindex"); else fail("thank-you page indexable");
 
