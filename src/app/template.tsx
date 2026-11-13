@@ -1,15 +1,19 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 
 /*
  * Re-mounts on every client-side navigation, so each new page fades and rises in gently.
- * The very first page load is not animated (it would only delay the first paint).
+ * The class is added in the browser only (before paint), never in server HTML, so the very
+ * first page load is not animated and its first paint isn't delayed.
  */
-let firstRender = true;
+let hydrated = false;
 
 export default function Template({ children }: { children: ReactNode }) {
-  const animate = !firstRender;
-  firstRender = false;
-  return <div className={animate ? "page-enter" : undefined}>{children}</div>;
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (hydrated) ref.current?.classList.add("page-enter");
+    hydrated = true;
+  }, []);
+  return <div ref={ref}>{children}</div>;
 }
