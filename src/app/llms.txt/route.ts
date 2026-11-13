@@ -1,4 +1,5 @@
 import { site, siteUrl, trustLabel } from "@/lib/site";
+import { localFor } from "@/lib/suburbLocal";
 import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
 import { generalFaqs } from "@/lib/faqs";
@@ -35,7 +36,7 @@ export function GET() {
     "## Areas and suburbs",
     ...areas.flatMap((a) => [
       `### [${a.name}](${u}/areas/${a.slug})`,
-      ...suburbsIn(a.slug).map((s) => `- [${s.name} ${a.state} ${s.postcode}](${u}${suburbPath(s)}) – ${s.council}`),
+      ...suburbsIn(a.slug).map((s) => `- [${s.name} ${a.state} ${s.postcode}](${u}${suburbPath(s)}) – ${s.council}. ${localFor(a.slug, s.slug) ?? ""} ${s.note}`.trim()),
       "",
     ]),
     ...(guides.length

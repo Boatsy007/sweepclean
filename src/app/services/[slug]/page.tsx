@@ -14,6 +14,32 @@ import { ServiceVisual } from "@/components/ServiceVisual";
 import { TrackedLink } from "@/components/TrackedLink";
 import { pageMeta } from "@/lib/seo";
 import { servicePhotos } from "@/lib/photos";
+import { suburbPath, suburbsIn, type Suburb } from "@/lib/suburbs";
+import { profilesFor, type ProfileKey } from "@/lib/localProfiles";
+import { guides, guidePath, readingTime } from "@/lib/guides";
+
+/** Which local home types make a suburb most relevant to each service (from each suburb's housing note). */
+const serviceFit: Record<string, ProfileKey[]> = {
+  "regular-house-cleaning": ["family", "acreage", "leafy", "hillside"],
+  "deep-cleaning": ["newbuild", "character", "prestige", "waterside"],
+  "ndis-cleaning": ["seniors", "family"],
+  "bond-cleaning": ["rentals", "apartment"],
+  "airbnb-cleaning": ["coastal", "apartment", "waterside"],
+  "carpet-cleaning": ["rentals", "family", "acreage"],
+  "commercial-cleaning": ["apartment", "rentals"],
+};
+const anchorLabel: Record<string, string> = {
+  "regular-house-cleaning": "House cleaning", "deep-cleaning": "Deep cleaning", "ndis-cleaning": "NDIS cleaning",
+  "bond-cleaning": "Bond cleaning", "airbnb-cleaning": "Airbnb cleaning", "carpet-cleaning": "Carpet cleaning", "commercial-cleaning": "Office cleaning",
+};
+function topSuburbs(service: string, area: string, n = 5): Suburb[] {
+  const fit = serviceFit[service] ?? [];
+  return suburbsIn(area)
+    .map((x, i) => ({ x, i, score: profilesFor(x).filter((k) => fit.includes(k)).length }))
+    .sort((p, q) => q.score - p.score || p.i - q.i)
+    .slice(0, n)
+    .map((p) => p.x);
+}
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -119,11 +145,39 @@ export default async function ServicePage({ params }: Props) {
         <Faqs faqs={s.faqs} />
       </section>
 
+      {(() => {
+        const related = guides.filter((g) => g.services?.includes(s.slug)).slice(0, 6);
+        if (!related.length) return null;
+        return (
+          <section className="container-x pt-16" aria-labelledby="sguides-h">
+            <h2 id="sguides-h" className="text-2xl font-extrabold">Helpful guides about {s.name.toLowerCase()}</h2>
+            <ul className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {related.map((g) => (
+                <li key={g.slug}>
+                  <Link href={guidePath(g.slug)} className="card group flex h-full flex-col p-5 hover:shadow-lift">
+                    <span className="font-display font-bold leading-snug text-navy group-hover:text-violet">{g.title}</span>
+                    <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-violet">Read guide · {readingTime(g)} min <Icon name="arrow" className="size-4" /></span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })()}
+
       <section className="container-x py-16" aria-labelledby="where-h">
         <h2 id="where-h" className="text-2xl font-extrabold">{s.name} near you</h2>
-        <ul className="mt-5 flex flex-wrap gap-3">
+        <p className="mt-2 max-w-2xl">Available across Brisbane, Logan, the Gold Coast and Tweed Heads. Suburbs where {s.name.toLowerCase()} is a particularly good fit:</p>
+        <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {areas.map((a) => (
-            <li key={a.slug}><Link href={`/areas/${a.slug}`} className="inline-flex items-center gap-2 rounded-full border-2 border-lilac bg-white px-5 py-2.5 font-medium text-navy hover:border-violet"><Icon name="pin" className="size-4 text-violet" />{a.name}</Link></li>
+            <li key={a.slug} className="card p-5">
+              <Link href={`/areas/${a.slug}`} className="inline-flex items-center gap-2 font-display text-lg font-bold text-navy hover:text-violet"><Icon name="pin" className="size-5 text-violet" />{a.name}</Link>
+              <ul className="mt-3 space-y-1.5 text-[0.95rem]">
+                {topSuburbs(s.slug, a.slug).map((x) => (
+                  <li key={x.slug}><Link href={suburbPath(x)} className="text-slate underline decoration-lilac underline-offset-2 hover:text-violet hover:decoration-violet">{anchorLabel[s.slug] ?? s.name} in {x.name}</Link></li>
+                ))}
+              </ul>
+            </li>
           ))}
         </ul>
         <h2 className="mt-12 text-2xl font-extrabold">Other services</h2>

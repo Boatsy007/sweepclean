@@ -14,6 +14,13 @@ import { QuickStart } from "@/components/QuickStart";
 import { suburbPath, suburbsIn } from "@/lib/suburbs";
 import { pageMeta } from "@/lib/seo";
 import { AreaGuides } from "@/components/AreaGuides";
+import { guidesForArea, guidePath } from "@/lib/guides";
+
+/** State-level facts that genuinely differ between areas (sources: RTA Queensland, NSW Fair Trading). */
+const stateFacts = {
+  QLD: { bond: "Residential Tenancies Authority (RTA)", reports: "Entry (Form 1a) and exit (Form 14a) condition reports", disputes: "RTA dispute resolution, then QCAT", time: "Queensland time (AEST, no daylight saving)" },
+  NSW: { bond: "NSW Fair Trading (Rental Bonds Online)", reports: "Condition report at the start of the tenancy", disputes: "NSW Civil and Administrative Tribunal (NCAT)", time: "NSW time – an hour ahead of Queensland from October to April" },
+} as const;
 
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() {
@@ -68,6 +75,39 @@ export default async function AreaPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {(() => {
+        const subs = suburbsIn(a.slug);
+        const councils = [...new Set(subs.map((x) => x.council))];
+        const regions = [...new Set(subs.map((x) => x.group))];
+        const postcodes = [...new Set(subs.map((x) => x.postcode))].sort();
+        const st = stateFacts[a.state];
+        const priceGuide = guidesForArea(a.slug)[0];
+        const rows: [string, React.ReactNode][] = [
+          ["State", a.state === "NSW" ? "New South Wales" : "Queensland"],
+          [councils.length > 1 ? "Councils" : "Council", councils.join(" · ")],
+          ["Suburbs we clean", `${subs.length} suburbs across ${regions.join(", ")}`],
+          ["Postcodes", `${postcodes[0]}–${postcodes[postcodes.length - 1]}`],
+          ["Bonds held by", st.bond],
+          ["Bond clean benchmark", st.reports],
+          ["Bond disputes", st.disputes],
+          ["Bookings confirmed in", st.time],
+          ...(priceGuide ? [["Local guide", <Link key="g" href={guidePath(priceGuide.slug)} className="font-semibold text-violet underline underline-offset-2">{priceGuide.title}</Link>] as [string, React.ReactNode]] : []),
+        ];
+        return (
+          <section className="container-x pt-16" aria-labelledby="facts-h">
+            <h2 id="facts-h" className="text-3xl font-extrabold sm:text-[2.5rem]">{a.name} at a glance</h2>
+            <dl className="mt-6 divide-y divide-lilac overflow-hidden rounded-[var(--radius-card)] border border-lilac bg-white">
+              {rows.map(([k, v]) => (
+                <div key={k} className="grid grid-cols-[9.5rem_1fr] gap-4 px-5 py-3.5 sm:grid-cols-[13rem_1fr]">
+                  <dt className="font-display font-semibold text-navy">{k}</dt>
+                  <dd>{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        );
+      })()}
 
       <section className="container-x py-16" aria-labelledby="local-h">
         <h2 id="local-h" className="text-3xl font-extrabold sm:text-[2.5rem]">Cleaning homes in {a.name}: what we look out for</h2>

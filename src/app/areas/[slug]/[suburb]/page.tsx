@@ -15,6 +15,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { pageMeta } from "@/lib/seo";
 import { AreaGuides } from "@/components/AreaGuides";
 import { profiles, profilesFor, servicesFor } from "@/lib/localProfiles";
+import { localFor } from "@/lib/suburbLocal";
 
 type Props = { params: Promise<{ slug: string; suburb: string }> };
 
@@ -43,6 +44,7 @@ export default async function SuburbPage({ params }: Props) {
   const near = nearby(s);
   const nsw = a.state === "NSW";
   const path = suburbPath(s);
+  const about = localFor(a.slug, s.slug);
   const keys = profilesFor(s);
   const local = keys.slice(0, 3).map((k) => ({ k, ...profiles[k] }));
   const suits = servicesFor(s, keys).map((x) => ({ ...x, sv: services.find((v) => v.slug === x.slug)! }));
@@ -58,6 +60,12 @@ export default async function SuburbPage({ params }: Props) {
       q: `Do you clean homes in ${s.name}?`,
       a: `Yes. Swept cleans houses, townhouses and apartments in ${s.name} ${a.state} ${s.postcode}, along with nearby suburbs such as ${near.slice(0, 3).map((n) => n.name).join(", ")}. Request a quote online and we'll confirm your booking.`,
     },
+    ...(about
+      ? [{
+          q: `Which parts of ${s.name} do you clean?`,
+          a: `All of ${s.name} ${s.postcode}. ${about} We also clean the neighbouring suburbs of ${near.slice(0, 4).map((n) => n.name).join(", ")}.`,
+        }]
+      : []),
     {
       q: `How much does house cleaning cost in ${s.name}?`,
       a: `Every home is different, so we quote each one. The price depends on the number of bedrooms and bathrooms, how often you'd like us to visit, the home's current condition and any extras such as inside the oven. You'll get a written price ${site.quoteResponse}, before anything is booked.`,
@@ -86,7 +94,7 @@ export default async function SuburbPage({ params }: Props) {
     "@id": `${siteUrl()}${path}#service`,
     name: `House cleaning in ${s.name}`,
     serviceType: "House cleaning",
-    description: `Regular, deep, NDIS, bond, Airbnb, carpet and commercial cleaning in ${s.name} ${a.state} ${s.postcode}.`,
+    description: `Regular, deep, NDIS, bond, Airbnb, carpet and commercial cleaning in ${s.name} ${a.state} ${s.postcode}.${about ? ` ${about}` : ""}`,
     url: `${siteUrl()}${path}`,
     provider: { "@id": `${siteUrl()}/#business` },
     areaServed: {
@@ -143,6 +151,7 @@ export default async function SuburbPage({ params }: Props) {
       <section className="container-x grid gap-10 py-16 lg:grid-cols-[1fr_1.1fr]" aria-labelledby="glance-h">
         <div>
           <h2 id="glance-h" className="text-3xl font-extrabold">{s.name} at a glance</h2>
+          {about && <p className="mt-3 max-w-xl text-lg leading-relaxed">{about}</p>}
           <dl className="reveal mt-6 divide-y divide-lilac overflow-hidden rounded-[var(--radius-card)] border border-lilac bg-white">
             {facts.map(([k, v]) => (
               <div key={k} className="grid grid-cols-[9.5rem_1fr] gap-4 px-5 py-3.5 sm:grid-cols-[12rem_1fr]">
