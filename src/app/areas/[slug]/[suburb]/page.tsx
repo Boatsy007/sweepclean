@@ -16,6 +16,7 @@ import { pageMeta } from "@/lib/seo";
 import { AreaGuides } from "@/components/AreaGuides";
 import { profiles, profilesFor, servicesFor } from "@/lib/localProfiles";
 import { localFor } from "@/lib/suburbLocal";
+import { serviceAreaPath, serviceAreas } from "@/lib/serviceAreas";
 
 type Props = { params: Promise<{ slug: string; suburb: string }> };
 
@@ -106,7 +107,7 @@ export default async function SuburbPage({ params }: Props) {
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: `Cleaning services in ${s.name}`,
-      itemListElement: services.map((sv) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: `${sv.name} in ${s.name}`, url: `${siteUrl()}/services/${sv.slug}` } })),
+      itemListElement: services.map((sv) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: `${sv.name} in ${s.name}`, url: `${siteUrl()}${serviceAreas[sv.slug]?.[a.slug] ? serviceAreaPath(sv.slug, a.slug) : `/services/${sv.slug}`}` } })),
     },
   };
 
@@ -200,7 +201,7 @@ export default async function SuburbPage({ params }: Props) {
               </ul>
               <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
                 <Link href={`/quote?service=${slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote<span className="sr-only"> for {sv.name.toLowerCase()} in {s.name}</span></Link>
-                <Link href={`/services/${slug}`} className="text-navy underline underline-offset-2">Full checklist<span className="sr-only"> for {sv.name.toLowerCase()}</span></Link>
+                <Link href={serviceAreas[slug]?.[a.slug] ? serviceAreaPath(slug, a.slug) : `/services/${slug}`} className="text-navy underline underline-offset-2">Full checklist<span className="sr-only"> for {sv.name.toLowerCase()}</span></Link>
               </div>
             </li>
           ))}
@@ -218,7 +219,7 @@ export default async function SuburbPage({ params }: Props) {
                 <span className="flex-1" />
                 <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
                   <Link href={`/quote?service=${sv.slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote</Link>
-                  <Link href={`/services/${sv.slug}`} className="text-navy underline underline-offset-2">What&apos;s included<span className="sr-only"> in {sv.name.toLowerCase()}</span></Link>
+                  <Link href={serviceAreas[sv.slug]?.[a.slug] ? serviceAreaPath(sv.slug, a.slug) : `/services/${sv.slug}`} className="text-navy underline underline-offset-2">What&apos;s included<span className="sr-only"> in {sv.name.toLowerCase()}</span></Link>
                 </div>
               </li>
             ))}

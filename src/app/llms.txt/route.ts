@@ -1,5 +1,6 @@
 import { site, siteUrl, trustLabel } from "@/lib/site";
 import { localFor } from "@/lib/suburbLocal";
+import { serviceAreaPath, serviceAreas, titleLabel } from "@/lib/serviceAreas";
 import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
 import { generalFaqs } from "@/lib/faqs";
@@ -29,6 +30,9 @@ export function GET() {
     "",
     "## Services",
     ...services.map((s) => `- [${s.name}](${u}/services/${s.slug}): ${s.summary} Best for: ${s.bestFor}.`),
+    "",
+    "## Services by area",
+    ...Object.entries(serviceAreas).flatMap(([sv, m]) => Object.entries(m).map(([ar, c]) => `- [${titleLabel[sv]} ${areas.find((x) => x.slug === ar)?.name}](${u}${serviceAreaPath(sv, ar)}): ${c.description}`)),
     "",
     "## What we clean",
     ...tasks.map((t) => `- ${t.name}: ${t.detail}`),

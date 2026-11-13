@@ -4,6 +4,7 @@ import { areas } from "@/lib/areas";
 import { site, siteUrl } from "@/lib/site";
 import { suburbPath, suburbs } from "@/lib/suburbs";
 import { guidePath, guides } from "@/lib/guides";
+import { serviceAreaPath, serviceAreas } from "@/lib/serviceAreas";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
@@ -14,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/quote", 0.9),
     page("/services", 0.8),
     ...services.map((s) => page(`/services/${s.slug}`, 0.9)),
+    ...Object.entries(serviceAreas).flatMap(([sv, m]) => Object.keys(m).map((ar) => page(serviceAreaPath(sv, ar), 0.85))),
     page("/areas", 0.7),
     ...areas.map((a) => page(`/areas/${a.slug}`, 0.8)),
     ...suburbs.map((s) => page(suburbPath(s), 0.7)),

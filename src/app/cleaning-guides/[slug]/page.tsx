@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatDate, getGuide, guideAuthor, guidePath, guides, headingId, isOfficialSource, readingTime, relatedGuides, wordCount } from "@/lib/guides";
 import { services } from "@/lib/services";
+import { serviceAreaPath, serviceAreas } from "@/lib/serviceAreas";
 import { siteUrl } from "@/lib/site";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { pageMeta } from "@/lib/seo";
@@ -144,7 +145,7 @@ export default async function GuidePage({ params }: Props) {
               <ul className="mt-5 grid gap-4 sm:grid-cols-2">
                 {linkedServices.map((s) => (
                   <li key={s.slug}>
-                    <Link href={`/services/${s.slug}`} className="card flex items-center gap-4 p-5 hover:shadow-lift">
+                    <Link href={g.areas?.length === 1 && serviceAreas[s.slug]?.[g.areas[0]] ? serviceAreaPath(s.slug, g.areas[0]) : `/services/${s.slug}`} className="card flex items-center gap-4 p-5 hover:shadow-lift">
                       <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-lavender text-violet"><Icon name={s.icon} className="size-6" /></span>
                       <span><span className="block font-display font-semibold text-navy">{s.name}</span><span className="block text-sm">{s.bestFor}</span></span>
                     </Link>

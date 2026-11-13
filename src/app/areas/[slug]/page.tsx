@@ -15,6 +15,7 @@ import { suburbPath, suburbsIn } from "@/lib/suburbs";
 import { pageMeta } from "@/lib/seo";
 import { AreaGuides } from "@/components/AreaGuides";
 import { guidesForArea, guidePath } from "@/lib/guides";
+import { serviceAreaPath, serviceAreas } from "@/lib/serviceAreas";
 
 /** State-level facts that genuinely differ between areas (sources: RTA Queensland, NSW Fair Trading). */
 const stateFacts = {
@@ -68,7 +69,7 @@ export default async function AreaPage({ params }: Props) {
               <h2 className="text-lg font-bold">Services in {a.name}</h2>
               <ul className="mt-3 divide-y divide-lilac">
                 {services.map((s) => (
-                  <li key={s.slug}><Link href={`/services/${s.slug}`} className="flex items-center gap-3 py-3 font-medium text-navy hover:text-violet"><Icon name={s.icon} className="size-5 text-violet" />{s.name}<Icon name="arrow" className="ml-auto size-4" /></Link></li>
+                  <li key={s.slug}><Link href={serviceAreas[s.slug]?.[a.slug] ? serviceAreaPath(s.slug, a.slug) : `/services/${s.slug}`} className="flex items-center gap-3 py-3 font-medium text-navy hover:text-violet"><Icon name={s.icon} className="size-5 text-violet" />{s.name}<Icon name="arrow" className="ml-auto size-4" /></Link></li>
                 ))}
               </ul>
             </nav>
