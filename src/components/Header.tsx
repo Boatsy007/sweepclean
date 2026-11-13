@@ -19,11 +19,21 @@ const nav = [
 
 export function Header() {
   const path = usePathname();
-  const [open, setOpen] = useState(false);
+  // The menu is open only on the page it was opened on. When a menu link navigates, the menu
+  // closes in the same render as the new page, so the page crossfade goes straight from the
+  // open menu to the chosen page (no glimpse of the old page in between).
+  const [openedAt, setOpenedAt] = useState<string | null>(null);
+  const open = openedAt === path;
+  const setOpen = (v: boolean | ((o: boolean) => boolean)) => {
+    const next = typeof v === "function" ? v(open) : v;
+    setOpenedAt(next ? path : null);
+  };
+  /** True right after a menu link changed page: hide the menu instantly (the page crossfade covers it). */
+  const closedByNavigation = openedAt !== null && openedAt !== path;
   const [svcOpen, setSvcOpen] = useState(false);
   const svcRef = useRef<HTMLLIElement>(null);
 
-  useEffect(() => { setOpen(false); setSvcOpen(false); }, [path]);
+  useEffect(() => { setOpenedAt(null); setSvcOpen(false); }, [path]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setOpen(false), setSvcOpen(false));
     const onClick = (e: MouseEvent) => { if (svcRef.current && !svcRef.current.contains(e.target as Node)) setSvcOpen(false); };
@@ -118,7 +128,11 @@ export function Header() {
 
       {/* Close as soon as any link is tapped – don't wait for the next page to load
           (and still close when tapping the page you're already on). */}
-      <div id="mobile-nav" data-lenis-prevent data-open={open} aria-hidden={!open} inert={!open} onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); }} className="mobile-nav fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto border-t border-lilac bg-white px-4 pb-10 pt-2 text-navy lg:hidden">
+      <div id="mobile-nav" data-lenis-prevent data-open={open} data-instant={closedByNavigation || undefined} aria-hidden={!open} inert={!open} onClick={(e) => {
+        // Tapping the page you are already on just closes the menu; other links close it as the new page arrives.
+        const a = (e.target as HTMLElement).closest("a");
+        if (a && new URL(a.href).pathname === path) setOpen(false);
+      }} className="mobile-nav fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto border-t border-lilac bg-white px-4 pb-10 pt-2 text-navy lg:hidden">
         <nav aria-label="Mobile">
           <ul className="divide-y divide-lilac font-display text-xl font-semibold">
             {nav.filter((n) => !n.children).slice(0, 1).map((n) => (
