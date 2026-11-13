@@ -274,6 +274,13 @@ html.lenis { scroll-behavior: auto; }
 .mobile-nav[data-open="false"] { opacity: 0; visibility: hidden; pointer-events: none; }
 .mobile-nav[data-open="true"] { opacity: 1; visibility: visible; transition: opacity 0.22s ease, visibility 0s; }
 .mobile-nav[data-instant] { transition: none; }
+/* From the menu to a new page: the open menu gets its own top layer in the page transition and
+   dissolves to reveal the new page; the old page is never shown. */
+.mobile-nav[data-open="true"] { view-transition-name: mobile-menu; }
+@keyframes swept-menu-out { to { opacity: 0; } }
+::view-transition-group(mobile-menu) { z-index: 100; animation: none; }
+::view-transition-old(mobile-menu) { animation: swept-menu-out 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both; }
+html.vt-from-menu::view-transition-old(.page-out) { animation: none; opacity: 0; }
 
 /* Cleaning guide article body (GuideContent.tsx) */
 @layer components {

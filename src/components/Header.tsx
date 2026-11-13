@@ -131,7 +131,12 @@ export function Header() {
       <div id="mobile-nav" data-lenis-prevent data-open={open} data-instant={closedByNavigation || undefined} aria-hidden={!open} inert={!open} onClick={(e) => {
         // Tapping the page you are already on just closes the menu; other links close it as the new page arrives.
         const a = (e.target as HTMLElement).closest("a");
-        if (a && new URL(a.href).pathname === path) setOpen(false);
+        if (!a) return;
+        if (new URL(a.href).pathname === path) { setOpen(false); return; }
+        // Going to another page: the page crossfade starts from the menu, not the old page (see globals.css).
+        const root = document.documentElement;
+        root.classList.add("vt-from-menu");
+        window.setTimeout(() => root.classList.remove("vt-from-menu"), 1500);
       }} className="mobile-nav fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto border-t border-lilac bg-white px-4 pb-10 pt-2 text-navy lg:hidden">
         <nav aria-label="Mobile">
           <ul className="divide-y divide-lilac font-display text-xl font-semibold">
