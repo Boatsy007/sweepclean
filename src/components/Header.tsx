@@ -118,7 +118,7 @@ export function Header() {
 
       {/* Close as soon as any link is tapped – don't wait for the next page to load
           (and still close when tapping the page you're already on). */}
-      <div id="mobile-nav" data-lenis-prevent hidden={!open} onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); }} className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto border-t border-lilac bg-white px-4 pb-10 pt-2 text-navy lg:hidden">
+      <div id="mobile-nav" data-lenis-prevent data-open={open} aria-hidden={!open} inert={!open} onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); }} className="mobile-nav fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto border-t border-lilac bg-white px-4 pb-10 pt-2 text-navy lg:hidden">
         <nav aria-label="Mobile">
           <ul className="divide-y divide-lilac font-display text-xl font-semibold">
             {nav.filter((n) => !n.children).slice(0, 1).map((n) => (

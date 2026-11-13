@@ -250,6 +250,17 @@ html.lenis { scroll-behavior: auto; }
   .hero-fill { padding-bottom: 1.5rem; }
 }
 
+/* Page transitions: each new page (after the first) fades and rises in. */
+@keyframes swept-page-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes swept-page-fade { from { opacity: 0; } to { opacity: 1; } }
+.page-enter { animation: swept-page-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) { .page-enter { animation: swept-page-fade 0.2s ease-out both; } }
+
+/* Mobile menu: fades in and out rather than appearing/disappearing in one frame. */
+.mobile-nav { transition: opacity 0.22s ease, visibility 0s linear 0.22s; }
+.mobile-nav[data-open="false"] { opacity: 0; visibility: hidden; pointer-events: none; }
+.mobile-nav[data-open="true"] { opacity: 1; visibility: visible; transition: opacity 0.22s ease, visibility 0s; }
+
 /* Cleaning guide article body (GuideContent.tsx) */
 @layer components {
   .prose-guide { font-size: 1.075rem; line-height: 1.75; }

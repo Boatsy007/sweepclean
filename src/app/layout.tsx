@@ -28,7 +28,7 @@ export const viewport: Viewport = { themeColor: "#ffffff", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-AU" className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
+    <html lang="en-AU" data-scroll-behavior="smooth" className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <head>
         {/* Chrome on iPhone (CriOS) has an iOS 26 bug with headers pinned to the top: flag it before
             first paint so the mobile header can scroll with the page for those visitors only. */}
