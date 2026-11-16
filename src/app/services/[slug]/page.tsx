@@ -13,6 +13,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { ServiceVisual } from "@/components/ServiceVisual";
 import { TrackedLink } from "@/components/TrackedLink";
 import { pageMeta } from "@/lib/seo";
+import { RegularPackages } from "@/components/RegularPackages";
 import { servicePhotos } from "@/lib/photos";
 import { suburbPath } from "@/lib/suburbs";
 import { anchorLabel, serviceAreaPath, serviceAreas, titleLabel, topSuburbs } from "@/lib/serviceAreas";
@@ -100,6 +101,8 @@ export default async function ServicePage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {s.slug === "regular-house-cleaning" && <RegularPackages />}
 
       <section className="container-x py-16 sm:py-20" aria-labelledby="steps-h">
         <h2 id="steps-h" className="text-3xl font-extrabold sm:text-[2.5rem]">How it works</h2>

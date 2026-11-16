@@ -19,6 +19,7 @@ import { postcodeInArea } from "@/lib/areas";
 import { site, telHref } from "@/lib/site";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
+import { packageById, packageNote, type CleanPackage } from "@/lib/packages";
 
 type Data = Partial<QuoteRequest> & { extras: string[] };
 const STORAGE_KEY = "swept-quote-v1";
@@ -54,6 +55,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const [hp, setHp] = useState("");
   const [resumed, setResumed] = useState(false);
+  const [chosenPackage, setChosenPackage] = useState<CleanPackage | undefined>();
   const started = useRef(false);
   const mountedAt = useRef(Date.now());
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -67,6 +69,14 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
     const freq = params.get("frequency");
     const suburb = params.get("suburb");
     if (svc && SERVICE_OPTIONS.some((o) => o.value === svc)) next.service = svc;
+    // Regular-clean package chosen on the pricing section: note it on the request.
+    const pkg = svc === "regular-house-cleaning" ? packageById(params.get("package")) : undefined;
+    if (pkg) {
+      const note = packageNote(pkg);
+      const rest = (next.notes ?? "").replace(/^Package: .*(\n|$)/, "").trim();
+      next.notes = rest ? `${note}\n${rest}` : note;
+      setChosenPackage(pkg);
+    }
     if (freq && FREQUENCY_OPTIONS.some((o) => o.value === freq)) next.frequency = freq;
     if (suburb) {
       if (/^\d{4}$/.test(suburb)) next.postcode = suburb;
@@ -193,6 +203,13 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
           <p className="mb-6 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-lavender px-4 py-3 text-sm text-violet-ink">
             Welcome back – we&apos;ve kept your answers so far.
             <button type="button" className="font-semibold underline underline-offset-2" onClick={() => { clear(); setData({ ...empty, source: data.source }); setResumed(false); go(0); }}>Start over</button>
+          </p>
+        )}
+
+        {chosenPackage && !isCallback && data.service === "regular-house-cleaning" && (
+          <p className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-lilac bg-lavender px-4 py-3 text-sm text-navy">
+            <Icon name="checkCircle" className="size-5 shrink-0 text-violet" />
+            <span><strong>Booking request:</strong> {chosenPackage.name} regular clean – ${chosenPackage.price} per clean ({chosenPackage.time.toLowerCase()}).</span>
           </p>
         )}
 
