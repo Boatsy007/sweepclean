@@ -71,4 +71,4 @@ export const regularPackages: CleanPackage[] = [
 export const packageById = (id: string | null | undefined) => regularPackages.find((p) => p.id === id);
 
 /** One-line summary added to the booking request, e.g. "Package: Spotless – $147 per clean (typically about 2 hours)". */
-export const packageNote = (p: CleanPackage) => `Package: ${p.name} – $${p.price} per clean (${p.time.toLowerCase()})`;
+export const packageNote = (p: CleanPackage) => `Package: ${p.name} – $${p.price} + GST per clean (${p.time.toLowerCase()})`;
