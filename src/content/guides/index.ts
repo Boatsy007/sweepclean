@@ -11,6 +11,7 @@ import { guide as emergencyCleaning } from "./emergency-cleaning-services-how-qu
 import { guide as hiringQuestions } from "./questions-to-ask-before-hiring-a-house-cleaner";
 import { guide as avoidScams } from "./how-to-avoid-getting-scammed-by-cleaning-services";
 import { guide as inspectionCleaning } from "./rental-inspection-cleaning-what-should-be-done";
+import { guide as bondCleanTime } from "./how-long-does-a-professional-bond-clean-take";
 
 /*
  * Published Cleaning Guides.
@@ -21,4 +22,4 @@ import { guide as inspectionCleaning } from "./rental-inspection-cleaning-what-s
  * Full instructions: docs/CLEANING-GUIDES.md
  */
 
-export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices, tweedCleaningPrices, loganCleaningCost, bondBrisbane, bondLogan, bondGoldCoast, bondTweed, emergencyCleaning, hiringQuestions, avoidScams, inspectionCleaning];
+export const guideList: Guide[] = [brisbaneCleaningCost, goldCoastCleaningPrices, tweedCleaningPrices, loganCleaningCost, bondBrisbane, bondLogan, bondGoldCoast, bondTweed, emergencyCleaning, hiringQuestions, avoidScams, inspectionCleaning, bondCleanTime];
