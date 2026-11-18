@@ -21,7 +21,7 @@ export const regularPackages: CleanPackage[] = [
     id: "regular",
     name: "Regular",
     price: 97,
-    time: "Typically 1–1.5 hours",
+    time: "One cleaner · typically 1 hour",
     bestFor: "Smaller or well-kept homes on a weekly or fortnightly clean",
     includes: [
       "Kitchen benchtops, splashback, sink and tapware",
@@ -37,7 +37,7 @@ export const regularPackages: CleanPackage[] = [
     id: "spotless",
     name: "Spotless",
     price: 147,
-    time: "Typically about 2 hours",
+    time: "One cleaner · typically 1.5–2 hours",
     bestFor: "Most family homes on a fortnightly clean",
     builds: "Regular",
     recommended: true,
@@ -55,7 +55,7 @@ export const regularPackages: CleanPackage[] = [
     id: "platinum",
     name: "Ultimate Platinum",
     price: 247,
-    time: "Typically about 3 hours",
+    time: "One cleaner · typically 2.5–3 hours",
     bestFor: "Larger homes, busy households with pets, or a full monthly reset",
     builds: "Spotless",
     includes: [
@@ -71,4 +71,4 @@ export const regularPackages: CleanPackage[] = [
 export const packageById = (id: string | null | undefined) => regularPackages.find((p) => p.id === id);
 
 /** One-line summary added to the booking request, e.g. "Package: Spotless – $147 per clean (typically about 2 hours)". */
-export const packageNote = (p: CleanPackage) => `Package: ${p.name} – $${p.price} + GST per clean (${p.time.toLowerCase()})`;
+export const packageNote = (p: CleanPackage) => `Package: ${p.name} – $${p.price} + GST fixed price per clean (${p.time.toLowerCase()})`;

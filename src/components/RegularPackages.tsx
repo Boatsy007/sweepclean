@@ -29,7 +29,7 @@ export function RegularPackages() {
       <div className="max-w-2xl">
         <p className="eyebrow">Regular clean prices</p>
         <h2 id="prices-h" className="mt-2 text-3xl font-extrabold sm:text-[2.5rem]">Choose your regular clean</h2>
-        <p className="mt-3 text-lg">Three simple packages, priced per visit (+GST). Pick the one that suits your home and request a booking.</p>
+        <p className="mt-3 text-lg">Three simple packages at a fixed price per clean (+GST) – you pay the package price, not by the hour. Pick the one that suits your home and request a booking.</p>
       </div>
 
       <ul className="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
@@ -44,6 +44,7 @@ export function RegularPackages() {
               <span className="font-display text-5xl font-extrabold leading-none text-navy">${p.price}</span>
               <span className="pb-1 font-medium">+GST per clean</span>
             </p>
+            <p className="mt-1.5 text-sm font-semibold text-navy">Fixed price – not an hourly rate</p>
             <p className="mt-3 inline-flex items-center gap-2 font-display font-semibold text-violet-ink"><Icon name="clock" className="size-5 text-violet" />{p.time}</p>
 
             <div className="mt-6 border-t border-lilac pt-5">
@@ -64,7 +65,7 @@ export function RegularPackages() {
       </ul>
 
       <p className="mt-8 max-w-3xl text-[0.95rem]">
-        Prices are per visit, plus GST, for a typical home on a weekly or fortnightly schedule. Larger homes, a first clean or heavy build-up can take longer – we&apos;ll confirm your price and time in writing before anything is booked. No lock-in contracts.
+        Prices are fixed per visit, plus GST, for a typical home. Times are a guide for one cleaner on a weekly or fortnightly schedule. Larger homes, a first clean or heavy build-up can take longer – we&apos;ll confirm your price and time in writing before anything is booked. No lock-in contracts.
       </p>
     </section>
   );
