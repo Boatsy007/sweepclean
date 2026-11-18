@@ -209,7 +209,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
         {chosenPackage && !isCallback && data.service === "regular-house-cleaning" && (
           <p className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-lilac bg-lavender px-4 py-3 text-sm text-navy">
             <Icon name="checkCircle" className="size-5 shrink-0 text-violet" />
-            <span><strong>Booking request:</strong> {chosenPackage.name} package – ${chosenPackage.price} + GST fixed price per clean ({chosenPackage.time.toLowerCase()}).</span>
+            <span><strong>Booking request:</strong> {chosenPackage.name} package – from ${chosenPackage.from} + GST per clean (starting price for {chosenPackage.basis}). We&apos;ll confirm your fixed price before the clean.</span>
           </p>
         )}
 
