@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CtaLink } from "@/components/CtaLink";
-import { BOOK_PATH, isBookable } from "@/lib/bookingKoala";
+import { isBookable, PACKAGES_HREF } from "@/lib/bookingKoala";
 import { services } from "@/lib/services";
 import { breadcrumbSchema } from "@/lib/schema";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -42,7 +42,7 @@ export default function Services() {
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   {isBookable(s.slug) ? (
                     <>
-                      <CtaLink intent="book" location="services_card" context={{ page_type: "general", service: s.slug }} href={BOOK_PATH} className="btn-primary">Book a clean</CtaLink>
+                      <CtaLink intent="book" location="services_card" context={{ page_type: "general", service: s.slug }} href={PACKAGES_HREF} className="btn-primary">Book a clean</CtaLink>
                       <Link href={`/services/${s.slug}`} className="btn-outline">Learn more<span className="sr-only"> about {s.name}</span></Link>
                       <CtaLink intent="quote" location="services_card" context={{ page_type: "general", service: s.slug }} href={`/quote?service=${s.slug}`} className="font-semibold text-violet-ink underline underline-offset-2">or get a quote</CtaLink>
                     </>

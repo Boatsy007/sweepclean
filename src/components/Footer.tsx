@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CtaLink } from "./CtaLink";
-import { BOOK_PATH, LOGIN_PATH } from "@/lib/bookingKoala";
+import { LOGIN_PATH, PACKAGES_HREF } from "@/lib/bookingKoala";
 import { Logo } from "./SweptMark";
 import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
@@ -14,7 +14,7 @@ export function Footer() {
           <Logo tone="white" size="lg" />
           <p className="mt-5 max-w-xs leading-relaxed">House cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Weekly, fortnightly and monthly cleans, tailored to your home.</p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <CtaLink intent="book" location="footer" href={BOOK_PATH} className="btn-white">Book a clean</CtaLink>
+            <CtaLink intent="book" location="footer" href={PACKAGES_HREF} className="btn-white">Book a clean</CtaLink>
             <CtaLink intent="quote" location="footer" href="/quote" className="font-semibold text-white underline underline-offset-4 hover:text-white/80">Get a free quote</CtaLink>
           </div>
         </div>

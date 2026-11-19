@@ -1,5 +1,14 @@
 # Conversion optimisation report – booking first, quotes second
 
+> **Update (19 November 2026, branch `booking-request-form`).** BookingKoala's embedded booking and contact forms have been removed. Bookings are now **requests through our own form**, which Swept confirms in BookingKoala.
+> - **General "Book a clean" buttons** (header, mobile tile, sticky bar, menu, footer, homepage, bands, suburb and region pages, guides) go to the **regular cleaning packages** (`/services/regular-house-cleaning#prices`).
+> - **Each package's "Request booking" button** goes to **`/book-now?package=…`**, the native booking request form with the package already selected. It shows an estimate from the published prices, and the button reads "Request My Booking", with no payment taken.
+> - **All other services** stay quote-based.
+> - **BookingKoala** is now used on the website only for the customer login (`/login`).
+> - **Leads** go to Resend email and, once configured, to `LEAD_WEBHOOK_URL` (Make.com → BookingKoala Create Lead). See `LEAD-WEBHOOK.md`.
+>
+> The sections below describe the previous iteration. Their CTA-location inventory still applies; the destinations are as summarised here.
+
 _19 November 2026 · branch `conversion-optimisation`, built on `bookingkoala-integration` (`7e544be`). Not merged; production unchanged._
 
 **Principle:** residential customers who are ready to buy go straight to **Book a clean → `/book-now`** (BookingKoala). Anyone who wants a written price, has a custom scope, or needs **bond or commercial** cleaning keeps the **free quote** pathway. All pathways are driven from one setting in `src/lib/bookingKoala.ts`:

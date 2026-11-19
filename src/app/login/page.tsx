@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BookingKoalaEmbed } from "@/components/BookingKoalaEmbed";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { BOOK_PATH, LOGIN_PATH } from "@/lib/bookingKoala";
+import { LOGIN_PATH, PACKAGES_HREF } from "@/lib/bookingKoala";
 import { site, telHref } from "@/lib/site";
 import { pageMeta } from "@/lib/seo";
 
@@ -22,7 +22,7 @@ export default function LoginPage() {
         <p className="mt-3 text-lg">Log in to view and manage your Swept bookings.</p>
         <BookingKoalaEmbed form="login" className="mt-8" />
         <p className="mt-6 text-[0.95rem]">
-          New to Swept? <Link href={BOOK_PATH} className="font-semibold text-violet-ink underline underline-offset-2">Book a clean</Link> or <Link href="/quote" className="font-semibold text-violet-ink underline underline-offset-2">get a free quote</Link>.
+          New to Swept? <Link href={PACKAGES_HREF} className="font-semibold text-violet-ink underline underline-offset-2">Book a clean</Link> or <Link href="/quote" className="font-semibold text-violet-ink underline underline-offset-2">get a free quote</Link>.
           {site.phone ? <> Need help logging in? Call <a href={telHref(site.phone)} className="font-semibold text-violet-ink underline underline-offset-2">{site.phone}</a>.</> : null}
         </p>
       </div>

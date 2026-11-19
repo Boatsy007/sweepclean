@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { BOOK_HINT_FREQUENCIES, BOOK_HINT_PACKAGES, BOOKINGKOALA_EMBED_SCRIPT, bookingKoalaDirectUrl, bookingKoalaEmbedUrl, bookingKoalaForms, type BookingKoalaForm } from "@/lib/bookingKoala";
+import { BOOKINGKOALA_EMBED_SCRIPT, bookingKoalaDirectUrl, bookingKoalaEmbedUrl, bookingKoalaForms, type BookingKoalaForm } from "@/lib/bookingKoala";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
 
@@ -31,13 +31,11 @@ function loadEmbedScript(onError: () => void) {
 }
 
 const viewEvent: Record<BookingKoalaForm, string> = {
-  booking: "booking_form_view",
   login: "customer_login_view",
-  contact: "contact_form_view",
 };
 
 /**
- * One of Swept's official BookingKoala embeds (booking form, customer login or contact form).
+ * Swept's official BookingKoala embed – used for the customer login on /login only.
  *
  * - Reserves the form's height in the server HTML (no layout shift) and shows a loading state until the iframe loads.
  * - Uses the official iframe URL and embed.js; never touches the cross-origin iframe's content.
@@ -65,15 +63,7 @@ export function BookingKoalaEmbed({ form, lazy = false, className = "" }: { form
     setLoaded(true);
     if (!viewed.current) {
       viewed.current = true;
-      // A view of the form – never a booking. Adds the package/frequency picked on our site, if any.
-      const q = new URLSearchParams(window.location.search);
-      const pkg = q.get("package");
-      const freq = q.get("frequency");
-      track(viewEvent[form], {
-        form,
-        ...(pkg && pkg in BOOK_HINT_PACKAGES ? { package: pkg } : {}),
-        ...(freq && freq in BOOK_HINT_FREQUENCIES ? { frequency: freq } : {}),
-      });
+      track(viewEvent[form], { form }); // a view of the form – never a login or a submission
     }
   };
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BOOK_PATH, bookHref } from "@/lib/bookingKoala";
+import { BOOK_PATH, bookingRequestHref } from "@/lib/bookingKoala";
 import { CtaLink } from "./CtaLink";
 import { orgRef } from "@/lib/schema";
 import { packageExtras, regularPackages } from "@/lib/packages";
@@ -71,8 +71,8 @@ export function RegularPackages({ place, pageUrl = "/services/regular-house-clea
             </div>
 
             <span className="flex-1" />
-            <CtaLink intent="book" location="package_card" context={{ page_type: "package", service: "regular-house-cleaning", package: p.id }} href={bookHref({ package: p.id })} className={`${p.recommended ? "btn-primary" : "btn-outline"} mt-8 w-full !min-h-13`}>
-              Book {p.name} <Icon name="arrow" className="size-4" />
+            <CtaLink intent="book" location="package_card" context={{ page_type: "package", service: "regular-house-cleaning", package: p.id }} href={bookingRequestHref(p.id)} className={`${p.recommended ? "btn-primary" : "btn-outline"} mt-8 w-full !min-h-13`}>
+              Request booking <Icon name="arrow" className="size-4" />
             </CtaLink>
           </li>
         ))}

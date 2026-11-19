@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CtaLink } from "@/components/CtaLink";
-import { BOOK_PATH } from "@/lib/bookingKoala";
+import { PACKAGES_HREF } from "@/lib/bookingKoala";
 import { site, telHref } from "@/lib/site";
 import { services, type Faq } from "@/lib/services";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
@@ -85,7 +85,7 @@ export default function SweptPromisePage() {
             <p className="mt-5 max-w-xl text-lg leading-relaxed">{p.body}</p>
             <p className="mt-4 max-w-xl leading-relaxed">It&apos;s how we work on every clean – homes and businesses, first visit or fiftieth – so you can book Swept with confidence, even the first time.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <CtaLink intent="book" location="promise_hero" context={{ page_type: "general" }} href={BOOK_PATH} className="btn-primary !min-h-14 !px-7 text-lg">Book a clean <Icon name="arrow" className="size-5" /></CtaLink>
+              <CtaLink intent="book" location="promise_hero" context={{ page_type: "general" }} href={PACKAGES_HREF} className="btn-primary !min-h-14 !px-7 text-lg">Book a clean <Icon name="arrow" className="size-5" /></CtaLink>
               {site.phone && <a href={telHref(site.phone)} className="btn-outline !min-h-14 !px-6"><Icon name="phone" className="size-5" />{site.phone}</a>}
             </div>
           </div>

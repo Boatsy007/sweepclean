@@ -11,7 +11,6 @@ import { Faqs } from "@/components/Faqs";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { QuoteForm } from "@/components/QuoteForm";
-import { BookingKoalaEmbed } from "@/components/BookingKoalaEmbed";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -111,15 +110,6 @@ export default function Contact() {
               <QuoteForm initialMode="callback" />
             </Suspense>
           </div>
-        </div>
-      </section>
-
-      {/* BookingKoala contact form. The callback form above stays until this one is confirmed working live. */}
-      <section id="message" className="container-x scroll-mt-28 pt-16" aria-labelledby="message-h">
-        <div className="mx-auto max-w-3xl">
-          <h2 id="message-h" className="text-3xl font-extrabold sm:text-[2.4rem]">Send us a message</h2>
-          <p className="mt-3 text-lg leading-relaxed">Questions about a booking, your account or our services? Send them here and we&apos;ll reply by email or phone.</p>
-          <BookingKoalaEmbed form="contact" lazy className="mt-8" />
         </div>
       </section>
 

@@ -17,6 +17,9 @@ export type CleanPackage = {
   from: number;
   /** Property size the starting price is based on. */
   basis: string;
+  /** The same size as numbers – a larger home may need extra time (never priced automatically). */
+  beds: number;
+  baths: number;
   /** Shown as "Everything in <previous>, plus:" for tiers above the first. */
   builds?: string;
   includes: string[];
@@ -31,6 +34,8 @@ export const regularPackages: CleanPackage[] = [
     description: "Reliable, professional home cleaning that keeps your home fresh, tidy and comfortable.",
     from: 97,
     basis: "1 bedroom, 1 bathroom",
+    beds: 1,
+    baths: 1,
     includes: [
       "Kitchen benchtops and accessible surfaces wiped",
       "Kitchen sink and taps cleaned",
@@ -53,6 +58,8 @@ export const regularPackages: CleanPackage[] = [
     description: "Everything in Regular, with extra attention to the details that make your home feel beautifully maintained.",
     from: 147,
     basis: "2 bedrooms, 2 bathrooms",
+    beds: 2,
+    baths: 2,
     builds: "Regular",
     recommended: true,
     includes: [
@@ -75,6 +82,8 @@ export const regularPackages: CleanPackage[] = [
     description: "Our most comprehensive recurring cleaning experience, with detailed attention throughout your home.",
     from: 207,
     basis: "3 bedrooms, 2 bathrooms",
+    beds: 3,
+    baths: 2,
     builds: "Spotless",
     includes: [
       "Kitchen and bathroom cabinet fronts wiped",
@@ -101,3 +110,20 @@ export const packageById = (id: string | null | undefined) => regularPackages.fi
 
 /** One-line summary added to the booking request. */
 export const packageNote = (p: CleanPackage) => `Package: ${p.name} – from $${p.from} + GST per clean (starting price for ${p.basis})`;
+
+export type PackageEstimate = { from: number; extraHours: number; bedMaking: number; linenChange: number; total: number };
+
+/**
+ * Estimated price per clean (AUD excluding GST) from the published prices only: the package's
+ * starting price plus any extra time and extras the customer chose. Larger homes are NOT priced
+ * here – the final price is confirmed by Swept before the first clean.
+ */
+export function estimatePackage(p: CleanPackage, opts: { extraHours?: number; bedMaking?: number; linenChange?: number }): PackageEstimate {
+  const extraHours = Math.max(0, Math.min(4, Math.floor(opts.extraHours ?? 0))) * packageExtras.extraHour;
+  const bedMaking = Math.max(0, Math.min(8, Math.floor(opts.bedMaking ?? 0))) * packageExtras.bedMaking;
+  const linenChange = Math.max(0, Math.min(8, Math.floor(opts.linenChange ?? 0))) * packageExtras.linenChange;
+  return { from: p.from, extraHours, bedMaking, linenChange, total: p.from + extraHours + bedMaking + linenChange };
+}
+
+/** True when the home is bigger than the package's starting size (so extra time may be needed). */
+export const exceedsBasis = (p: CleanPackage, beds?: number, baths?: number) => (beds ?? 0) > p.beds || (baths ?? 0) > p.baths;

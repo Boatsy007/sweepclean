@@ -1,11 +1,11 @@
 import { CtaLink, type CtaContext } from "./CtaLink";
 import { Icon } from "./Icon";
-import { BOOK_PATH, quoteHref, type CtaIntent } from "@/lib/bookingKoala";
+import { quoteHref, type CtaIntent, PACKAGES_HREF } from "@/lib/bookingKoala";
 import { site, trustLabel } from "@/lib/site";
 
 /**
  * Closing call-to-action band.
- * intent "book" (default, residential): Book a clean → /book-now, with a quieter link to a free quote.
+ * intent "book" (default, residential): Book a clean → the regular cleaning packages, with a quieter link to a free quote.
  * intent "quote" (bond, commercial, custom scopes): quote first, as before.
  */
 export function CtaBand({
@@ -25,8 +25,8 @@ export function CtaBand({
       <div className="reveal relative overflow-hidden rounded-[1.75rem] border border-lilac bg-lavender px-6 py-12 sm:px-12 sm:py-16">
         <div className="relative mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-extrabold leading-tight sm:text-[2.6rem]">{title}</h2>
-          <p className="mt-3 text-lg">{body ?? (book ? "Choose your clean, pick a day and book online in a few minutes." : "Get a tailored quote and a cleaning plan to suit your home.")}</p>
-          <CtaLink intent={intent} location={id} context={context} href={href ?? (book ? BOOK_PATH : quote)} className="btn-primary mt-7 !min-h-14 !px-8 text-lg">
+          <p className="mt-3 text-lg">{body ?? (book ? "Choose your package and request your booking in minutes." : "Get a tailored quote and a cleaning plan to suit your home.")}</p>
+          <CtaLink intent={intent} location={id} context={context} href={href ?? (book ? PACKAGES_HREF : quote)} className="btn-primary mt-7 !min-h-14 !px-8 text-lg">
             {cta ?? (book ? "Book a clean" : "Request a quote")} <Icon name="arrow" className="size-5" />
           </CtaLink>
           {book ? (

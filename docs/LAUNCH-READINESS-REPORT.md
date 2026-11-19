@@ -1,5 +1,7 @@
 # Launch readiness report – sweptcleans.com.au
 
+> **Update (19 November 2026).** BookingKoala now appears on the website **only as the customer login** (`/login`). `/book-now` is Swept's own booking request form for the regular cleaning packages, and the contact page keeps the native call-back form. Leads reach BookingKoala through `LEAD_WEBHOOK_URL` via Make.com, which still needs to be set up – see `LEAD-WEBHOOK.md`. Sections 3, 9 and 11 below were written for the earlier embedded booking and contact forms.
+
 _19 November 2026. Branch `bookingkoala-integration`, built on top of `seo-production-launch` (the approved SEO work, commit `04df225`). Neither branch is merged to `main`; production is unchanged. Recover the previous states from `main` (`d0ac5ec`, before any of this) or `seo-production-launch` (SEO only)._
 
 Every result below comes from the final build (`next build && next start`) in the development environment. **This environment can't reach BookingKoala:** its Cloudflare protection blocks the environment's IP address ("Sorry, you have been blocked"), both for the booking site and for help.bookingkoala.com. So whether the embedded forms **render, resize, log in and submit** has not been verified here. That's a live check for you on the preview (section 9). Everything on Swept's side of the integration has been tested.

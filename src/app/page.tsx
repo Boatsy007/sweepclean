@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CtaLink } from "@/components/CtaLink";
-import { BOOK_PATH, bookHref } from "@/lib/bookingKoala";
+import { PACKAGES_HREF } from "@/lib/bookingKoala";
 import { getImageProps } from "next/image";
 import { preload } from "react-dom";
 import { services } from "@/lib/services";
@@ -98,7 +98,7 @@ export default function Home() {
             </ul>
             {/* Primary action: book online. The free-quote form sits right alongside (below on phones). Desktop adds phone + services. */}
             <div className="intro mt-8 [--d:400ms] lg:mt-10 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
-              <CtaLink intent="book" location="home_hero" context={{ page_type: "home" }} href={BOOK_PATH} className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem] lg:w-auto lg:!px-9">Book a clean <Icon name="arrow" className="size-[1.1rem]" /></CtaLink>
+              <CtaLink intent="book" location="home_hero" context={{ page_type: "home" }} href={PACKAGES_HREF} className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem] lg:w-auto lg:!px-9">Book a clean <Icon name="arrow" className="size-[1.1rem]" /></CtaLink>
               <div className="hidden items-center gap-6 lg:flex">
                 {site.phone && (
                   <a href={telHref(site.phone)} className="btn-outline !min-h-12 whitespace-nowrap !px-5 text-[0.98rem]">
@@ -217,7 +217,7 @@ export default function Home() {
           <ul className="reveal-stagger grid gap-4 sm:grid-cols-3">
             {schedules.map((s) => (
               <li key={s.value}>
-                <CtaLink intent="book" location="home_schedule" context={{ page_type: "home", service: "regular-house-cleaning", frequency: s.value }} href={bookHref({ frequency: s.value })} className="group flex h-full flex-col rounded-[var(--radius-card)] border-2 border-violet/40 bg-white p-6 transition hover:border-violet hover:shadow-lift">
+                <CtaLink intent="book" location="home_schedule" context={{ page_type: "home", service: "regular-house-cleaning", frequency: s.value }} href={PACKAGES_HREF} className="group flex h-full flex-col rounded-[var(--radius-card)] border-2 border-violet/40 bg-white p-6 transition hover:border-violet hover:shadow-lift">
                   <span className="flex items-center gap-3 font-display text-xl font-bold text-navy"><Icon name="calendar" className="size-6 text-violet" />{s.label}</span>
                   <span className="mt-3 flex-1 leading-relaxed">{s.body}</span>
                   <span className="mt-4 inline-flex items-center gap-1.5 font-display font-semibold text-violet">Book {s.label.toLowerCase()} <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" /></span>

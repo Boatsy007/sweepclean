@@ -351,7 +351,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
 
 /* ---------- field primitives ---------- */
 
-function FieldError({ id, msg }: { id: string; msg?: string }) {
+export function FieldError({ id, msg }: { id: string; msg?: string }) {
   return msg ? <p id={`${id}-error`} className="error" role="alert">{msg}</p> : null;
 }
 
@@ -368,7 +368,7 @@ function ChoiceCard({ name, value, checked, onChange, icon, title, body }: { nam
   );
 }
 
-function Pills({ label, name, options, value, onChange, error, compact, optional, noTopMargin }: { label: string; name: string; options: readonly string[]; value?: string; onChange: (v: string) => void; error?: string; compact?: boolean; optional?: boolean; noTopMargin?: boolean }) {
+export function Pills({ label, name, options, value, onChange, error, compact, optional, noTopMargin }: { label: string; name: string; options: readonly string[]; value?: string; onChange: (v: string) => void; error?: string; compact?: boolean; optional?: boolean; noTopMargin?: boolean }) {
   return (
     <fieldset className={noTopMargin ? "" : "mt-7"} aria-describedby={error ? `${name}-error` : undefined}>
       <legend className="label">{label}{optional && <span className="font-normal text-slate"> (optional)</span>}</legend>
@@ -385,7 +385,7 @@ function Pills({ label, name, options, value, onChange, error, compact, optional
   );
 }
 
-function TextField({ id, label, value, onChange, error, required, ...rest }: { id: string; label: string; value?: string; onChange: (v: string) => void; error?: string; required?: boolean } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "id">) {
+export function TextField({ id, label, value, onChange, error, required, ...rest }: { id: string; label: string; value?: string; onChange: (v: string) => void; error?: string; required?: boolean } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "id">) {
   return (
     <div>
       <label htmlFor={id} className="label">{label}{!required && <span className="font-normal text-slate"> (optional)</span>}</label>
@@ -395,7 +395,7 @@ function TextField({ id, label, value, onChange, error, required, ...rest }: { i
   );
 }
 
-function Consent({ checked, onChange, error }: { checked: boolean; onChange: (v: boolean) => void; error?: string }) {
+export function Consent({ checked, onChange, error }: { checked: boolean; onChange: (v: boolean) => void; error?: string }) {
   return (
     <div className="mt-6">
       <label className="flex cursor-pointer items-start gap-3 text-sm">

@@ -22,12 +22,9 @@ const failures = [];
 const notes = [];
 const fail = (m) => failures.push(m);
 
-const embeds = [
-  { path: "/book-now", src: `https://${BK}/booknow?embed=true`, height: 1000 },
-  { path: "/login", src: `https://${BK}/login?embed=true`, height: 650 },
-  { path: "/contact", src: `https://${BK}/contact-us?embed=true`, height: 1000, scrollTo: "#message" },
-];
-const plain = ["/", "/services/bond-cleaning", "/areas/gold-coast/helensvale", "/cleaning-guides/bond-cleaning-cost-brisbane", "/quote", "/services/regular-house-cleaning"];
+// BookingKoala is embedded on the customer login page only (booking and contact use our own forms).
+const embeds = [{ path: "/login", src: `https://${BK}/login?embed=true`, height: 650 }];
+const plain = ["/", "/services/bond-cleaning", "/areas/gold-coast/helensvale", "/cleaning-guides/bond-cleaning-cost-brisbane", "/quote", "/services/regular-house-cleaning", "/book-now?package=spotless", "/contact"];
 
 async function inspectEmbed(page, e, label) {
   if (e.scrollTo) await page.locator(e.scrollTo).scrollIntoViewIfNeeded();
@@ -89,20 +86,27 @@ async function inspectEmbed(page, e, label) {
     }
   }
 
-  // 3. Client-side navigation: home → login (header link) → book (in-page link) → back.
+  // 3. Client-side navigation: home → login (header link) → booking request page → back to login.
   for (const [w, sel] of [[390, 'header a[href="/login"] >> visible=true'], [1440, 'header a[href="/login"] >> visible=true']]) {
     const page = await browser.newPage({ viewport: { width: w, height: 900 }, isMobile: w < 1024, hasTouch: w < 1024 });
+    const bkOnBook = [];
     await page.goto(BASE + "/", { waitUntil: "networkidle" });
     // Genuine pointer click (fails if anything covers the link).
     await page.locator(sel).first().click();
     await page.waitForURL("**/login");
-    await inspectEmbed(page, embeds[1], `client nav → /login @${w}px`);
-    await page.locator('main a[href="/book-now"]').first().click();
-    await page.waitForURL("**/book-now");
-    await inspectEmbed(page, embeds[0], `client nav login → /book-now @${w}px`);
+    await inspectEmbed(page, embeds[0], `client nav → /login @${w}px`);
+    // Leaving the login page: the embed (and its script) must not follow onto the booking request page.
+    await page.goto(BASE + "/services/regular-house-cleaning", { waitUntil: "networkidle" });
+    page.on("request", (r) => r.url().includes("bookingkoala.com") && bkOnBook.push(r.url()));
+    await page.locator('#prices a[href="/book-now?package=spotless"]').first().click();
+    await page.waitForURL("**/book-now?package=spotless");
+    await page.waitForTimeout(1200);
+    const left = await page.evaluate(() => ({ scripts: document.querySelectorAll('script[src*="bookingkoala.com"]').length, iframes: document.querySelectorAll('iframe[src*="bookingkoala.com"]').length }));
+    if (left.iframes || bkOnBook.length) fail(`client nav → /book-now @${w}px: BookingKoala still present (${left.iframes} iframe, ${bkOnBook.length} requests)`);
+    await page.goBack();
     await page.goBack();
     await page.waitForURL("**/login");
-    await inspectEmbed(page, embeds[1], `history back → /login @${w}px`);
+    await inspectEmbed(page, embeds[0], `history back → /login @${w}px`);
     await page.close();
   }
 

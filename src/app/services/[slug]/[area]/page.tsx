@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CtaLink } from "@/components/CtaLink";
-import { BOOK_PATH, isBookable } from "@/lib/bookingKoala";
+import { isBookable, PACKAGES_HREF } from "@/lib/bookingKoala";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, services } from "@/lib/services";
@@ -108,7 +108,7 @@ export default async function ServiceAreaPage({ params }: Props) {
               <>
                 {/* Bookable in BookingKoala: book online first, a free quote second. */}
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <CtaLink intent="book" location="service_area_hero" context={ctx} href={BOOK_PATH} className="btn-primary !min-h-14 !px-8 text-lg">Book a clean <Icon name="arrow" className="size-5" /></CtaLink>
+                  <CtaLink intent="book" location="service_area_hero" context={ctx} href={PACKAGES_HREF} className="btn-primary !min-h-14 !px-8 text-lg">Book a clean <Icon name="arrow" className="size-5" /></CtaLink>
                   <CtaLink intent="quote" location="service_area_hero_quote" context={ctx} href={quoteHref} className="btn-outline !min-h-14">Get a free quote</CtaLink>
                 </div>
                 <p className="mt-4 text-sm">Book online in minutes{trustLabel() ? ` · ${trustLabel()}` : ""} · <a href="#checklist" className="font-semibold text-violet-ink underline underline-offset-2">What&apos;s included</a></p>

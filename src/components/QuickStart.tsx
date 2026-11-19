@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "./Icon";
 import { track } from "@/lib/analytics";
-import { BOOK_PATH } from "@/lib/bookingKoala";
+import { PACKAGES_HREF } from "@/lib/bookingKoala";
 import { CtaLink, type CtaContext } from "./CtaLink";
 
 /** Hero quick-start: capture the suburb first (low-effort commitment), then continue the quote. */
@@ -31,7 +31,7 @@ export function QuickStart({ id = "hero", bookContext }: { id?: string; bookCont
       {bookContext && (
         <p className="mt-2 text-sm">
           Ready to book?{" "}
-          <CtaLink intent="book" location={`${id}_quickstart`} context={bookContext} href={BOOK_PATH} className="inline-flex items-center gap-1 font-semibold text-violet-ink underline underline-offset-4">
+          <CtaLink intent="book" location={`${id}_quickstart`} context={bookContext} href={PACKAGES_HREF} className="inline-flex items-center gap-1 font-semibold text-violet-ink underline underline-offset-4">
             Book a clean online <Icon name="arrow" className="size-3.5" />
           </CtaLink>
         </p>

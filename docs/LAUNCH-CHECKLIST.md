@@ -32,12 +32,11 @@ Nothing below is optional. The site hides anything that isn't set, but it can't 
 
 If neither delivery method is set in production, the API returns an error and the visitor sees a "didn't send" message. Leads are never silently lost: the failed lead is written to the Vercel function log.
 
-## 3b. BookingKoala (booking, customer login, contact form)
-- [ ] On the branch preview: booking form loads and resizes on desktop and iPhone (Safari + Chrome), login works, test contact message arrives (docs/LAUNCH-READINESS-REPORT.md §9)
-- [ ] BookingKoala services and prices match the website packages (Regular $97, Spotless $147, Ultimate Platinum $207 + GST; extra hour $67, bed making $5, linen change $10)
-- [ ] BookingKoala → Settings → Tracking & Conversion: same GA4 ID as the website and the Google Ads conversion; confirm with BookingKoala support which event fires on a completed embedded booking
-- [ ] BookingKoala form colours set to #527C91 / #061B49; check whether its hosted site can be hidden or noindexed
-- [ ] After confirming the BookingKoala contact form delivers, decide whether to keep the callback form on /contact
+## 3b. BookingKoala and lead flow
+- [ ] On the branch preview: customer login loads and works on desktop and iPhone (Safari + Chrome)
+- [ ] Make.com: custom webhook → BookingKoala "Create a Lead" (docs/LEAD-WEBHOOK.md); set `LEAD_WEBHOOK_URL` in Vercel; `/api/lead-status` shows `"webhook": true`
+- [ ] Submit one booking request, one quote and one call-back on the preview; confirm each arrives by email (Resend) and as a BookingKoala lead
+- [ ] BookingKoala services and prices match the website packages (Regular $97, Spotless $147, Ultimate Platinum $207 + GST; extra hour $67, bed making $5, linen change $10) for when you convert requests into bookings
 
 ## 4. Brand assets
 - [x] Master logo in `public/brand/` (updated 2026-11-19)
