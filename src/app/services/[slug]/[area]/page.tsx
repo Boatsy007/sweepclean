@@ -7,7 +7,7 @@ import { site, siteUrl, trustLabel } from "@/lib/site";
 import { suburbPath, suburbsIn } from "@/lib/suburbs";
 import { guides, guidePath, readingTime } from "@/lib/guides";
 import { anchorLabel, getServiceArea, serviceAreaPath, serviceAreas, titleLabel, topSuburbs } from "@/lib/serviceAreas";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, orgRef } from "@/lib/schema";
 import { pageMeta } from "@/lib/seo";
 import { servicePhotos } from "@/lib/photos";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -82,7 +82,7 @@ export default async function ServiceAreaPage({ params }: Props) {
     serviceType: s.name,
     description: c.description,
     url: `${siteUrl()}${path}`,
-    provider: { "@id": `${siteUrl()}/#business` },
+    provider: orgRef(),
     areaServed: [
       { "@type": a.state === "NSW" ? "Place" : "City", name: `${a.name}, ${a.state === "NSW" ? "New South Wales" : "Queensland"}` },
       ...all.map((x) => ({ "@type": "Place", name: `${x.name} ${a.state} ${x.postcode}` })),

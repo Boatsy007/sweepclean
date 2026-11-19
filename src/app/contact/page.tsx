@@ -4,7 +4,7 @@ import { site, siteUrl, telHref, trustLabel } from "@/lib/site";
 import { areas } from "@/lib/areas";
 import { suburbsIn } from "@/lib/suburbs";
 import type { Faq } from "@/lib/services";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, orgRef } from "@/lib/schema";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { Faqs } from "@/components/Faqs";
@@ -84,8 +84,8 @@ export default function Contact() {
     "@id": `${siteUrl()}/contact#page`,
     url: `${siteUrl()}/contact`,
     name: "Contact Swept Cleaning",
-    about: { "@id": `${siteUrl()}/#business` },
-    mainEntity: { "@id": `${siteUrl()}/#business` },
+    about: orgRef(),
+    mainEntity: orgRef(),
   };
   return (
     <>

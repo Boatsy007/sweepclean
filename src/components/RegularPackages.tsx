@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { orgRef } from "@/lib/schema";
 import { packageExtras, regularPackages } from "@/lib/packages";
 import { siteUrl } from "@/lib/site";
 import { Icon } from "./Icon";
@@ -24,7 +25,7 @@ export function RegularPackages({ place, pageUrl = "/services/regular-house-clea
         description: `${p.description} Starting price for a ${p.basis} home; larger homes cost more. Final fixed price confirmed before the clean.`,
         priceSpecification: { "@type": "PriceSpecification", minPrice: p.from, priceCurrency: "AUD", valueAddedTaxIncluded: false },
         url: `${siteUrl()}/quote?service=regular-house-cleaning&package=${p.id}`,
-        itemOffered: { "@type": "Service", name: "Recurring house cleaning", provider: { "@id": `${siteUrl()}/#business` } },
+        itemOffered: { "@type": "Service", name: "Recurring house cleaning", provider: orgRef() },
       })),
       { "@type": "Offer", name: "Additional cleaning time", priceSpecification: { "@type": "UnitPriceSpecification", price: x.extraHour, priceCurrency: "AUD", valueAddedTaxIncluded: false, unitText: "hour" } },
       { "@type": "Offer", name: "Bed making", priceSpecification: { "@type": "UnitPriceSpecification", price: x.bedMaking, priceCurrency: "AUD", valueAddedTaxIncluded: false, unitText: "bed" } },

@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import { isIndexable, resolveSiteOrigin } from "./src/lib/siteConfig";
+
+// Validates NEXT_PUBLIC_SITE_URL at build time – an invalid production domain fails the build.
+const canonicalHost = new URL(resolveSiteOrigin()).host;
+const indexable = isIndexable();
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -12,7 +17,16 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: { qualities: [70, 75] },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // Previews / dev: never indexable, whatever the page metadata says.
+      ...(indexable ? [] : [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }]),
+      // Production served on any other host (e.g. the *.vercel.app alias) is noindex too, so only
+      // the canonical domain can be indexed. (www → non-www is a redirect set in Vercel → Domains.)
+      ...(indexable && process.env.VERCEL_ENV === "production"
+        ? [{ source: "/:path*", missing: [{ type: "host" as const, value: canonicalHost }], headers: [{ key: "X-Robots-Tag", value: "noindex" }] }]
+        : []),
+    ];
   },
   async redirects() {
     // Common alternative URLs people (and other sites) may link to.

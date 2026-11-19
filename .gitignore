@@ -8,3 +8,4 @@ next-env.d.ts
 .vercel
 test-results
 scripts/audit.json
+scripts/seo-check.json

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { areas, getArea } from "@/lib/areas";
 import { services } from "@/lib/services";
 import { siteUrl } from "@/lib/site";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, orgRef } from "@/lib/schema";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { Faqs } from "@/components/Faqs";
@@ -48,7 +48,7 @@ export default async function AreaPage({ params }: Props) {
     "@type": "Service",
     name: `House cleaning in ${a.name}`,
     serviceType: "House cleaning",
-    provider: { "@id": `${siteUrl()}/#business` },
+    provider: orgRef(),
     areaServed: suburbsIn(a.slug).map((sb) => ({ "@type": "Place", name: `${sb.name} ${a.state} ${sb.postcode}`, url: `${siteUrl()}${suburbPath(sb)}` })),
     url: `${siteUrl()}/areas/${a.slug}`,
   };

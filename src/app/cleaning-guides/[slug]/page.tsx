@@ -6,7 +6,7 @@ import { formatDate, getGuide, guideAuthor, guidePath, guides, headingId, isOffi
 import { services } from "@/lib/services";
 import { serviceAreaPath, serviceAreas } from "@/lib/serviceAreas";
 import { siteUrl } from "@/lib/site";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, orgRef } from "@/lib/schema";
 import { pageMeta } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
@@ -58,8 +58,8 @@ export default async function GuidePage({ params }: Props) {
     image: imageUrl,
     datePublished: g.published,
     dateModified: g.updated ?? g.published,
-    author: { "@type": "Organization", name: guideAuthor.name, url: `${siteUrl()}/why-swept`, parentOrganization: { "@id": `${siteUrl()}/#business` } },
-    publisher: { "@id": `${siteUrl()}/#business` },
+    author: { "@type": "Organization", name: guideAuthor.name, url: `${siteUrl()}/why-swept`, parentOrganization: orgRef() },
+    publisher: orgRef(),
     mainEntityOfPage: url,
     articleSection: g.categories,
     keywords: g.categories.join(", "),

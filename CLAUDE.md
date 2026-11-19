@@ -11,7 +11,7 @@ Follow `docs/CLEANING-GUIDES.md` exactly:
 3. Register it in `src/content/guides/index.ts`.
 4. Add internal links to the relevant service pages (`services: [...]` plus inline `[text](/services/...)` links), and to other guides or area pages where natural. For a location-specific guide, set `areas: [...]` so it appears on that area's suburb pages. Never make per-suburb copies.
 5. Don't create custom page layouts. The template at `src/app/cleaning-guides/[slug]/page.tsx` handles every guide.
-6. Build, run `scripts/smoke.cjs` and the SEO audit (`scripts/seo-audit.cjs` + `scripts/seo-analyse.py`), then commit and push.
+6. Build, run `scripts/smoke.cjs`, `scripts/seo-check.cjs` and the SEO audit (`scripts/seo-audit.cjs` + `scripts/seo-analyse.py`), then commit and push.
 
 The sitemap, `llms.txt`, structured data, related guides and the guides listing update automatically.
 
@@ -19,6 +19,8 @@ The sitemap, `llms.txt`, structured data, related guides and the guides listing 
 
 - Brand: coastal blue #527C91 (primary – buttons, links, icons, logo mark), dark navy #061B49 (headings/text), white, subtle background #F3F8F9, light accent #E5EFF2 – as tokens in `src/app/globals.css` (token names are historical: `violet` = coastal blue, `violet-ink` = deeper blue for small text on tinted backgrounds, `lavender` = subtle background, `lilac` = light accent). No purple anywhere. Mostly white pages, no large coloured panels or heavy gradients. Logo files are in `public/brand/` (`swept-logo`, `swept-logo-white` for the navy footer, `swept-mark`).
 - Every page's metadata goes through `pageMeta()` in `src/lib/seo.ts`.
+- Production domain: `https://sweptcleans.com.au` (non-www), set once in `src/lib/siteConfig.ts`. Build URLs with `siteUrl()` / `absoluteUrl()` from `src/lib/site.ts` – never hard-code the domain. Reference the business entity with `orgRef()` from `src/lib/schema.ts` – never declare a second business entity. Only production deployments are indexable.
+- After changes, run `npm run build`, start on port 3100 with `LEAD_DEV_LOG=1`, then `npm run test:smoke` and `BASE=http://localhost:3100 npm run test:seo`. See `docs/SEO-PRODUCTION-REPORT.md`.
 - Service × area pages (`/services/<service>/<area>`, 28 pages) are written per combination in `src/lib/serviceAreas.ts` (intro, local notes, FAQs, description). They target "hire" searches and link to the area guides for prices – never repeat guide prices there. Suburb local facts live in `src/lib/suburbLocal.ts`.
 - Don't change the homepage, branding, forms or lead API unless asked.
 - Chrome on iPhone has a header workaround (`html.crios` in `globals.css` and `layout.tsx`). Leave it in place until Chrome fixes the iOS 26 bug.

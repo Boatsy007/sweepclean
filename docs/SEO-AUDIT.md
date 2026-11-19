@@ -1,5 +1,7 @@
 # SEO audit – Swept Cleaning
 
+> **Superseded.** This is the 4 November 2026 audit. The current production audit is [SEO-PRODUCTION-REPORT.md](SEO-PRODUCTION-REPORT.md) (19 November 2026).
+
 _Audited 4 November 2026 against the production build (`next build && next start`), commit after `8a05cff`. The live Vercel site could not be reached from the audit environment, so live-only checks (real domain, HTTPS, CDN headers, Search Console data) are listed under "Still to do" rather than marked as passed._
 
 **How it was audited:** `scripts/seo-audit.cjs` crawls the site like Googlebot, starting at the home page with JavaScript disabled and following every internal link. It then runs technical probes (status codes, redirects, robots.txt). `scripts/seo-analyse.py` checks titles, descriptions, canonicals, headings, Open Graph, structured data, content depth, duplication between suburb pages, internal linking and images. Lighthouse 13.6 was run on mobile on one page of each type. To re-run:

@@ -8,17 +8,20 @@
  * Before launch, review docs/LAUNCH-CHECKLIST.md.
  */
 
+import { isIndexable, resolveSiteOrigin } from "./siteConfig";
+
 export const site = {
   name: "Swept",
-  legalName: null as string | null, // e.g. "Swept Cleaning Pty Ltd"
+  /** Registered business name (ABR). Shown in the footer and privacy policy, and as legalName in structured data. */
+  legalName: "Swept Residential and Commercial Cleaning" as string | null,
   tagline: "House cleaning in Brisbane, Logan and the Gold Coast",
   description:
     "Regular, deep, bond, Airbnb, carpet and commercial cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Get a written quote online in about two minutes.",
 
   /** Contact details. Leave null until real – the UI hides anything that is null. */
   phone: "0490 216 363" as string | null, // display format
-  email: "hey@swept.com.au" as string | null,
-  abn: null as string | null,
+  email: "hey@sweptcleans.com.au" as string | null,
+  abn: "80 230 927 825" as string | null, // display format; structured data uses the 11 digits
 
   /** Hours you answer enquiries (shown on contact surfaces + schema). */
   responseHours: "Monday to Saturday, 7am–6pm (AEST)",
@@ -30,8 +33,6 @@ export const site = {
    * helps Google and AI assistants connect the profiles to this site.
    */
   profiles: [] as string[],
-  /** Date the site content was last meaningfully updated (used for sitemap lastmod). */
-  contentUpdated: "2026-11-04",
   /** How quickly you reply to a quote request. Only promise what you can keep. */
   quoteResponse: "within one business day",
 
@@ -99,13 +100,38 @@ export const site = {
   recurringOffer: null as string | null,
 } as const;
 
+/** The canonical production origin (no trailing slash), e.g. "https://sweptcleans.com.au". See siteConfig.ts. */
+const ORIGIN = resolveSiteOrigin();
+
 export function siteUrl(): string {
-  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
-  if (explicit) return explicit.replace(/\/$/, "");
-  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  if (vercel) return `https://${vercel}`;
-  return "http://localhost:3000";
+  return ORIGIN;
 }
+
+/**
+ * Absolute canonical URL for an internal path: one leading slash, no duplicate slashes,
+ * no trailing slash (except the homepage "/"), path segments URL-encoded once.
+ * Query strings and fragments are kept as given. Absolute URLs are returned unchanged.
+ */
+export function absoluteUrl(path = "/"): string {
+  if (/^https?:\/\//i.test(path)) return path;
+  const cut = path.search(/[?#]/);
+  const [rawPath, suffix] = cut === -1 ? [path, ""] : [path.slice(0, cut), path.slice(cut)];
+  let p = ("/" + rawPath).replace(/\/{2,}/g, "/");
+  if (p.length > 1) p = p.replace(/\/+$/, "");
+  p = p.split("/").map((seg) => encodeURIComponent(safeDecode(seg))).join("/");
+  return `${ORIGIN}${p}${suffix}`;
+}
+
+function safeDecode(s: string) {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
+}
+
+/** Whether this deployment may be indexed (production only). See siteConfig.ts. */
+export const indexable = isIndexable();
 
 /** Short trust label built from the insured / police-check flags. null = show nothing. */
 export function trustLabel(): string | null {

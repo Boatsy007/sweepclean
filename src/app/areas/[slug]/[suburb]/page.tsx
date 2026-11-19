@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { areaFor, getSuburb, nearby, stateName, suburbPath, suburbs, suburbsIn } from "@/lib/suburbs";
 import { services } from "@/lib/services";
 import { site, siteUrl, trustLabel } from "@/lib/site";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, orgRef } from "@/lib/schema";
 import type { Faq } from "@/lib/services";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
@@ -97,7 +97,7 @@ export default async function SuburbPage({ params }: Props) {
     serviceType: "House cleaning",
     description: `Regular, deep, NDIS, bond, Airbnb, carpet and commercial cleaning in ${s.name} ${a.state} ${s.postcode}.${about ? ` ${about}` : ""}`,
     url: `${siteUrl()}${path}`,
-    provider: { "@id": `${siteUrl()}/#business` },
+    provider: orgRef(),
     areaServed: {
       "@type": "Place",
       name: `${s.name}, ${stateName(a.state)}`,

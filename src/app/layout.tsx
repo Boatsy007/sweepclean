@@ -8,7 +8,7 @@ import { Analytics } from "@/components/Analytics";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { JsonLd } from "@/components/JsonLd";
 import { businessSchema, websiteSchema } from "@/lib/schema";
-import { site, siteUrl } from "@/lib/site";
+import { indexable, site, siteUrl } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", weight: ["500", "600", "700", "800"], display: "swap" });
@@ -18,10 +18,13 @@ export const metadata: Metadata = {
   title: { default: "House Cleaning Brisbane, Logan & Gold Coast | Swept Cleaning", template: "%s | Swept Cleaning" },
   description: site.description,
   applicationName: "Swept Cleaning",
-  alternates: { canonical: "/" },
-  openGraph: { type: "website", locale: "en_AU", siteName: "Swept Cleaning", url: "/" },
+  // No canonical here: every page sets its own through pageMeta(), so nothing (e.g. the 404 page)
+  // can inherit the homepage canonical.
+  openGraph: { type: "website", locale: "en_AU", siteName: "Swept Cleaning" },
   twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },
+  // Previews and dev builds are noindex (see src/lib/siteConfig.ts); production pages are indexable.
+  ...(indexable ? {} : { robots: { index: false, follow: false } }),
 };
 
 export const viewport: Viewport = { themeColor: "#ffffff", width: "device-width", initialScale: 1 };

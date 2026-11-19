@@ -189,7 +189,7 @@ export const guide: Guide = {
     { type: "h2", text: "Checking a message really is from Swept" },
     {
       type: "p",
-      text: "If you get a call, text or email claiming to be from Swept that you weren't expecting – especially one asking for payment or personal details – call us on 0490 216 363 or email hey@swept.com.au to check before you act. Our quotes are always in writing, and we'll never mind you calling to confirm. Learn more about [how we work](/why-swept) and [The Swept Promise](/swept-promise), or [request a free quote](/quote).",
+      text: "If you get a call, text or email claiming to be from Swept that you weren't expecting – especially one asking for payment or personal details – call us on 0490 216 363 or email hey@sweptcleans.com.au to check before you act. Our quotes are always in writing, and we'll never mind you calling to confirm. Learn more about [how we work](/why-swept) and [The Swept Promise](/swept-promise), or [request a free quote](/quote).",
     },
   ],
   faqs: [

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { allCategories, guidePath, guides } from "@/lib/guides";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, orgRef } from "@/lib/schema";
 import { pageMeta } from "@/lib/seo";
 import { siteUrl } from "@/lib/site";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -31,7 +31,7 @@ export default function CleaningGuides() {
         "@type": "CollectionPage",
         name: "Cleaning Guides & Advice",
         url: `${siteUrl()}/cleaning-guides`,
-        publisher: { "@id": `${siteUrl()}/#business` },
+        publisher: orgRef(),
         mainEntity: {
           "@type": "ItemList",
           itemListElement: guides.map((g, i) => ({ "@type": "ListItem", position: i + 1, url: `${siteUrl()}${guidePath(g.slug)}`, name: g.title })),

@@ -1,5 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SweptMark } from "@/components/SweptMark";
+
+// Next.js returns HTTP 404 and adds its own robots noindex; no canonical (none is inherited from the layout).
+export const metadata: Metadata = { title: { absolute: "Page Not Found | Swept Cleaning" } };
 
 export default function NotFound() {
   return (

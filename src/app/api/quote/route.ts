@@ -102,7 +102,7 @@ export async function POST(req: Request) {
       console.info("[lead] (no delivery configured – logged only)", JSON.stringify(Object.fromEntries(rows)));
       return NextResponse.json({ ok: true, delivered: ["log"] });
     }
-    console.error("[lead] NOT DELIVERED – configure RESEND_API_KEY (and verify swept.com.au in Resend) or LEAD_WEBHOOK_URL", JSON.stringify(Object.fromEntries(rows)));
+    console.error("[lead] NOT DELIVERED – configure RESEND_API_KEY (and verify sweptcleans.com.au in Resend) or LEAD_WEBHOOK_URL", JSON.stringify(Object.fromEntries(rows)));
     return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 502 });
   }
 
