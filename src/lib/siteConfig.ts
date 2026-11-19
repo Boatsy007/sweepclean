@@ -6,10 +6,11 @@
  *
  * - The canonical origin is always the production domain – on production, on previews and
  *   locally – so every build emits the same canonical URLs. It never falls back to a
- *   *.vercel.app address. NEXT_PUBLIC_SITE_URL can override it (e.g. after a domain change);
- *   an invalid override fails the build instead of silently producing wrong canonicals.
+ *   *.vercel.app address. NEXT_PUBLIC_SITE_URL is optional and may only repeat PRODUCTION_ORIGIN:
+ *   any other value (http, www, *.vercel.app, another domain) fails the build instead of silently
+ *   producing wrong canonicals. To move domains, change PRODUCTION_ORIGIN here.
  * - Indexing is on only for production deployments. Vercel previews and `next dev` are
- *   noindex (X-Robots-Tag header + robots meta + a disallow-all robots.txt).
+ *   noindex (X-Robots-Tag header + robots meta; robots.txt still allows crawling so Google can see the noindex).
  */
 
 export const PRODUCTION_ORIGIN = "https://sweptcleans.com.au";
@@ -27,6 +28,9 @@ export function resolveSiteOrigin(env: Env = process.env): string {
   if (u.protocol !== "https:") throw new Error(`NEXT_PUBLIC_SITE_URL must use https: "${raw}"`);
   if (u.pathname !== "/" || u.search || u.hash || u.username || u.port) throw new Error(`NEXT_PUBLIC_SITE_URL must be a bare origin like ${PRODUCTION_ORIGIN}: "${raw}"`);
   if (/\.vercel\.app$/i.test(u.hostname) || /^www\./i.test(u.hostname)) throw new Error(`NEXT_PUBLIC_SITE_URL must be the permanent non-www domain, not "${u.hostname}"`);
+  // Only the permanent domain is accepted, so a stray value (an old domain, a typo, a staging host)
+  // can never silently replace it. Moving to a new domain is a deliberate edit of PRODUCTION_ORIGIN.
+  if (u.origin !== PRODUCTION_ORIGIN) throw new Error(`NEXT_PUBLIC_SITE_URL must be ${PRODUCTION_ORIGIN} (got "${raw}"). To change domain, edit PRODUCTION_ORIGIN in src/lib/siteConfig.ts.`);
   return u.origin;
 }
 

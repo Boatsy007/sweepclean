@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { BOOK_PATH, LOGIN_PATH } from "@/lib/bookingKoala";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "./SweptMark";
@@ -49,7 +50,7 @@ export function Header() {
     <header className="header-elevate sticky top-0 z-50 border-b border-lilac bg-white text-violet">
       <div aria-hidden="true" className="scroll-progress pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-violet" />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-violet">Skip to content</a>
-      <div className="container-x flex h-[76px] items-center justify-between gap-3 lg:h-[96px] lg:gap-4 xl:gap-6">
+      <div className="container-x flex h-[76px] items-center justify-between gap-0.5 min-[340px]:gap-1.5 min-[390px]:gap-3 lg:h-[96px] lg:gap-4 xl:gap-6">
         <Link href="/" className="shrink-0"><Logo size="header" priority /></Link>
 
         <nav aria-label="Main" className="hidden lg:block">
@@ -92,6 +93,9 @@ export function Header() {
 
         {/* Desktop actions */}
         <div className="hidden items-center gap-2 lg:flex">
+          <Link href={LOGIN_PATH} onClick={() => track("cta_click", { cta: "header_login" })} aria-label="Customer login" aria-current={path === LOGIN_PATH ? "page" : undefined} className="inline-flex size-11 items-center justify-center gap-2 whitespace-nowrap rounded-full font-display text-[1.05rem] font-semibold hover:bg-lavender 2xl:size-auto 2xl:px-3 2xl:py-2">
+            <Icon name="user" className="size-6 2xl:size-5" /><span className="hidden 2xl:inline" aria-hidden="true">Customer login</span>
+          </Link>
           {site.phone && (
             <>
               <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-lavender xl:inline-flex">
@@ -102,24 +106,28 @@ export function Header() {
               </a>
             </>
           )}
-          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_book" })} className="btn-primary !min-h-12 whitespace-nowrap !px-5 text-[1rem] xl:!px-6 xl:text-[1.05rem]">
+          <Link href={BOOK_PATH} onClick={() => track("booking_cta_click", { location: "header" })} className="btn-primary !min-h-12 whitespace-nowrap !px-5 text-[1rem] xl:!px-6 xl:text-[1.05rem]">
             Book a clean <Icon name="arrow" className="size-4" />
           </Link>
         </div>
 
         {/* Mobile / tablet actions: labelled tiles */}
-        <div className="-mr-2 flex h-full items-stretch whitespace-nowrap font-display text-[0.72rem] font-semibold leading-[1.15] lg:hidden">
-          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_quote_mobile" })} className="flex flex-col items-center justify-center gap-1 px-1.5 text-center hover:bg-lavender min-[360px]:px-2.5 min-[400px]:px-3">
+        <div className="-mr-2 flex h-full items-stretch whitespace-nowrap font-display text-[0.66rem] font-semibold leading-[1.15] min-[390px]:text-[0.72rem] lg:hidden">
+          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_quote_mobile" })} className="flex flex-col items-center justify-center gap-1 px-1 text-center hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
             <Icon name="calendar" className="size-6" />
             <span>Request a<br />Free Quote</span>
           </Link>
+          <Link href={LOGIN_PATH} onClick={() => track("cta_click", { cta: "header_login_mobile" })} aria-label="Customer login" aria-current={path === LOGIN_PATH ? "page" : undefined} className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1 text-center hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
+            <Icon name="user" className="size-6" />
+            <span aria-hidden="true">Customer<br />Login</span>
+          </Link>
           {site.phone && (
-            <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header_mobile" })} aria-label={`Call Swept on ${site.phone}`} className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1.5 hover:bg-lavender min-[360px]:px-2.5 min-[400px]:px-3">
+            <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header_mobile" })} aria-label={`Call Swept on ${site.phone}`} className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1 hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
               <Icon name="phone" className="size-6" />
               <span aria-hidden="true">Call Us</span>
             </a>
           )}
-          <button type="button" className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1.5 hover:bg-lavender min-[360px]:px-2.5 min-[400px]:px-3" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
+          <button type="button" className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1 hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
             <Icon name={open ? "close" : "menu"} className="size-6" />
             <span aria-hidden="true">{open ? "Close" : "Menu"}</span>
           </button>
@@ -157,6 +165,7 @@ export function Header() {
           </ul>
         </nav>
         <Link href="/quote" onClick={() => track("cta_click", { cta: "mobile_menu_quote" })} className="btn-primary mt-6 w-full">Get a free quote <Icon name="arrow" className="size-4" /></Link>
+        <Link href={LOGIN_PATH} className="mt-4 flex items-center justify-center gap-2 py-2 font-display font-semibold text-violet-ink"><Icon name="user" className="size-5" />Customer login</Link>
       </div>
     </header>
   );

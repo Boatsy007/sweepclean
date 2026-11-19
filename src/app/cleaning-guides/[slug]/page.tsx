@@ -95,9 +95,9 @@ export default async function GuidePage({ params }: Props) {
         <div className="container-x -mt-2 max-w-5xl">
           <div className="reveal-zoom relative aspect-[16/9] overflow-hidden rounded-[1.75rem] border border-lilac shadow-lift">
             {typeof g.image.src === "string" ? (
-              <Image src={g.image.src} alt={g.image.alt} fill priority sizes="(min-width: 1024px) 1000px, 100vw" className="object-cover" />
+              <Image src={g.image.src} alt={g.image.alt} fill priority fetchPriority="high" sizes="(min-width: 1024px) 1000px, 100vw" className="object-cover" />
             ) : (
-              <Image src={g.image.src} alt={g.image.alt} fill priority placeholder="blur" sizes="(min-width: 1024px) 1000px, 100vw" className="object-cover" />
+              <Image src={g.image.src} alt={g.image.alt} fill priority fetchPriority="high" placeholder="blur" sizes="(min-width: 1024px) 1000px, 100vw" className="object-cover" />
             )}
           </div>
         </div>

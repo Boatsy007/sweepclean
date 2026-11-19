@@ -32,6 +32,13 @@ Nothing below is optional. The site hides anything that isn't set, but it can't 
 
 If neither delivery method is set in production, the API returns an error and the visitor sees a "didn't send" message. Leads are never silently lost: the failed lead is written to the Vercel function log.
 
+## 3b. BookingKoala (booking, customer login, contact form)
+- [ ] On the branch preview: booking form loads and resizes on desktop and iPhone (Safari + Chrome), login works, test contact message arrives (docs/LAUNCH-READINESS-REPORT.md §9)
+- [ ] BookingKoala services and prices match the website packages (Regular $97, Spotless $147, Ultimate Platinum $207 + GST; extra hour $67, bed making $5, linen change $10)
+- [ ] BookingKoala → Settings → Tracking & Conversion: same GA4 ID as the website and the Google Ads conversion; confirm with BookingKoala support which event fires on a completed embedded booking
+- [ ] BookingKoala form colours set to #527C91 / #061B49; check whether its hosted site can be hidden or noindexed
+- [ ] After confirming the BookingKoala contact form delivers, decide whether to keep the callback form on /contact
+
 ## 4. Brand assets
 - [x] Master logo in `public/brand/` (updated 2026-11-19)
 - [ ] Replace the remaining stock or old-uniform photos as real job photos become available
@@ -40,11 +47,12 @@ If neither delivery method is set in production, the API returns an error and th
 - [ ] GA4 property → `NEXT_PUBLIC_GA_ID` (or a GTM container → `NEXT_PUBLIC_GTM_ID`)
 - [ ] In GA4, mark `generate_lead` as a key event
 - [ ] Google Search Console: Domain property for `sweptcleans.com.au` verified with a DNS TXT record, then submit `https://sweptcleans.com.au/sitemap.xml` (see docs/SEO-PRODUCTION-REPORT.md)
-- [ ] Before turning on GA4: stop putting the customer's first name in the thank-you URL (`/quote/thanks?name=…`) – page URLs are sent to Google Analytics, and names are personal information
+- [x] The thank-you URL no longer contains the customer's name (handed over in sessionStorage)
 - [ ] Google Business Profile (service-area business) using the exact same name and phone
 
 ## 6. Final QA
 - [ ] `npm run build` then `LEAD_DEV_LOG=1 npx next start -p 3100`, `npm run test:smoke` and `BASE=http://localhost:3100 npm run test:seo`
-- [ ] After the domain is live: `BASE=https://sweptcleans.com.au npm run test:seo`
+- [ ] `BASE=http://localhost:3100 node scripts/bookingkoala-check.cjs`
+- [ ] After the domain is live: `BASE=https://sweptcleans.com.au npm run test:seo` and the BookingKoala check
 - [ ] Test on a real iPhone and Android phone
 - [ ] Run Lighthouse on the production URL

@@ -15,7 +15,19 @@ const ok = (m) => console.log("  ✓ " + m);
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 900 } });
   const page = await ctx.newPage();
   const consoleErrors = [];
-  page.on("console", (m) => m.type() === "error" && consoleErrors.push(`${page.url()}: ${m.text()}`));
+  // Errors raised by the third-party BookingKoala embed (its own iframe/network) are reported separately:
+  // they depend on BookingKoala, not on our code (e.g. its Cloudflare blocks some data-centre IPs).
+  const thirdParty = [];
+  const bkFailed = new Set(); // HTTP statuses of failed BookingKoala responses on the current page
+  page.on("response", (r) => { if (/bookingkoala\.com/.test(r.url()) && r.status() >= 400) bkFailed.add(r.status()); });
+  page.on("framenavigated", (f) => { if (f === page.mainFrame()) bkFailed.clear(); });
+  page.on("console", (m) => {
+    if (m.type() !== "error") return;
+    const where = (m.location() && m.location().url) || "";
+    const status = Number((m.text().match(/status of (\d{3})/) || [])[1]);
+    if (/bookingkoala\.com/.test(where + m.text()) || (status && bkFailed.has(status))) thirdParty.push(`${page.url()}: ${m.text()}`);
+    else consoleErrors.push(`${page.url()}: ${m.text()}`);
+  });
   page.on("pageerror", (e) => consoleErrors.push(`${page.url()}: ${e.message}`));
 
   // 1. Crawl from sitemap
@@ -119,7 +131,9 @@ const ok = (m) => console.log("  ✓ " + m);
   await page.waitForTimeout(2600); // pass the bot timing trap
   await page.click("button:has-text('Get my free quote')");
   await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("submission → thank-you page"), () => fail("did not reach thank-you page"));
-  if (await page.isVisible("text=Thanks, Test")) ok("thank-you personalised"); else fail("thank-you not personalised");
+  // The first name is handed over in sessionStorage and rendered just after the page loads.
+  if (await page.waitForSelector("text=Thanks, Test", { timeout: 4000 }).then(() => true, () => false)) ok("thank-you personalised"); else fail("thank-you not personalised");
+  if (/[?&]name=/.test(page.url()) || /Test/.test(new URL(page.url()).search)) fail("thank-you URL contains the customer's name"); else ok("thank-you URL has no personal details");
   const ev = await events().catch(() => []);
   // dataLayer resets on navigation in the new page; check events on the quote page via sessionless approach:
   // Client navigations (with the page crossfade) update <head> a moment after the URL changes – wait for it.
@@ -161,6 +175,7 @@ const ok = (m) => console.log("  ✓ " + m);
   await m.close();
 
   if (consoleErrors.length) consoleErrors.forEach((e) => fail("console: " + e)); else ok("no console errors");
+  if (thirdParty.length) console.log(`  · ${thirdParty.length} console message(s) from the BookingKoala embed (third party, not our code) – e.g. ${thirdParty[0].slice(0, 160)}`);
   await browser.close();
   console.log(failures ? `\n${failures} failure(s)` : "\nAll checks passed");
   process.exit(failures ? 1 : 0);

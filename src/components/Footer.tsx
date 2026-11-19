@@ -30,7 +30,7 @@ export function Footer() {
       </div>
       <div className="container-x mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} {site.legalName ?? "Swept Cleaning"}{site.abn ? ` · ABN ${site.abn}` : ""}</p>
-        <p className="flex gap-5"><Link href="/privacy" className="hover:text-white">Privacy</Link><Link href="/sitemap.xml" className="hover:text-white">Sitemap</Link></p>
+        <p className="flex gap-5"><Link href="/login" className="hover:text-white">Customer login</Link><Link href="/privacy" className="hover:text-white">Privacy</Link><Link href="/sitemap.xml" className="hover:text-white">Sitemap</Link></p>
       </div>
     </footer>
   );

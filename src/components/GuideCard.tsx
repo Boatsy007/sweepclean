@@ -11,9 +11,9 @@ export function GuideCard({ guide, priority = false }: { guide: Guide; priority?
       <div className={`${priority ? "" : "reveal-zoom "}relative aspect-[16/10] overflow-hidden`}>
         {guide.image ? (
           typeof guide.image.src === "string" ? (
-            <Image src={guide.image.src} alt="" fill quality={70} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, calc(100vw - 32px)" className="object-cover" priority={priority} />
+            <Image src={guide.image.src} alt="" fill quality={70} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, calc(100vw - 32px)" className="object-cover" priority={priority} fetchPriority={priority ? "high" : undefined} />
           ) : (
-            <Image src={guide.image.src} alt="" fill quality={70} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, calc(100vw - 32px)" className="object-cover" placeholder="blur" priority={priority} />
+            <Image src={guide.image.src} alt="" fill quality={70} sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, calc(100vw - 32px)" className="object-cover" placeholder="blur" priority={priority} fetchPriority={priority ? "high" : undefined} />
           )
         ) : (
           <span className="grid h-full place-items-center bg-gradient-to-br from-lavender to-lilac">

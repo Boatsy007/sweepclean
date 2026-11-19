@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { rememberThanksName } from "@/lib/thanksName";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   EXTRA_OPTIONS,
@@ -49,7 +50,8 @@ function clear() {
 export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "callback" } = {}) {
   const router = useRouter();
   const params = useSearchParams();
-  const [data, setData] = useState<Data>(empty);
+  // Start in the requested mode so the first render already has the right layout (no shift).
+  const [data, setData] = useState<Data>(() => (initialMode === "callback" ? { ...empty, kind: "callback" } : empty));
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
@@ -166,7 +168,8 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
         in_area: data.postcode ? postcodeInArea(data.postcode) : undefined,
       });
       clear();
-      const q = new URLSearchParams({ type: data.kind ?? "quote", ...(data.service ? { service: data.service } : {}), ...(data.name ? { name: data.name.split(" ")[0] } : {}) });
+      rememberThanksName(data.name); // shown on the thank-you page – kept out of the URL (analytics)
+      const q = new URLSearchParams({ type: data.kind ?? "quote", ...(data.service ? { service: data.service } : {}) });
       router.push(`/quote/thanks?${q.toString()}`);
     } catch {
       setStatus("error");
@@ -189,7 +192,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
             {STEPS.map((s, i) => (
               <li key={s} className="flex flex-1 flex-col gap-1.5" aria-current={i === step ? "step" : undefined}>
                 <span className={`h-1.5 rounded-full transition-colors ${i <= step ? "bg-violet" : "bg-lilac"}`} />
-                <span className={`hidden text-xs font-semibold sm:block ${i === step ? "text-violet" : "text-slate"}`}>{i + 1}. {s}</span>
+                <span className={`hidden text-xs font-semibold sm:block ${i === step ? "text-violet-ink" : "text-slate"}`}>{i + 1}. {s}</span>
               </li>
             ))}
           </ol>

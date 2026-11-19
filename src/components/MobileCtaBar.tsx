@@ -8,14 +8,15 @@ import { Icon } from "./Icon";
 
 /**
  * Thumb-zone CTA on phones, always pinned to the bottom of the screen.
- * Hidden on the quote funnel itself, where it would cover the form.
+ * Hidden on the quote funnel and the booking/login pages, where it would cover the form.
  * A spacer the same height keeps the footer clear of the bar.
  */
 export function MobileCtaBar() {
   const path = usePathname();
   const [hasInline, setHasInline] = useState(false);
   useEffect(() => { setHasInline(!!document.getElementById("quote")); }, [path]);
-  if (path.startsWith("/quote")) return null;
+  // Hidden where a form is the page: the quote funnel and the BookingKoala booking and login pages.
+  if (path.startsWith("/quote") || path === "/book-now" || path === "/login") return null;
   return (
     <>
       <div aria-hidden="true" className="h-[calc(3.75rem+max(env(safe-area-inset-bottom),0.5rem))] lg:hidden" />

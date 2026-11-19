@@ -1,5 +1,7 @@
 # Production technical SEO report – sweptcleans.com.au
 
+> Approved 19 November 2026. For the current launch status (BookingKoala, LCP, remaining blockers) see [LAUNCH-READINESS-REPORT.md](LAUNCH-READINESS-REPORT.md).
+
 _Prepared 19 November 2026 on branch `seo-production-launch`. Baseline: commit `d0ac5ec` (tag `baseline-pre-seo-launch`). Not merged to `main` and not deployed to production – awaiting owner review._
 
 All results below come from runs in the development environment, against a production build (`next build && next start`). Live checks (the real domain, DNS, HTTPS certificate, Vercel headers, Search Console, email delivery) can't be run until the domain is connected. They're listed as **pending**, not passed.

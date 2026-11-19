@@ -11,6 +11,7 @@ import { Faqs } from "@/components/Faqs";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { QuoteForm } from "@/components/QuoteForm";
+import { BookingKoalaEmbed } from "@/components/BookingKoalaEmbed";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -105,10 +106,20 @@ export default function Contact() {
             </ul>
           </div>
           <div id="callback" className="scroll-mt-28">
-            <Suspense fallback={<div className="card h-96" />}>
+            {/* Placeholder sized to the callback form (measured 320–1440px) so the page doesn't jump when it loads. */}
+            <Suspense fallback={<div className="card h-[52rem] min-[400px]:h-[47rem] md:h-[40.4rem] lg:h-[41.5rem] xl:h-[40.4rem]" />}>
               <QuoteForm initialMode="callback" />
             </Suspense>
           </div>
+        </div>
+      </section>
+
+      {/* BookingKoala contact form. The callback form above stays until this one is confirmed working live. */}
+      <section id="message" className="container-x scroll-mt-28 pt-16" aria-labelledby="message-h">
+        <div className="mx-auto max-w-3xl">
+          <h2 id="message-h" className="text-3xl font-extrabold sm:text-[2.4rem]">Send us a message</h2>
+          <p className="mt-3 text-lg leading-relaxed">Questions about a booking, your account or our services? Send them here and we&apos;ll reply by email or phone.</p>
+          <BookingKoalaEmbed form="contact" lazy className="mt-8" />
         </div>
       </section>
 

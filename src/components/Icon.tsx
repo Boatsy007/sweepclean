@@ -25,6 +25,7 @@ const paths: Record<string, React.ReactNode> = {
   close: <path d="M6 6l12 12M18 6 6 18" />,
   chevron: <path d="m6 9 6 6 6-6" />,
   key: <><circle cx="8" cy="15" r="4.5" /><path d="m11.2 11.8 8.3-8.3M16 7l2.5 2.5M14 9l2 2" /></>,
+  user: <><circle cx="12" cy="8" r="4" /><path d="M4.5 20.5c.9-3.9 3.9-6 7.5-6s6.6 2.1 7.5 6" /></>,
   paw: <><circle cx="7" cy="9" r="1.8" /><circle cx="11" cy="6" r="1.8" /><circle cx="15.5" cy="7" r="1.8" /><circle cx="18" cy="11" r="1.8" /><path d="M8.5 17.5c0-2.8 2-5.5 4.5-5.5s4 2.2 4 4.4c0 1.8-1.2 3.1-3 3.1-1.3 0-1.8-.6-3-.6s-1.6.6-2.5.6c-.7 0-1-.9-1-2Z" /></>,
 };
 

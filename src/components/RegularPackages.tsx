@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BOOK_PATH } from "@/lib/bookingKoala";
 import { orgRef } from "@/lib/schema";
 import { packageExtras, regularPackages } from "@/lib/packages";
 import { siteUrl } from "@/lib/site";
@@ -24,7 +25,7 @@ export function RegularPackages({ place, pageUrl = "/services/regular-house-clea
         name: `${p.name} recurring house clean`,
         description: `${p.description} Starting price for a ${p.basis} home; larger homes cost more. Final fixed price confirmed before the clean.`,
         priceSpecification: { "@type": "PriceSpecification", minPrice: p.from, priceCurrency: "AUD", valueAddedTaxIncluded: false },
-        url: `${siteUrl()}/quote?service=regular-house-cleaning&package=${p.id}`,
+        url: `${siteUrl()}${BOOK_PATH}`,
         itemOffered: { "@type": "Service", name: "Recurring house cleaning", provider: orgRef() },
       })),
       { "@type": "Offer", name: "Additional cleaning time", priceSpecification: { "@type": "UnitPriceSpecification", price: x.extraHour, priceCurrency: "AUD", valueAddedTaxIncluded: false, unitText: "hour" } },
@@ -70,7 +71,7 @@ export function RegularPackages({ place, pageUrl = "/services/regular-house-clea
             </div>
 
             <span className="flex-1" />
-            <TrackedLink cta={`package_${p.id}`} href={`/quote?service=regular-house-cleaning&package=${p.id}`} className={`${p.recommended ? "btn-primary" : "btn-outline"} mt-8 w-full !min-h-13`}>
+            <TrackedLink cta={`package_book_${p.id}`} href={BOOK_PATH} className={`${p.recommended ? "btn-primary" : "btn-outline"} mt-8 w-full !min-h-13`}>
               Request booking <Icon name="arrow" className="size-4" />
             </TrackedLink>
           </li>

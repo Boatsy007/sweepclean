@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { rememberThanksName } from "@/lib/thanksName";
 import { useRef, useState } from "react";
 import { FREQUENCY_OPTIONS, SERVICE_OPTIONS, validateContact, type Errors, type QuoteRequest } from "@/lib/quote";
 import { postcodeInArea } from "@/lib/areas";
@@ -66,7 +67,8 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
         recurring: payload.frequency !== "once",
         in_area: payload.postcode ? postcodeInArea(payload.postcode) : undefined,
       });
-      const q = new URLSearchParams({ type: "quote", service: d.service ?? "", name: (d.name ?? "").split(" ")[0] });
+      rememberThanksName(d.name); // shown on the thank-you page – kept out of the URL (analytics)
+      const q = new URLSearchParams({ type: "quote", ...(d.service ? { service: d.service } : {}) });
       router.push(`/quote/thanks?${q.toString()}`);
     } catch {
       setStatus("error");

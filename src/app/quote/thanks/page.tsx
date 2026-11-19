@@ -1,24 +1,24 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { SweptMark } from "@/components/SweptMark";
+import { ThanksName } from "@/components/ThanksName";
 import { services } from "@/lib/services";
 import { site } from "@/lib/site";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({ title: "Thanks – We've Got Your Request | Swept Cleaning", description: "Thanks for requesting a quote from Swept Cleaning. Here is what happens next.", path: "/quote/thanks", noindex: true });
 
-type Props = { searchParams: Promise<{ type?: string; service?: string; name?: string }> };
+type Props = { searchParams: Promise<{ type?: string; service?: string }> };
 
 export default async function Thanks({ searchParams }: Props) {
-  const { type, service, name } = await searchParams;
+  const { type, service } = await searchParams;
   const callback = type === "callback";
   const svc = services.find((s) => s.slug === service);
-  const first = name?.replace(/[^\p{L}' -]/gu, "").slice(0, 30);
   return (
     <section className="bg-gradient-to-b from-white to-lavender/70">
       <div className="container-x max-w-3xl py-16 text-center sm:py-24">
         <SweptMark size={84} className="mx-auto" />
-        <h1 className="mt-6 text-4xl font-extrabold sm:text-5xl">Thanks{first ? `, ${first}` : ""} – we&apos;ve got it.</h1>
+        <h1 className="mt-6 text-4xl font-extrabold sm:text-5xl">Thanks<ThanksName /> – we&apos;ve got it.</h1>
         <p className="mx-auto mt-4 max-w-xl text-lg">
           {callback ? `We'll call you back ${site.quoteResponse}.` : `We'll send your tailored ${svc ? svc.name.toLowerCase() : "cleaning"} quote ${site.quoteResponse}.`} {callback ? "" : "Check your inbox for a copy of your request."}
         </p>

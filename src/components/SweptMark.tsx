@@ -16,16 +16,12 @@ export function Logo({ tone = "color", size = "md", priority = false }: { tone?:
   const src = tone === "white" ? logoWhite : logoColor;
   const ratio = src.width / src.height;
   if (size === "header") {
-    // Full-colour logo on the white header (proportions kept): 44px tall on phones, 56px on desktop.
+    // One responsive image (not separate phone and desktop copies, which made phones download both):
+    // 44px tall on phones (40px under 390px, 34px under 340px) and laptops, 56px from 1280px.
     const r = logoColor.width / logoColor.height;
     const wm = Math.round(r * 44);
     const wd = Math.round(r * 56);
-    return (
-      <>
-        <Image src={logoColor} alt="Swept Cleaning" width={wm} height={44} priority={priority} sizes={`${wm}px`} className="h-[44px] w-auto max-[389px]:h-[40px] max-[339px]:h-[34px] lg:hidden" />
-        <Image src={logoColor} alt="Swept Cleaning" width={wd} height={56} priority={priority} sizes={`${wd}px`} className="hidden h-[44px] w-auto lg:block xl:h-[56px]" />
-      </>
-    );
+    return <Image src={logoColor} alt="Swept Cleaning" width={wd} height={56} priority={priority} fetchPriority={priority ? "high" : undefined} sizes={`(min-width: 1280px) ${wd}px, ${wm}px`} className="h-[44px] w-auto max-[389px]:h-[40px] max-[339px]:h-[34px] xl:h-[56px]" />;
   }
   const h = size === "lg" ? 64 : 48;
   const w = Math.round(ratio * h);

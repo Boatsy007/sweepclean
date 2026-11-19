@@ -202,7 +202,7 @@ function walkLd(ld) {
       descs.set(rec.description, p);
     }
     if (rec.h1.length !== 1) fail(`${p}: ${rec.h1.length} H1s`);
-    if (rec.ogUrl && rec.ogUrl !== c && rec.ogUrl.replace(/\/$/, "") !== (c || "").replace(/\/$/, "")) fail(`${p}: og:url ${rec.ogUrl} ≠ canonical`);
+    if (c && rec.ogUrl && rec.ogUrl !== c && rec.ogUrl.replace(/\/$/, "") !== (c || "").replace(/\/$/, "")) fail(`${p}: og:url ${rec.ogUrl} ≠ canonical`);
     if (!rec.ogImage) fail(`${p}: no og:image`);
     else if (!rec.ogImage.startsWith(SITE + "/")) fail(`${p}: og:image not on ${SITE}: ${rec.ogImage}`);
     if (indexable && rec.words < 120) warn(`${p}: thin main content (${rec.words} words)`);
@@ -253,9 +253,16 @@ function walkLd(ld) {
   const thanks = await get(BASE + "/quote/thanks");
   if (thanks.status !== 200 || !/<meta name="robots" content="noindex/.test(thanks.text)) fail("/quote/thanks must be 200 + noindex");
   if (smPaths.has("/quote/thanks")) fail("/quote/thanks is in the sitemap");
+  // BookingKoala utility pages: reachable, noindex, follow, not in the sitemap.
+  for (const p of ["/login", "/book-now"]) {
+    const r = await get(BASE + p);
+    if (r.status !== 200 || !/<meta name="robots" content="noindex, follow"/.test(r.text)) fail(`${p} must be 200 + noindex, follow`);
+    if (smPaths.has(p)) fail(`${p} is in the sitemap`);
+    if (/rel="canonical"/.test(r.text)) fail(`${p}: noindex page has a canonical`);
+  }
   const notFoundHtml = await (await fetch(BASE + "/this-page-does-not-exist")).text();
   if (/rel="canonical"/.test(notFoundHtml)) fail("404 page has a canonical tag");
-  const redirects = { "/about": "/why-swept", "/book": "/quote", "/get-a-quote": "/quote", "/end-of-lease-cleaning": "/services/bond-cleaning", "/services/end-of-lease-cleaning": "/services/bond-cleaning" };
+  const redirects = { "/about": "/why-swept", "/book": "/book-now", "/get-a-quote": "/quote", "/end-of-lease-cleaning": "/services/bond-cleaning", "/services/end-of-lease-cleaning": "/services/bond-cleaning" };
   for (const [from, to] of Object.entries(redirects)) {
     const r = await get(BASE + from);
     const loc = r.location ? new URL(r.location, BASE).pathname : null;

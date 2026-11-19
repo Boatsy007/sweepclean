@@ -15,7 +15,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  images: { qualities: [70, 75] },
+  // AVIF first (smaller files at the same quality setting), WebP for browsers without AVIF.
+  images: { qualities: [70, 75], formats: ["image/avif", "image/webp"] },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
@@ -33,7 +34,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/end-of-lease-cleaning", destination: "/services/bond-cleaning", permanent: true },
       { source: "/services/end-of-lease-cleaning", destination: "/services/bond-cleaning", permanent: true },
-      { source: "/book", destination: "/quote", permanent: true },
+      { source: "/book", destination: "/book-now", permanent: true },
       { source: "/get-a-quote", destination: "/quote", permanent: true },
       { source: "/about", destination: "/why-swept", permanent: true },
     ];
