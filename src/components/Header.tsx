@@ -98,10 +98,10 @@ export function Header() {
           </Link>
           {site.phone && (
             <>
-              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} className="hidden items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-lavender xl:inline-flex">
+              <a href={telHref(site.phone)} className="hidden items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 font-display text-[1.05rem] font-semibold hover:bg-lavender xl:inline-flex">
                 <Icon name="phone" className="size-5" />{site.phone}
               </a>
-              <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header" })} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-lavender xl:hidden">
+              <a href={telHref(site.phone)} aria-label={`Call Swept on ${site.phone}`} className="grid size-11 place-items-center rounded-full hover:bg-lavender xl:hidden">
                 <Icon name="phone" className="size-6" />
               </a>
             </>
@@ -122,7 +122,7 @@ export function Header() {
             <span aria-hidden="true">Customer<br />Login</span>
           </Link>
           {site.phone && (
-            <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "header_mobile" })} aria-label={`Call Swept on ${site.phone}`} className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1 hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
+            <a href={telHref(site.phone)} aria-label={`Call Swept on ${site.phone}`} className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1 hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
               <Icon name="phone" className="size-6" />
               <span aria-hidden="true">Call Us</span>
             </a>

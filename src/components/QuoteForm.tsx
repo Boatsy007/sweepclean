@@ -18,7 +18,7 @@ import {
 import { services } from "@/lib/services";
 import { postcodeInArea } from "@/lib/areas";
 import { site, telHref } from "@/lib/site";
-import { track } from "@/lib/analytics";
+import { getAttribution, track } from "@/lib/analytics";
 import { Icon } from "./Icon";
 import { packageById, packageNote, type CleanPackage } from "@/lib/packages";
 
@@ -157,7 +157,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
       const res = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, website: hp, elapsed: Date.now() - mountedAt.current, page: window.location.pathname + window.location.search }),
+        body: JSON.stringify({ ...data, website: hp, elapsed: Date.now() - mountedAt.current, page: window.location.pathname + window.location.search, attribution: getAttribution() }),
       });
       if (!res.ok) throw new Error(String(res.status));
       track("generate_lead", {

@@ -47,6 +47,8 @@ export type QuoteRequest = {
   bedMaking?: string;
   linenChange?: string;
   address?: string;
+  /** Ad click ID / UTM tags of the visit (no personal data) – lets a confirmed booking be matched to its ad. */
+  attribution?: Record<string, string>;
 };
 
 const AU_PHONE = /^(\+?61|0)[2-478](\s?\d){8}$/;
@@ -103,6 +105,7 @@ export function sanitise(raw: Record<string, unknown>): QuoteRequest {
     bedMaking: str(raw.bedMaking, 2),
     linenChange: str(raw.linenChange, 2),
     address: str(raw.address, 160),
+    attribution: attributionFrom(raw.attribution),
   };
 }
 
@@ -130,6 +133,17 @@ export function validateBooking(d: Partial<QuoteRequest>, packageIds: readonly s
   else if (d.startDate < todayInBrisbane()) e.startDate = "Please choose a date from today onwards.";
   if (!d.address || d.address.trim().length < 4) e.address = "Please enter the street address.";
   return e;
+}
+
+const ATTRIBUTION_KEYS = ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "landing_page"];
+function attributionFrom(v: unknown): Record<string, string> | undefined {
+  if (!v || typeof v !== "object") return undefined;
+  const out: Record<string, string> = {};
+  for (const k of ATTRIBUTION_KEYS) {
+    const x = (v as Record<string, unknown>)[k];
+    if (typeof x === "string" && x.trim()) out[k] = x.trim().slice(0, 200);
+  }
+  return Object.keys(out).length ? out : undefined;
 }
 
 export function labelFor(list: readonly { value: string; label: string }[], v?: string) {

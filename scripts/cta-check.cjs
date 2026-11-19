@@ -127,8 +127,9 @@ function ctas(html) {
     await page.close();
   }
   // ---- 3. Booking request: package card → form with the package preselected → validation → submit.
+  // (Run each suite against its own fresh server – npm run test:all – so the quote API rate limit is untouched.)
   {
-    const c = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, extraHTTPHeaders: { "x-forwarded-for": `10.9.${Date.now() % 250}.${Math.floor(Math.random() * 250)}` } });
+    const c = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
     const page = await c.newPage();
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));

@@ -9,7 +9,7 @@ import { BOOKING_BATHROOMS, BOOKING_BEDROOMS, BOOKING_BEDS, FREQUENCY_OPTIONS, t
 import { postcodeInArea } from "@/lib/areas";
 import { rememberThanksName } from "@/lib/thanksName";
 import { site, telHref } from "@/lib/site";
-import { track } from "@/lib/analytics";
+import { getAttribution, track } from "@/lib/analytics";
 
 type Data = Partial<QuoteRequest>;
 const HOURS = [
@@ -66,11 +66,11 @@ export function BookingRequestForm() {
       const res = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, kind: "booking", service: "regular-house-cleaning", website: hp, elapsed: Date.now() - mountedAt.current, source: window.location.pathname + window.location.search }),
+        body: JSON.stringify({ ...data, kind: "booking", service: "regular-house-cleaning", website: hp, elapsed: Date.now() - mountedAt.current, source: window.location.pathname + window.location.search, attribution: getAttribution() }),
       });
       if (!res.ok) throw new Error(String(res.status));
-      // A booking REQUEST, confirmed later by Swept – counted as a lead, never as a confirmed booking.
-      track("generate_lead", {
+      // A booking REQUEST, confirmed later by Swept – its own event, never counted as a confirmed booking.
+      track("booking_request", {
         lead_type: "booking_request",
         service: "regular-house-cleaning",
         package: data.package,

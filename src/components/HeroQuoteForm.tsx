@@ -7,7 +7,7 @@ import { FREQUENCY_OPTIONS, SERVICE_OPTIONS, validateContact, type Errors, type 
 import { postcodeInArea } from "@/lib/areas";
 import { services } from "@/lib/services";
 import { site, telHref, trustLabel } from "@/lib/site";
-import { track } from "@/lib/analytics";
+import { getAttribution, track } from "@/lib/analytics";
 import { Icon } from "./Icon";
 import Image from "next/image";
 import { photos } from "@/lib/photos";
@@ -56,6 +56,7 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
       source: `hero:${typeof document !== "undefined" ? document.referrer || "direct" : ""}`,
       website: hp,
       elapsed: Date.now() - mountedAt.current,
+      attribution: getAttribution(),
     };
     try {
       const res = await fetch("/api/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });

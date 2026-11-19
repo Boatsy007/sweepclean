@@ -64,6 +64,8 @@ export function buildLeadPayload(q: QuoteRequest, pkg: CleanPackage | undefined,
       : null,
     notes: q.notes ?? null,
     source: q.source ?? null,
+    /** Google Ads click ID (gclid/gbraid/wbraid) and UTM tags of the visit – for offline conversion import. */
+    attribution: q.attribution ?? null,
     /** The same human-readable rows as the notification email – handy for a lead's notes field. */
     summary,
   };

@@ -42,7 +42,7 @@ export function MobileCtaBar() {
       <div data-mobile-cta-bar className="fixed inset-x-0 bottom-0 z-40 border-t border-lilac bg-white/95 shadow-[0_-10px_28px_-14px_rgb(6_27_73/0.22)] px-4 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur lg:hidden">
         <div className="flex gap-2.5 min-[360px]:gap-3">
           {site.phone && (
-            <a href={telHref(site.phone)} onClick={() => track("click_to_call", { location: "mobile_bar" })} className="btn-outline !min-h-11 flex-1 whitespace-nowrap !px-4">
+            <a href={telHref(site.phone)} className="btn-outline !min-h-11 flex-1 whitespace-nowrap !px-4">
               <Icon name="phone" className="size-5" /> Call
             </a>
           )}

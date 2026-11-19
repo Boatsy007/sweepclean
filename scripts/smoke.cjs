@@ -13,7 +13,24 @@ const ok = (m) => console.log("  ✓ " + m);
 (async () => {
   const browser = await chromium.launch();
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 900 } });
+  // Analytics: on localhost the real Google tag never loads (production domain only), so record exactly
+  // what the site would send to gtag() – event names, counts and parameters.
+  await ctx.addInitScript(() => {
+    window.gtag = function () {
+      try {
+        const l = JSON.parse(sessionStorage.getItem("__gtag") || "[]");
+        l.push(Array.from(arguments));
+        sessionStorage.setItem("__gtag", JSON.stringify(l));
+      } catch {}
+    };
+    // tel:/mailto: clicks are tracked, but don't let the browser try to open a dialler/mail app.
+    window.addEventListener("click", (e) => { const a = e.target && e.target.closest && e.target.closest('a[href^="tel:"],a[href^="mailto:"]'); if (a) e.preventDefault(); });
+  });
   const page = await ctx.newPage();
+  const gtagEvents = async () => (await page.evaluate(() => JSON.parse(sessionStorage.getItem("__gtag") || "[]"))).filter((c) => c[0] === "event").map((c) => ({ name: c[1], params: c[2] || {} }));
+  const resetGtag = () => page.evaluate(() => sessionStorage.removeItem("__gtag"));
+  const count = (list, name, where = () => true) => list.filter((e) => e.name === name && where(e.params)).length;
+  const allEvents = [];
   const consoleErrors = [];
   // Errors raised by the third-party BookingKoala embed (its own iframe/network) are reported separately:
   // they depend on BookingKoala, not on our code (e.g. its Cloudflare blocks some data-centre IPs).
@@ -84,11 +101,12 @@ const ok = (m) => console.log("  ✓ " + m);
 
   // 3. Quote funnel
   console.log("Quote funnel");
-  const events = () => page.evaluate(() => (window.dataLayer || []).map((e) => e.event).filter(Boolean));
   // Hero form (home page)
   await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
+  await resetGtag();
   await page.click("#quote button[type=submit]");
   if (await page.isVisible("#hq-name-error")) ok("hero form validation shown"); else fail("hero form validation missing");
+  if (count(await gtagEvents(), "generate_lead") === 0) ok("no lead event when validation fails"); else fail("generate_lead fired on a failed submit");
   await page.fill("#hq-name", "Hero Person");
   await page.fill("#hq-phone", "0412 345 678");
   await page.fill("#hq-email", "hero@example.com");
@@ -99,11 +117,18 @@ const ok = (m) => console.log("  ✓ " + m);
   await page.waitForTimeout(2600);
   await page.click("#quote button[type=submit]");
   await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("hero form → thank-you page"), () => fail("hero form did not submit"));
+  {
+    const ev = await gtagEvents();
+    allEvents.push(...ev);
+    const n = count(ev, "generate_lead", (p) => p.lead_type === "quote_hero");
+    if (n === 1 && count(ev, "generate_lead") === 1) ok("hero form success → exactly one generate_lead (quote_hero)"); else fail(`hero form generate_lead count ${count(ev, "generate_lead")}`);
+  }
 
   // Full multi-step form, arriving with a suburb pre-filled
   await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
   await page.evaluate(() => localStorage.clear());
   await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
+  await resetGtag();
   await page.click("text=Continue");
   if (await page.isVisible("text=Choose the type of clean you need.")) ok("step 1 validation shown"); else fail("step 1 validation missing");
   await page.click("label:has-text('Regular home cleaning')");
@@ -131,11 +156,17 @@ const ok = (m) => console.log("  ✓ " + m);
   await page.waitForTimeout(2600); // pass the bot timing trap
   await page.click("button:has-text('Get my free quote')");
   await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("submission → thank-you page"), () => fail("did not reach thank-you page"));
+  {
+    const ev = await gtagEvents();
+    allEvents.push(...ev);
+    if (count(ev, "quote_start") === 1) ok("quote_start sent once"); else fail(`quote_start count ${count(ev, "quote_start")}`);
+    if (count(ev, "quote_step") >= 3) ok("quote_step sent per step"); else fail(`quote_step count ${count(ev, "quote_step")}`);
+    if (count(ev, "generate_lead") === 1 && count(ev, "generate_lead", (p) => p.lead_type === "quote" && p.service === "regular-house-cleaning")) ok("full form success → exactly one generate_lead (quote)"); else fail(`full form generate_lead ${JSON.stringify(ev.filter((e) => e.name === "generate_lead"))}`);
+    if (count(ev, "quote_step_error") >= 1) ok("validation errors tracked as quote_step_error (field names only)"); else fail("quote_step_error missing");
+  }
   // The first name is handed over in sessionStorage and rendered just after the page loads.
   if (await page.waitForSelector("text=Thanks, Test", { timeout: 4000 }).then(() => true, () => false)) ok("thank-you personalised"); else fail("thank-you not personalised");
   if (/[?&]name=/.test(page.url()) || /Test/.test(new URL(page.url()).search)) fail("thank-you URL contains the customer's name"); else ok("thank-you URL has no personal details");
-  const ev = await events().catch(() => []);
-  // dataLayer resets on navigation in the new page; check events on the quote page via sessionless approach:
   // Client navigations (with the page crossfade) update <head> a moment after the URL changes – wait for it.
   await page.waitForFunction(() => (document.querySelector('meta[name="robots"]')?.content || "").includes("noindex"), null, { timeout: 4000 }).catch(() => {});
   const robots = await page.evaluate(() => document.querySelector('meta[name="robots"]')?.content || "");
@@ -144,12 +175,22 @@ const ok = (m) => console.log("  ✓ " + m);
   // Event tracking (fresh run, intercept before navigation)
   await page.goto(`${BASE}/quote?service=deep-cleaning`, { waitUntil: "networkidle" });
   if (await page.isVisible("text=Tell us about your home")) ok("?service= deep-links to step 2"); else fail("service deep-link failed");
+  await resetGtag();
   await page.click("fieldset:has-text('Property type') label:has-text('Apartment')");
-  const e2 = await events();
-  if (e2.includes("quote_start")) ok("quote_start event pushed to dataLayer"); else fail("quote_start missing: " + e2.join(","));
+  if (count(await gtagEvents(), "quote_start") === 1) ok("quote_start sent on first interaction"); else fail("quote_start missing");
+  if (await page.evaluate(() => window.dataLayer === undefined)) ok("no dataLayer events from the site outside production"); else fail("site wrote to dataLayer");
 
   // Callback flow
   await page.goto(`${BASE}/contact`, { waitUntil: "networkidle" });
+  await resetGtag();
+  // Email link on the contact page → one click_email.
+  await page.click('main a[href^="mailto:"] >> nth=0');
+  {
+    const ev = await gtagEvents();
+    allEvents.push(...ev);
+    if (count(ev, "click_email") === 1 && count(ev, "click_email", (p) => p.link_location === "page")) ok("email link → exactly one click_email"); else fail(`click_email ${JSON.stringify(ev)}`);
+  }
+  await resetGtag();
   await page.fill("#name", "Call Me");
   await page.fill("#phone", "0400111222");
   await page.fill("#suburb", "Tweed Heads");
@@ -157,6 +198,29 @@ const ok = (m) => console.log("  ✓ " + m);
   await page.waitForTimeout(2600);
   await page.click("button:has-text('Request a call back')");
   await page.waitForURL(/thanks\?type=callback/, { timeout: 10000 }).then(() => ok("callback → thank-you"), () => fail("callback flow failed"));
+  {
+    const ev = await gtagEvents();
+    allEvents.push(...ev);
+    if (count(ev, "generate_lead") === 1 && count(ev, "generate_lead", (p) => p.lead_type === "callback")) ok("callback success → exactly one generate_lead (callback)"); else fail(`callback generate_lead ${JSON.stringify(ev.filter((e) => e.name === "generate_lead"))}`);
+  }
+  // Header phone and Book a clean (desktop) → one event each.
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
+  await resetGtag();
+  await page.click('header a[href^="tel:"] >> visible=true');
+  await page.click('header a[data-cta-intent="book"] >> visible=true');
+  await page.waitForURL(/regular-house-cleaning/, { timeout: 8000 }).catch(() => {});
+  {
+    const ev = await gtagEvents();
+    allEvents.push(...ev);
+    if (count(ev, "click_to_call") === 1 && count(ev, "click_to_call", (p) => p.link_location === "header")) ok("header phone → exactly one click_to_call"); else fail(`click_to_call ${JSON.stringify(ev.filter((e) => e.name === "click_to_call"))}`);
+    if (count(ev, "booking_cta_click") === 1 && count(ev, "booking_cta_click", (p) => p.cta_location === "header")) ok("header Book a clean → exactly one booking_cta_click"); else fail(`booking_cta_click ${JSON.stringify(ev.filter((e) => e.name === "booking_cta_click"))}`);
+  }
+  // No personal details in any analytics parameter.
+  {
+    const pii = ["hero person", "hero@example.com", "0412", "test person", "test@example.com", "call me", "0400111222", "burleigh heads 4220"];
+    const leaked = allEvents.filter((e) => pii.some((x) => JSON.stringify(e.params).toLowerCase().includes(x)));
+    if (!leaked.length && allEvents.length) ok(`no personal details in ${allEvents.length} analytics events`); else fail(`personal details in analytics: ${JSON.stringify(leaked).slice(0, 200)}`);
+  }
 
   // API hardening
   const bad = await fetch(`${BASE}/api/quote`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind: "quote", name: "x" }) });
