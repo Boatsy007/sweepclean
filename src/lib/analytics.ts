@@ -13,6 +13,8 @@ declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
+    /** Set by Analytics.tsx on the production domain: events wait here until gtm.js has loaded. */
+    __sweptTag?: { ready: boolean; queue: [string, Params][] };
   }
 }
 
@@ -24,6 +26,13 @@ export function track(event: string, params: Params = {}) {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;
   const clean: Params = {};
   for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") clean[k] = v;
+  const tag = window.__sweptTag;
+  if (tag && !tag.ready) {
+    // Container not loaded yet: hold the event (sent once on load, see Analytics.tsx). origin_path records
+    // the page it happened on. (Overriding page_location here makes this container drop events – tested.)
+    tag.queue.push([event, { ...clean, origin_path: window.location.pathname }]);
+    return;
+  }
   window.gtag("event", event, clean);
 }
 

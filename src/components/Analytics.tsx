@@ -13,11 +13,13 @@ import { AnalyticsListeners } from "./AnalyticsListeners";
  * - Production domain only: the check runs in the browser because the same build also serves the
  *   *.vercel.app alias and previews. NEXT_PUBLIC_ANALYTICS_TEST_HOST (e.g. "localhost") adds one host
  *   for local verification builds only – never set it in Vercel.
- * - Speed: dataLayer/gtag are ready as soon as the page is interactive, so early events queue in
- *   Google's standard way and none are lost; the large gtm.js download waits until the page has
- *   loaded and the browser is idle, keeping it out of LCP and the start-up main thread.
+ * - Speed: gtm.js is fetched on the visitor's first interaction (tap, key, scroll) or once the page has
+ *   loaded and the browser is idle – whichever comes first – so it stays out of LCP and start-up.
+ * - Early events: this container ignores gtag('event') calls queued before it has initialised, so
+ *   track() (src/lib/analytics.ts) holds events in window.__sweptTag.queue, stamped with the page they
+ *   happened on, and they're sent exactly once when gtm.js has loaded.
  * - Page views, including client-side navigation, come from the container's GA4 enhanced measurement
- *   (history events) – no manual page_view events here, so none are double-counted.
+ *   (history events) – no manual page_view events, so none are double-counted.
  */
 const hosts = [new URL(PRODUCTION_ORIGIN).hostname, process.env.NEXT_PUBLIC_ANALYTICS_TEST_HOST].filter(Boolean);
 
@@ -27,9 +29,18 @@ if (${JSON.stringify(hosts)}.indexOf(location.hostname) === -1) return;
 window.dataLayer = window.dataLayer || [];
 window.gtag = function gtag(){dataLayer.push(arguments);};
 gtag('js', new Date());
-function load(){ var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtm.js?id=${GTM_ID}'; document.head.appendChild(s); }
+var tag = window.__sweptTag = { ready: false, queue: [] }, started = false;
+var triggers = ['pointerdown', 'keydown', 'touchstart', 'scroll'];
+function load(){
+  if (started) return; started = true;
+  triggers.forEach(function(t){ removeEventListener(t, load, true); });
+  var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtm.js?id=${GTM_ID}';
+  s.onload = function(){ tag.ready = true; var q = tag.queue.splice(0); for (var i = 0; i < q.length; i++) gtag('event', q[i][0], q[i][1]); };
+  document.head.appendChild(s);
+}
+triggers.forEach(function(t){ addEventListener(t, load, { capture: true, passive: true, once: true }); });
 function idle(){ if (window.requestIdleCallback) requestIdleCallback(load, { timeout: 3000 }); else setTimeout(load, 1); }
-if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle, { once: true });
+if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
 })();`;
   return (
     <>
