@@ -23,6 +23,19 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: "en_AU", siteName: "Swept Cleaning" },
   twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },
+  // Favicons: stable URLs in /public (Google Search uses a square icon, a multiple of 48px).
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   // Previews and dev builds are noindex (see src/lib/siteConfig.ts); production pages are indexable.
   ...(indexable ? {} : { robots: { index: false, follow: false } }),
 };
