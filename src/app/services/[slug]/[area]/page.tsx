@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CtaLink } from "@/components/CtaLink";
+import { BOOK_PATH, isBookable } from "@/lib/bookingKoala";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, services } from "@/lib/services";
@@ -16,7 +18,6 @@ import { Faqs } from "@/components/Faqs";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { ServiceVisual } from "@/components/ServiceVisual";
-import { TrackedLink } from "@/components/TrackedLink";
 
 /*
  * Service × area landing page, e.g. /services/bond-cleaning/brisbane.
@@ -65,6 +66,8 @@ export default async function ServiceAreaPage({ params }: Props) {
   const best = topSuburbs(slug, area, 8);
   const all = suburbsIn(area);
   const quoteHref = `/quote?service=${s.slug}`;
+  const bookable = isBookable(slug);
+  const ctx = { page_type: "service_area" as const, service: slug, region: area };
   // Guides for this service: ones written for this area first, then general ones (never another area's).
   const related = guides
     .filter((g) => g.services?.includes(slug) && (!g.areas || g.areas.includes(area)))
@@ -101,11 +104,24 @@ export default async function ServiceAreaPage({ params }: Props) {
             <p className="eyebrow">{s.name} · {a.name} {a.state}</p>
             <h1 className="mt-3 text-4xl font-extrabold leading-[1.05] sm:text-5xl">{titleLabel[slug]} {at}</h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed">{c.intro}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <TrackedLink cta={`service_area_hero_${slug}_${area}`} href={quoteHref} className="btn-primary !min-h-14 !px-8 text-lg">Get a free quote <Icon name="arrow" className="size-5" /></TrackedLink>
-              <a href="#checklist" className="btn-outline !min-h-14">What&apos;s included</a>
-            </div>
-            <p className="mt-4 text-sm">Written quote {site.quoteResponse}{trustLabel() ? ` · ${trustLabel()}` : ""} · {all.length} {a.name} suburbs</p>
+            {bookable ? (
+              <>
+                {/* Bookable in BookingKoala: book online first, a free quote second. */}
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <CtaLink intent="book" location="service_area_hero" context={ctx} href={BOOK_PATH} className="btn-primary !min-h-14 !px-8 text-lg">Book a clean <Icon name="arrow" className="size-5" /></CtaLink>
+                  <CtaLink intent="quote" location="service_area_hero_quote" context={ctx} href={quoteHref} className="btn-outline !min-h-14">Get a free quote</CtaLink>
+                </div>
+                <p className="mt-4 text-sm">Book online in minutes{trustLabel() ? ` · ${trustLabel()}` : ""} · <a href="#checklist" className="font-semibold text-violet-ink underline underline-offset-2">What&apos;s included</a></p>
+              </>
+            ) : (
+              <>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <CtaLink intent="quote" location="service_area_hero" context={ctx} href={quoteHref} className="btn-primary !min-h-14 !px-8 text-lg">Get a free quote <Icon name="arrow" className="size-5" /></CtaLink>
+                  <a href="#checklist" className="btn-outline !min-h-14">What&apos;s included</a>
+                </div>
+                <p className="mt-4 text-sm">Written quote {site.quoteResponse}{trustLabel() ? ` · ${trustLabel()}` : ""} · {all.length} {a.name} suburbs</p>
+              </>
+            )}
           </div>
           <div className="reveal-zoom overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
             <ServiceVisual service={s} priority sizes="(min-width: 1200px) 520px, (min-width: 1024px) 45vw, 100vw" className="aspect-[5/3.4] w-full" />
@@ -198,7 +214,11 @@ export default async function ServiceAreaPage({ params }: Props) {
         </div>
       </section>
 
-      <CtaBand title={`${titleLabel[slug]} ${at}, done properly.`} body="Tell us about your home or workplace and we'll send a clear, written price." href={quoteHref} id={`sa_band_${slug}_${area}`} />
+      {bookable ? (
+        <CtaBand title={`${titleLabel[slug]} ${at}, done properly.`} quote={quoteHref} id="sa_band" context={ctx} />
+      ) : (
+        <CtaBand title={`${titleLabel[slug]} ${at}, done properly.`} body="Tell us about your home or workplace and we'll send a clear, written price." intent="quote" href={quoteHref} id="sa_band" context={ctx} />
+      )}
     </>
   );
 }

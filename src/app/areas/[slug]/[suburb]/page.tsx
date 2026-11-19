@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CtaLink } from "@/components/CtaLink";
+import { BOOK_PATH, isBookable } from "@/lib/bookingKoala";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { areaFor, getSuburb, nearby, stateName, suburbPath, suburbs, suburbsIn } from "@/lib/suburbs";
@@ -89,6 +91,8 @@ export default async function SuburbPage({ params }: Props) {
     },
   ];
 
+  const ctx = { page_type: "suburb" as const, region: a.slug, suburb: s.slug };
+
   const placeSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -144,6 +148,11 @@ export default async function SuburbPage({ params }: Props) {
                 <li key={t} className="flex items-center gap-2"><Icon name="checkCircle" className="size-5 shrink-0 text-violet" />{t}</li>
               ))}
             </ul>
+            {/* Ready to book: straight to online booking. The quote form alongside stays for a written price. */}
+            <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <CtaLink intent="book" location="suburb_hero" context={ctx} href={BOOK_PATH} className="btn-primary !min-h-13 !px-7">Book a clean <Icon name="arrow" className="size-4" /></CtaLink>
+              <span className="text-sm">or get a free quote <span className="lg:hidden">below</span><span className="hidden lg:inline">with the form</span></span>
+            </div>
           </div>
           <HeroQuoteForm defaultSuburb={`${s.name} ${s.postcode}`} title={`Get a quote in ${s.name}`} />
         </div>
@@ -200,7 +209,8 @@ export default async function SuburbPage({ params }: Props) {
                 {sv.checklist.filter((c) => !/^add/i.test(c.room)).flatMap((c) => c.items.slice(0, 1)).slice(0, 4).map((t) => <li key={t} className="flex gap-2"><Icon name="check" className="mt-0.5 size-4 shrink-0 text-violet" />{t}</li>)}
               </ul>
               <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
-                <Link href={`/quote?service=${slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote<span className="sr-only"> for {sv.name.toLowerCase()} in {s.name}</span></Link>
+                {isBookable(slug) && <CtaLink intent="book" location="suburb_fit_card" context={{ ...ctx, service: slug }} href={BOOK_PATH} className="text-violet underline underline-offset-2">Book online<span className="sr-only"> – {sv.name.toLowerCase()} in {s.name}</span></CtaLink>}
+                <CtaLink intent="quote" location="suburb_fit_card" context={{ ...ctx, service: slug }} href={`/quote?service=${slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote<span className="sr-only"> for {sv.name.toLowerCase()} in {s.name}</span></CtaLink>
                 <Link href={serviceAreas[slug]?.[a.slug] ? serviceAreaPath(slug, a.slug) : `/services/${slug}`} className="text-navy underline underline-offset-2">Full checklist<span className="sr-only"> for {sv.name.toLowerCase()}</span></Link>
               </div>
             </li>
@@ -218,7 +228,8 @@ export default async function SuburbPage({ params }: Props) {
                 <h3 className="mt-3 text-lg font-bold">{sv.name} in {s.name}</h3>
                 <span className="flex-1" />
                 <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
-                  <Link href={`/quote?service=${sv.slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote</Link>
+                  {isBookable(sv.slug) && <CtaLink intent="book" location="suburb_service_card" context={{ ...ctx, service: sv.slug }} href={BOOK_PATH} className="text-violet underline underline-offset-2">Book online<span className="sr-only"> – {sv.name.toLowerCase()} in {s.name}</span></CtaLink>}
+                  <CtaLink intent="quote" location="suburb_service_card" context={{ ...ctx, service: sv.slug }} href={`/quote?service=${sv.slug}&suburb=${encodeURIComponent(s.name)}`} className="text-violet underline underline-offset-2">Get a quote<span className="sr-only"> for {sv.name.toLowerCase()} in {s.name}</span></CtaLink>
                   <Link href={serviceAreas[sv.slug]?.[a.slug] ? serviceAreaPath(sv.slug, a.slug) : `/services/${sv.slug}`} className="text-navy underline underline-offset-2">What&apos;s included<span className="sr-only"> in {sv.name.toLowerCase()}</span></Link>
                 </div>
               </li>
@@ -250,7 +261,7 @@ export default async function SuburbPage({ params }: Props) {
         </ul>
       </section>
 
-      <CtaBand title={`A cleaner home in ${s.name}, on repeat.`} body="Tell us about your home and we'll send a clear, written price." href={`/quote?suburb=${encodeURIComponent(s.name)}`} id={`suburb_band_${s.slug}`} />
+      <CtaBand title={`A cleaner home in ${s.name}, on repeat.`} quote={`/quote?suburb=${encodeURIComponent(s.name)}`} id="suburb_band" context={ctx} />
     </>
   );
 }

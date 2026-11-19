@@ -73,7 +73,7 @@ export default function CleaningGuides() {
       </section>
       </GuideTopicProvider>
 
-      <CtaBand title="Ready for a beautifully clean home?" body="Tell us about your home and we'll send a clear, written price." href="/quote" cta="Get My Free Quote" id="guides_index_band" />
+      <CtaBand title="Ready for a beautifully clean home?" id="guides_index_band" context={{ page_type: "guides" }} />
     </>
   );
 }

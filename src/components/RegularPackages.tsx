@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { BOOK_PATH } from "@/lib/bookingKoala";
+import { BOOK_PATH, bookHref } from "@/lib/bookingKoala";
+import { CtaLink } from "./CtaLink";
 import { orgRef } from "@/lib/schema";
 import { packageExtras, regularPackages } from "@/lib/packages";
 import { siteUrl } from "@/lib/site";
 import { Icon } from "./Icon";
 import { JsonLd } from "./JsonLd";
-import { TrackedLink } from "./TrackedLink";
 
 /**
  * Recurring house cleaning packages and prices (regular cleaning pages only).
@@ -71,12 +71,14 @@ export function RegularPackages({ place, pageUrl = "/services/regular-house-clea
             </div>
 
             <span className="flex-1" />
-            <TrackedLink cta={`package_book_${p.id}`} href={BOOK_PATH} className={`${p.recommended ? "btn-primary" : "btn-outline"} mt-8 w-full !min-h-13`}>
-              Request booking <Icon name="arrow" className="size-4" />
-            </TrackedLink>
+            <CtaLink intent="book" location="package_card" context={{ page_type: "package", service: "regular-house-cleaning", package: p.id }} href={bookHref({ package: p.id })} className={`${p.recommended ? "btn-primary" : "btn-outline"} mt-8 w-full !min-h-13`}>
+              Book {p.name} <Icon name="arrow" className="size-4" />
+            </CtaLink>
           </li>
         ))}
       </ul>
+      {/* BookingKoala can't preselect a package from our site, so say which one to choose. */}
+      <p className="mt-5 text-center text-[0.95rem]">Booking online? Choose the same package and your home&apos;s size in the booking form.</p>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <div className="card p-6">

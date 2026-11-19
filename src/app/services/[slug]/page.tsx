@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CtaLink } from "@/components/CtaLink";
+import { BOOK_PATH, isBookable } from "@/lib/bookingKoala";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, services } from "@/lib/services";
@@ -11,7 +13,6 @@ import { CtaBand } from "@/components/CtaBand";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { ServiceVisual } from "@/components/ServiceVisual";
-import { TrackedLink } from "@/components/TrackedLink";
 import { pageMeta } from "@/lib/seo";
 import { RegularPackages } from "@/components/RegularPackages";
 import { servicePhotos } from "@/lib/photos";
@@ -38,6 +39,8 @@ export default async function ServicePage({ params }: Props) {
   const crumbs = [{ name: "Home", path: "/" }, { name: "Services", path: "/services" }, { name: s.name, path: `/services/${s.slug}` }];
   const others = services.filter((o) => o.slug !== s.slug);
   const quoteHref = `/quote?service=${s.slug}`;
+  const bookable = isBookable(s.slug);
+  const ctx = { page_type: "service" as const, service: s.slug };
 
   return (
     <>
@@ -50,11 +53,24 @@ export default async function ServicePage({ params }: Props) {
             <p className="eyebrow">{s.bestFor}</p>
             <h1 className="mt-3 text-4xl font-extrabold leading-[1.05] sm:text-5xl">{s.h1}</h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed">{s.intro}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <TrackedLink cta={`service_hero_${s.slug}`} href={quoteHref} className="btn-primary !min-h-14 !px-8 text-lg">Get a free quote <Icon name="arrow" className="size-5" /></TrackedLink>
-              <a href="#checklist" className="btn-outline !min-h-14">What&apos;s included</a>
-            </div>
-            <p className="mt-4 text-sm">Written quote {site.quoteResponse}{trustLabel() ? ` · ${trustLabel()}` : ""} · Brisbane, Logan, Gold Coast &amp; Tweed Heads</p>
+            {bookable ? (
+              <>
+                {/* Bookable in BookingKoala: book online first, a free quote second. */}
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <CtaLink intent="book" location="service_hero" context={ctx} href={BOOK_PATH} className="btn-primary !min-h-14 !px-8 text-lg">Book a clean <Icon name="arrow" className="size-5" /></CtaLink>
+                  <CtaLink intent="quote" location="service_hero_quote" context={ctx} href={quoteHref} className="btn-outline !min-h-14">Get a free quote</CtaLink>
+                </div>
+                <p className="mt-4 text-sm">Book online in minutes{trustLabel() ? ` · ${trustLabel()}` : ""} · <a href="#checklist" className="font-semibold text-violet-ink underline underline-offset-2">What&apos;s included</a></p>
+              </>
+            ) : (
+              <>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <CtaLink intent="quote" location="service_hero" context={ctx} href={quoteHref} className="btn-primary !min-h-14 !px-8 text-lg">Get a free quote <Icon name="arrow" className="size-5" /></CtaLink>
+                  <a href="#checklist" className="btn-outline !min-h-14">What&apos;s included</a>
+                </div>
+                <p className="mt-4 text-sm">Written quote {site.quoteResponse}{trustLabel() ? ` · ${trustLabel()}` : ""} · Brisbane, Logan, Gold Coast &amp; Tweed Heads</p>
+              </>
+            )}
           </div>
           <div className="reveal-zoom overflow-hidden rounded-[2rem] border border-lilac shadow-lift">
             <ServiceVisual service={s} priority sizes="(min-width: 1200px) 520px, (min-width: 1024px) 45vw, 100vw" className="aspect-[5/3.4] w-full" />
@@ -120,7 +136,14 @@ export default async function ServicePage({ params }: Props) {
       <section className="container-x grid gap-8 lg:grid-cols-[0.8fr_2fr]" aria-labelledby="sfaq-h">
         <div>
           <h2 id="sfaq-h" className="text-3xl font-extrabold">{s.name}: common questions</h2>
-          <TrackedLink cta={`service_faq_${s.slug}`} href={quoteHref} className="btn-primary mt-6">Get a free quote <Icon name="arrow" className="size-4" /></TrackedLink>
+          {bookable ? (
+            <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3">
+              <CtaLink intent="book" location="service_faq" context={ctx} href={BOOK_PATH} className="btn-primary">Book a clean <Icon name="arrow" className="size-4" /></CtaLink>
+              <CtaLink intent="quote" location="service_faq_quote" context={ctx} href={quoteHref} className="font-semibold text-violet-ink underline underline-offset-2">or get a free quote</CtaLink>
+            </div>
+          ) : (
+            <CtaLink intent="quote" location="service_faq" context={ctx} href={quoteHref} className="btn-primary mt-6">Get a free quote <Icon name="arrow" className="size-4" /></CtaLink>
+          )}
         </div>
         <Faqs faqs={s.faqs} />
       </section>
@@ -173,7 +196,11 @@ export default async function ServicePage({ params }: Props) {
         </ul>
       </section>
 
-      <CtaBand title={`Ready for your ${s.name.toLowerCase()} quote?`} body="Tell us about your home in about two minutes and we'll send a clear, written price." href={quoteHref} cta="Get my free quote" id={`service_band_${s.slug}`} />
+      {bookable ? (
+        <CtaBand title={`Ready to book your ${s.name.toLowerCase()}?`} quote={quoteHref} id="service_band" context={ctx} />
+      ) : (
+        <CtaBand title={`Ready for your ${s.name.toLowerCase()} quote?`} body="Tell us about your home in about two minutes and we'll send a clear, written price." intent="quote" href={quoteHref} cta="Get my free quote" id="service_band" context={ctx} />
+      )}
     </>
   );
 }

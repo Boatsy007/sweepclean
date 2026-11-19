@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { CtaLink } from "@/components/CtaLink";
+import { BOOK_PATH, isBookable } from "@/lib/bookingKoala";
 import { services } from "@/lib/services";
 import { breadcrumbSchema } from "@/lib/schema";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -37,9 +39,19 @@ export default function Services() {
                 <ul className="mt-4 space-y-2">
                   {s.suits.slice(0, 3).map((t) => <li key={t} className="flex gap-2.5"><Icon name="check" className="mt-0.5 size-5 shrink-0 text-violet" />{t}</li>)}
                 </ul>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link href={`/quote?service=${s.slug}`} className="btn-primary">Get a quote</Link>
-                  <Link href={`/services/${s.slug}`} className="btn-outline">Learn more<span className="sr-only"> about {s.name}</span></Link>
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  {isBookable(s.slug) ? (
+                    <>
+                      <CtaLink intent="book" location="services_card" context={{ page_type: "general", service: s.slug }} href={BOOK_PATH} className="btn-primary">Book a clean</CtaLink>
+                      <Link href={`/services/${s.slug}`} className="btn-outline">Learn more<span className="sr-only"> about {s.name}</span></Link>
+                      <CtaLink intent="quote" location="services_card" context={{ page_type: "general", service: s.slug }} href={`/quote?service=${s.slug}`} className="font-semibold text-violet-ink underline underline-offset-2">or get a quote</CtaLink>
+                    </>
+                  ) : (
+                    <>
+                      <CtaLink intent="quote" location="services_card" context={{ page_type: "general", service: s.slug }} href={`/quote?service=${s.slug}`} className="btn-primary">Get a quote</CtaLink>
+                      <Link href={`/services/${s.slug}`} className="btn-outline">Learn more<span className="sr-only"> about {s.name}</span></Link>
+                    </>
+                  )}
                 </div>
               </div>
             </article>

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { CtaLink } from "@/components/CtaLink";
+import { primaryCta } from "@/lib/bookingKoala";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,7 +17,6 @@ import { GuideCard } from "@/components/GuideCard";
 import { GuideContent } from "@/components/GuideContent";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
-import { TrackedLink } from "@/components/TrackedLink";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -47,6 +48,9 @@ export default async function GuidePage({ params }: Props) {
   const related = relatedGuides(g);
   const linkedServices = (g.services ?? []).map((s) => services.find((x) => x.slug === s)).filter(Boolean) as typeof services;
   const crumbs = [{ name: "Home", path: "/" }, { name: "Cleaning Guides", path: "/cleaning-guides" }, { name: g.title, path }];
+  // Next step follows the guide's main service: bookable → Book a Clean; bond/commercial/custom → quote.
+  const cta = primaryCta(g.services?.[0]);
+  const ctx = { page_type: "guide" as const, service: g.services?.[0] };
   const imageUrl = g.image ? (typeof g.image.src === "string" ? g.image.src : `${siteUrl()}${g.image.src.src}`) : `${siteUrl()}/opengraph-image`;
 
   const article = {
@@ -168,8 +172,18 @@ export default async function GuidePage({ params }: Props) {
             )}
             <div className="band p-6">
               <p className="font-display text-lg font-bold text-navy">Ready for a beautifully clean home?</p>
-              <p className="mt-2 text-sm">Get a clear, written price for your home.</p>
-              <TrackedLink cta={`guide_sidebar_${g.slug}`} href="/quote" className="btn-primary mt-4 w-full">Get My Free Quote</TrackedLink>
+              {cta.intent === "book" ? (
+                <>
+                  <p className="mt-2 text-sm">Choose your clean and book online in a few minutes.</p>
+                  <CtaLink intent="book" location="guide_sidebar" context={ctx} href={cta.href} className="btn-primary mt-4 w-full">Book a Clean</CtaLink>
+                  <p className="mt-3 text-center text-sm">or <CtaLink intent="quote" location="guide_sidebar_quote" context={ctx} href="/quote" className="font-semibold text-violet-ink underline underline-offset-2">get a free quote</CtaLink></p>
+                </>
+              ) : (
+                <>
+                  <p className="mt-2 text-sm">Get a clear, written price for your home.</p>
+                  <CtaLink intent="quote" location="guide_sidebar" context={ctx} href={cta.href} className="btn-primary mt-4 w-full">Get My Free Quote</CtaLink>
+                </>
+              )}
             </div>
           </div>
         </aside>
@@ -189,7 +203,13 @@ export default async function GuidePage({ params }: Props) {
         </section>
       )}
 
-      <CtaBand title="Ready for a beautifully clean home?" body="Tell us about your home and we'll send a clear, written price." href="/quote" cta="Get My Free Quote" id={`guide_band_${g.slug}`} />
+      {cta.intent === "book" ? (
+        <CtaBand title="Ready for a beautifully clean home?" id="guide_band" context={ctx} />
+      ) : (
+        <CtaBand title="Ready for a beautifully clean home?" body="Tell us about your home and we'll send a clear, written price." intent="quote" href={cta.href} cta="Get My Free Quote" id="guide_band" context={ctx} />
+      )}
+      {/* Tells the mobile sticky bar which pathway this guide leads to (bond guides → quote). */}
+      <span hidden data-page-cta={cta.intent} data-page-cta-href={cta.href} />
     </>
   );
 }

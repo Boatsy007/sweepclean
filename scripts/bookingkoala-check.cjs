@@ -93,11 +93,11 @@ async function inspectEmbed(page, e, label) {
   for (const [w, sel] of [[390, 'header a[href="/login"] >> visible=true'], [1440, 'header a[href="/login"] >> visible=true']]) {
     const page = await browser.newPage({ viewport: { width: w, height: 900 }, isMobile: w < 1024, hasTouch: w < 1024 });
     await page.goto(BASE + "/", { waitUntil: "networkidle" });
-    // DOM click (sticky header/bottom bar can cover the link in a tiny test viewport); still a Next.js client navigation.
-    await page.locator(sel).first().evaluate((a) => a.click());
+    // Genuine pointer click (fails if anything covers the link).
+    await page.locator(sel).first().click();
     await page.waitForURL("**/login");
     await inspectEmbed(page, embeds[1], `client nav → /login @${w}px`);
-    await page.locator('main a[href="/book-now"]').first().evaluate((a) => a.click());
+    await page.locator('main a[href="/book-now"]').first().click();
     await page.waitForURL("**/book-now");
     await inspectEmbed(page, embeds[0], `client nav login → /book-now @${w}px`);
     await page.goBack();

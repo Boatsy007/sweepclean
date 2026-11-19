@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { CtaLink } from "@/components/CtaLink";
+import { BOOK_PATH } from "@/lib/bookingKoala";
 import { site, telHref } from "@/lib/site";
 import { services, type Faq } from "@/lib/services";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
@@ -83,7 +85,7 @@ export default function SweptPromisePage() {
             <p className="mt-5 max-w-xl text-lg leading-relaxed">{p.body}</p>
             <p className="mt-4 max-w-xl leading-relaxed">It&apos;s how we work on every clean – homes and businesses, first visit or fiftieth – so you can book Swept with confidence, even the first time.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/quote" className="btn-primary !min-h-14 !px-7 text-lg">Get a free quote <Icon name="arrow" className="size-5" /></Link>
+              <CtaLink intent="book" location="promise_hero" context={{ page_type: "general" }} href={BOOK_PATH} className="btn-primary !min-h-14 !px-7 text-lg">Book a clean <Icon name="arrow" className="size-5" /></CtaLink>
               {site.phone && <a href={telHref(site.phone)} className="btn-outline !min-h-14 !px-6"><Icon name="phone" className="size-5" />{site.phone}</a>}
             </div>
           </div>
@@ -156,7 +158,7 @@ export default function SweptPromisePage() {
         <Faqs faqs={faqs} />
       </section>
 
-      <CtaBand title="Book your first clean with confidence." body={`A written quote, an agreed checklist and ${p.name} on every visit.`} id="promise_band" />
+      <CtaBand title="Book your first clean with confidence." body={`An agreed checklist and ${p.name} on every visit.`} id="promise_band" />
     </>
   );
 }

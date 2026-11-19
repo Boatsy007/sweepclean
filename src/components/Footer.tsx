@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { CtaLink } from "./CtaLink";
+import { BOOK_PATH, LOGIN_PATH } from "@/lib/bookingKoala";
 import { Logo } from "./SweptMark";
 import { services } from "@/lib/services";
 import { areas } from "@/lib/areas";
@@ -11,7 +13,10 @@ export function Footer() {
         <div>
           <Logo tone="white" size="lg" />
           <p className="mt-5 max-w-xs leading-relaxed">House cleaning across Brisbane, Logan, the Gold Coast and Tweed Heads. Weekly, fortnightly and monthly cleans, tailored to your home.</p>
-          <Link href="/quote" className="btn-white mt-6">Get a free quote</Link>
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <CtaLink intent="book" location="footer" href={BOOK_PATH} className="btn-white">Book a clean</CtaLink>
+            <CtaLink intent="quote" location="footer" href="/quote" className="font-semibold text-white underline underline-offset-4 hover:text-white/80">Get a free quote</CtaLink>
+          </div>
         </div>
         <FooterCol title="Services" links={services.map((s) => ({ href: `/services/${s.slug}`, label: s.name }))} />
         <FooterCol title="Areas" links={[...areas.map((a) => ({ href: `/areas/${a.slug}`, label: a.name })), { href: "/areas", label: "All areas" }]} />
@@ -30,7 +35,7 @@ export function Footer() {
       </div>
       <div className="container-x mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} {site.legalName ?? "Swept Cleaning"}{site.abn ? ` · ABN ${site.abn}` : ""}</p>
-        <p className="flex gap-5"><Link href="/login" className="hover:text-white">Customer login</Link><Link href="/privacy" className="hover:text-white">Privacy</Link><Link href="/sitemap.xml" className="hover:text-white">Sitemap</Link></p>
+        <p className="flex gap-5"><Link href={LOGIN_PATH} className="hover:text-white">Customer login</Link><Link href="/privacy" className="hover:text-white">Privacy</Link><Link href="/sitemap.xml" className="hover:text-white">Sitemap</Link></p>
       </div>
     </footer>
   );

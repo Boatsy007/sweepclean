@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { CtaLink } from "@/components/CtaLink";
+import { BOOK_PATH, bookHref } from "@/lib/bookingKoala";
 import { getImageProps } from "next/image";
 import { preload } from "react-dom";
 import { services } from "@/lib/services";
@@ -11,7 +13,6 @@ import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
 import { HeroQuoteForm } from "@/components/HeroQuoteForm";
 import { PromisePanel } from "@/components/SweptPromise";
-import { TrackedLink } from "@/components/TrackedLink";
 import { tasks } from "@/lib/tasks";
 import { pageMeta } from "@/lib/seo";
 
@@ -26,7 +27,7 @@ const schedules = [
   { value: "weekly", label: "Weekly", body: "For busy households, young kids and pets – the house never gets a chance to slip." },
   { value: "fortnightly", label: "Fortnightly", body: "A popular balance for couples and families who keep on top of the day-to-day." },
   { value: "monthly", label: "Monthly", body: "A regular top-to-bottom reset for tidy homes that want a hand with the big jobs." },
-];
+] as const;
 
 const regions = [
   { href: "/areas/brisbane#northside", label: "Brisbane Northside", icon: "city" },
@@ -95,9 +96,9 @@ export default function Home() {
                 <Link href={site.promise.path} className="text-violet underline decoration-violet/30 underline-offset-4 hover:decoration-violet">{site.promise.name}</Link>
               </li>
             </ul>
-            {/* Phones: one clear action (Call and Get a quote also live in the bottom bar). Desktop adds phone + services. */}
+            {/* Primary action: book online. The free-quote form sits right alongside (below on phones). Desktop adds phone + services. */}
             <div className="intro mt-8 [--d:400ms] lg:mt-10 lg:flex lg:flex-wrap lg:items-center lg:gap-4">
-              <a href="#quote" className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem] lg:w-auto lg:!px-9">Get my free quote <Icon name="arrow" className="size-[1.1rem]" /></a>
+              <CtaLink intent="book" location="home_hero" context={{ page_type: "home" }} href={BOOK_PATH} className="btn-primary !min-h-14 w-full whitespace-nowrap text-[1.08rem] lg:w-auto lg:!px-9">Book a clean <Icon name="arrow" className="size-[1.1rem]" /></CtaLink>
               <div className="hidden items-center gap-6 lg:flex">
                 {site.phone && (
                   <a href={telHref(site.phone)} className="btn-outline !min-h-12 whitespace-nowrap !px-5 text-[0.98rem]">
@@ -109,6 +110,9 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+            <p className="intro mt-3 text-center text-[0.95rem] [--d:440ms] lg:text-left">
+              Prefer a written price first? <a href="#quote" className="font-semibold text-violet-ink underline underline-offset-4">Get a free quote</a>
+            </p>
           </div>
 
           <div className="intro-right [--d:220ms]">
@@ -213,11 +217,11 @@ export default function Home() {
           <ul className="reveal-stagger grid gap-4 sm:grid-cols-3">
             {schedules.map((s) => (
               <li key={s.value}>
-                <TrackedLink cta={`schedule_${s.value}`} href={`/quote?service=regular-house-cleaning&frequency=${s.value}`} className="group flex h-full flex-col rounded-[var(--radius-card)] border-2 border-violet/40 bg-white p-6 transition hover:border-violet hover:shadow-lift">
+                <CtaLink intent="book" location="home_schedule" context={{ page_type: "home", service: "regular-house-cleaning", frequency: s.value }} href={bookHref({ frequency: s.value })} className="group flex h-full flex-col rounded-[var(--radius-card)] border-2 border-violet/40 bg-white p-6 transition hover:border-violet hover:shadow-lift">
                   <span className="flex items-center gap-3 font-display text-xl font-bold text-navy"><Icon name="calendar" className="size-6 text-violet" />{s.label}</span>
                   <span className="mt-3 flex-1 leading-relaxed">{s.body}</span>
-                  <span className="mt-4 inline-flex items-center gap-1.5 font-display font-semibold text-violet">Quote {s.label.toLowerCase()} <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" /></span>
-                </TrackedLink>
+                  <span className="mt-4 inline-flex items-center gap-1.5 font-display font-semibold text-violet">Book {s.label.toLowerCase()} <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" /></span>
+                </CtaLink>
               </li>
             ))}
           </ul>

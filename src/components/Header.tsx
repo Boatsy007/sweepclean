@@ -93,7 +93,7 @@ export function Header() {
 
         {/* Desktop actions */}
         <div className="hidden items-center gap-2 lg:flex">
-          <Link href={LOGIN_PATH} onClick={() => track("cta_click", { cta: "header_login" })} aria-label="Customer login" aria-current={path === LOGIN_PATH ? "page" : undefined} className="inline-flex size-11 items-center justify-center gap-2 whitespace-nowrap rounded-full font-display text-[1.05rem] font-semibold hover:bg-lavender 2xl:size-auto 2xl:px-3 2xl:py-2">
+          <Link href={LOGIN_PATH} onClick={() => track("login_click", { location: "header" })} aria-label="Customer login" aria-current={path === LOGIN_PATH ? "page" : undefined} className="inline-flex size-11 items-center justify-center gap-2 whitespace-nowrap rounded-full font-display text-[1.05rem] font-semibold hover:bg-lavender 2xl:size-auto 2xl:px-3 2xl:py-2">
             <Icon name="user" className="size-6 2xl:size-5" /><span className="hidden 2xl:inline" aria-hidden="true">Customer login</span>
           </Link>
           {site.phone && (
@@ -106,18 +106,18 @@ export function Header() {
               </a>
             </>
           )}
-          <Link href={BOOK_PATH} onClick={() => track("booking_cta_click", { location: "header" })} className="btn-primary !min-h-12 whitespace-nowrap !px-5 text-[1rem] xl:!px-6 xl:text-[1.05rem]">
+          <Link href={BOOK_PATH} data-cta-intent="book" onClick={() => track("booking_cta_click", { cta_location: "header", destination: BOOK_PATH })} className="btn-primary !min-h-12 whitespace-nowrap !px-5 text-[1rem] xl:!px-6 xl:text-[1.05rem]">
             Book a clean <Icon name="arrow" className="size-4" />
           </Link>
         </div>
 
         {/* Mobile / tablet actions: labelled tiles */}
         <div className="-mr-2 flex h-full items-stretch whitespace-nowrap font-display text-[0.66rem] font-semibold leading-[1.15] min-[390px]:text-[0.72rem] lg:hidden">
-          <Link href="/quote" onClick={() => track("cta_click", { cta: "header_quote_mobile" })} className="flex flex-col items-center justify-center gap-1 px-1 text-center hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
+          <Link href={BOOK_PATH} data-cta-intent="book" onClick={() => track("booking_cta_click", { cta_location: "header_mobile", destination: BOOK_PATH })} aria-label="Book a clean" aria-current={path === BOOK_PATH ? "page" : undefined} className="flex flex-col items-center justify-center gap-1 px-1 text-center hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
             <Icon name="calendar" className="size-6" />
-            <span>Request a<br />Free Quote</span>
+            <span aria-hidden="true">Book a<br />Clean</span>
           </Link>
-          <Link href={LOGIN_PATH} onClick={() => track("cta_click", { cta: "header_login_mobile" })} aria-label="Customer login" aria-current={path === LOGIN_PATH ? "page" : undefined} className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1 text-center hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
+          <Link href={LOGIN_PATH} onClick={() => track("login_click", { location: "header_mobile" })} aria-label="Customer login" aria-current={path === LOGIN_PATH ? "page" : undefined} className="flex flex-col items-center justify-center gap-1 border-l border-lilac px-1 text-center hover:bg-lavender min-[360px]:px-1.5 min-[414px]:px-2 min-[480px]:px-3">
             <Icon name="user" className="size-6" />
             <span aria-hidden="true">Customer<br />Login</span>
           </Link>
@@ -164,8 +164,10 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        <Link href="/quote" onClick={() => track("cta_click", { cta: "mobile_menu_quote" })} className="btn-primary mt-6 w-full">Get a free quote <Icon name="arrow" className="size-4" /></Link>
-        <Link href={LOGIN_PATH} className="mt-4 flex items-center justify-center gap-2 py-2 font-display font-semibold text-violet-ink"><Icon name="user" className="size-5" />Customer login</Link>
+        {/* Book online first; a free quote for anyone who wants a written price (or a commercial quote). */}
+        <Link href={BOOK_PATH} data-cta-intent="book" onClick={() => track("booking_cta_click", { cta_location: "mobile_menu", destination: BOOK_PATH })} className="btn-primary mt-6 w-full">Book a clean <Icon name="arrow" className="size-4" /></Link>
+        <Link href="/quote" data-cta-intent="quote" onClick={() => track("quote_cta_click", { cta_location: "mobile_menu", destination: "/quote" })} className="btn-outline mt-3 w-full">Get a free quote</Link>
+        <Link href={LOGIN_PATH} onClick={() => track("login_click", { location: "mobile_menu" })} className="mt-4 flex items-center justify-center gap-2 py-2 font-display font-semibold text-violet-ink"><Icon name="user" className="size-5" />Customer login</Link>
       </div>
     </header>
   );

@@ -63,7 +63,7 @@ export default async function AreaPage({ params }: Props) {
               <p className="eyebrow">{a.state === "NSW" ? "Across the border · NSW" : "South East Queensland"}</p>
               <h1 className="mt-3 text-4xl font-extrabold leading-[1.05] sm:text-5xl">{a.h1}</h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed">{a.intro}</p>
-              <QuickStart id={`area_${a.slug}`} />
+              <QuickStart id="region" bookContext={{ page_type: "region", region: a.slug }} />
             </div>
             <nav aria-label={`Services in ${a.name}`} className="card p-6">
               <h2 className="text-lg font-bold">Services in {a.name}</h2>
@@ -164,7 +164,7 @@ export default async function AreaPage({ params }: Props) {
         </ul>
       </section>
 
-      <CtaBand title={`Get a cleaning quote in ${a.name}`} body="Tell us about your home and we'll send a clear, written price." id={`area_band_${a.slug}`} />
+      <CtaBand title={`Book a clean in ${a.name}`} id="region_band" context={{ page_type: "region", region: a.slug }} />
     </>
   );
 }

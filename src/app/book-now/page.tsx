@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { BookHint } from "@/components/BookHint";
+import { CtaLink } from "@/components/CtaLink";
 import { BookingKoalaEmbed } from "@/components/BookingKoalaEmbed";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Icon } from "@/components/Icon";
@@ -18,7 +21,7 @@ export const metadata = pageMeta({
 });
 
 const steps = [
-  ["home", "Tell us about your home", "Choose your service, home size and any extras."],
+  ["home", "Tell us about your home", "Choose your service, how often, your home size and any extras."],
   ["calendar", "Pick a day and time", "Choose the time that suits you."],
   ["checkCircle", "Review and confirm", "Check the details and confirm securely."],
 ] as const;
@@ -29,10 +32,15 @@ export default function BookNowPage() {
     <section className="bg-gradient-to-b from-white to-lavender/70">
       <div className="container-x max-w-5xl pb-20 pt-8 lg:pt-12">
         <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Book a clean", path: BOOK_PATH }]} />
-        <h1 className="text-3xl font-extrabold sm:text-[2.6rem]">Book a clean</h1>
-        <p className="mt-3 max-w-2xl text-lg">Book your clean online in a few minutes. Prefer to talk it through first? <Link href="/quote" className="font-semibold text-violet-ink underline underline-offset-2">Get a free written quote</Link>{site.phone ? <> or call <a href={telHref(site.phone)} className="font-semibold text-violet-ink underline underline-offset-2">{site.phone}</a></> : null}.</p>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <h1 className="text-3xl font-extrabold sm:text-[2.6rem]">Book a clean</h1>
+          <p className="text-[0.95rem]">Already a customer? <Link href="/login" className="font-semibold text-violet-ink underline underline-offset-2">Log in</Link></p>
+        </div>
+        <p className="mt-3 max-w-2xl text-lg">Choose your service, how often and a time that suits, then check the details before you confirm.</p>
+        <Suspense fallback={null}>
+          <BookHint />
+        </Suspense>
 
-        {/* Compact on phones so the form starts near the top of the screen; cards from 640px. */}
         <ol className="mt-5 grid gap-2 sm:mt-6 sm:grid-cols-3 sm:gap-3">
           {steps.map(([icon, t, b], i) => (
             <li key={t} className="flex items-center gap-3 sm:items-start sm:rounded-2xl sm:border sm:border-lilac sm:bg-white/70 sm:p-4">
@@ -50,7 +58,10 @@ export default function BookNowPage() {
           <li className="flex gap-2.5"><Icon name="check" className="mt-0.5 size-5 shrink-0 text-violet" /><span>No lock-in contracts – pause or change your schedule any time</span></li>
         </ul>
         <p className="mt-6 text-[0.95rem]">
-          <strong className="text-navy">Commercial or office cleaning?</strong> These are quoted individually – <Link href="/quote?service=commercial-cleaning" className="font-semibold text-violet-ink underline underline-offset-2">request a commercial quote</Link>. Already a customer? <Link href="/login" className="font-semibold text-violet-ink underline underline-offset-2">Log in to your account</Link>.
+          <strong className="text-navy">Not ready to book?</strong> <CtaLink intent="quote" location="book_page" href="/quote" className="font-semibold text-violet-ink underline underline-offset-2">Get a free written quote</CtaLink>{site.phone ? <> or call <a href={telHref(site.phone)} className="font-semibold text-violet-ink underline underline-offset-2">{site.phone}</a></> : null}.
+        </p>
+        <p className="mt-3 text-[0.95rem]">
+          <strong className="text-navy">Commercial or office cleaning?</strong> These are quoted individually – <CtaLink intent="quote" location="book_page_commercial" href="/quote?service=commercial-cleaning" className="font-semibold text-violet-ink underline underline-offset-2">request a commercial quote</CtaLink>.
         </p>
         <p className="mt-3 text-sm">Bookings, customer accounts and payments are handled securely by BookingKoala, our booking system. See our <Link href="/privacy" className="underline underline-offset-2">privacy policy</Link>.</p>
       </div>

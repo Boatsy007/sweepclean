@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import { CtaLink } from "@/components/CtaLink";
+import { BOOK_PATH } from "@/lib/bookingKoala";
 import { QuoteForm } from "@/components/QuoteForm";
 import { Icon } from "@/components/Icon";
 import { site } from "@/lib/site";
@@ -15,8 +17,9 @@ export default function QuotePage() {
     <section className="bg-gradient-to-b from-white to-lavender/70">
       <div className="container-x grid gap-10 pb-20 pt-8 lg:grid-cols-[1.6fr_1fr] lg:pt-12">
         <div>
-          <h1 className="text-3xl font-extrabold sm:text-[2.6rem]">Book a clean – get your free quote</h1>
-          <p className="mb-7 mt-3 text-lg">A few quick questions, then we&apos;ll send a written price {site.quoteResponse}. No obligation.</p>
+          <h1 className="text-3xl font-extrabold sm:text-[2.6rem]">Get a free cleaning quote</h1>
+          <p className="mt-3 text-lg">A few quick questions, then we&apos;ll send a written price {site.quoteResponse}. No obligation – a quote isn&apos;t a booking.</p>
+          <p className="mb-7 mt-2 text-[0.95rem]">Want to book a home clean straight away? <CtaLink intent="book" location="quote_page" context={{ page_type: "general" }} href={BOOK_PATH} className="font-semibold text-violet-ink underline underline-offset-2">Book online</CtaLink></p>
           <Suspense fallback={<div className="card h-[32rem]" />}>
             <QuoteForm />
           </Suspense>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { BOOKINGKOALA_EMBED_SCRIPT, bookingKoalaDirectUrl, bookingKoalaEmbedUrl, bookingKoalaForms, type BookingKoalaForm } from "@/lib/bookingKoala";
+import { BOOK_HINT_FREQUENCIES, BOOK_HINT_PACKAGES, BOOKINGKOALA_EMBED_SCRIPT, bookingKoalaDirectUrl, bookingKoalaEmbedUrl, bookingKoalaForms, type BookingKoalaForm } from "@/lib/bookingKoala";
 import { track } from "@/lib/analytics";
 import { Icon } from "./Icon";
 
@@ -65,7 +65,15 @@ export function BookingKoalaEmbed({ form, lazy = false, className = "" }: { form
     setLoaded(true);
     if (!viewed.current) {
       viewed.current = true;
-      track(viewEvent[form], { form });
+      // A view of the form – never a booking. Adds the package/frequency picked on our site, if any.
+      const q = new URLSearchParams(window.location.search);
+      const pkg = q.get("package");
+      const freq = q.get("frequency");
+      track(viewEvent[form], {
+        form,
+        ...(pkg && pkg in BOOK_HINT_PACKAGES ? { package: pkg } : {}),
+        ...(freq && freq in BOOK_HINT_FREQUENCIES ? { frequency: freq } : {}),
+      });
     }
   };
 
