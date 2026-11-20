@@ -164,7 +164,7 @@ export default async function AreaPage({ params }: Props) {
         </ul>
       </section>
 
-      <CtaBand title={`Book a clean in ${a.name}`} id="region_band" context={{ page_type: "region", region: a.slug }} />
+      <CtaBand title={`Get a free cleaning quote in ${a.name}`} id="region_band" context={{ page_type: "region", region: a.slug }} />
     </>
   );
 }
