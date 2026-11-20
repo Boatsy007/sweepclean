@@ -11,6 +11,7 @@
     "test:seo": "node scripts/seo-check.cjs",
     "test:cta": "node scripts/cta-check.cjs",
     "test:webhook": "node scripts/webhook-check.cjs",
+    "test:delivery": "node scripts/delivery-check.cjs",
     "test:all": "node scripts/run-suites.cjs"
   },
   "dependencies": {

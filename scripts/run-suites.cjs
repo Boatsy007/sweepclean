@@ -18,6 +18,8 @@ const suites = [
   // Lead webhook payload (Make.com) – a local capture server stands in for the webhook.
   ["webhook-a", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "a", WEBHOOK_PORT: "3299" }],
   ["webhook-b", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "b", WEBHOOK_PORT: "3299" }],
+  // Enquiry delivery with a simulated Resend (starts its own servers, one per delivery setting).
+  ["delivery", ["scripts/delivery-check.cjs"], null],
 ];
 
 async function waitFor(url, ms = 30000) {
@@ -33,6 +35,12 @@ async function waitFor(url, ms = 30000) {
   let failed = 0;
   let port = 3201;
   for (const [name, args, serverEnv = {}, suiteEnv = {}] of suites) {
+    if (serverEnv === null) {
+      console.log(`\n=== ${name} (starts its own servers) ===`);
+      const r = spawnSync(process.execPath, args, { cwd: root, env: process.env, stdio: "inherit" });
+      if (r.status !== 0) { failed++; console.log(`--- ${name}: FAILED`); } else console.log(`--- ${name}: passed`);
+      continue;
+    }
     const p = port++;
     const server = spawn(process.execPath, [require.resolve("next/dist/bin/next", { paths: [root] }), "start", "-p", String(p)], { cwd: root, env: { ...process.env, LEAD_DEV_LOG: "1", PORT: String(p), ...serverEnv }, stdio: "ignore" });
     try {

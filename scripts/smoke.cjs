@@ -126,7 +126,7 @@ const ok = (m) => console.log("  ✓ " + m);
     if (n === 1 && count(ev, "generate_lead") === 1) ok("hero form success → exactly one generate_lead (quote_hero)"); else fail(`hero form generate_lead count ${count(ev, "generate_lead")}`);
   }
 
-  // Central quote form – Residential tab, arriving with a suburb pre-filled. Email left blank (optional).
+  // Central quote form – Residential tab, arriving with a suburb pre-filled. Email is required.
   await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
   await page.evaluate(() => localStorage.clear());
   await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
@@ -153,8 +153,9 @@ const ok = (m) => console.log("  ✓ " + m);
   await page.fill("#phone", "123");
   await page.click("button:has-text('Request My Free Quote')");
   if (await page.isVisible("text=Please enter an Australian phone number")) ok("phone validation shown"); else fail("phone validation missing");
-  if (await page.isVisible("#email-error")) fail("email required (should be optional)"); else ok("email optional");
+  if (await page.isVisible("#email-error")) ok("email required (validation shown)"); else fail("email not required");
   await page.fill("#phone", "0412 345 678");
+  await page.fill("#email", "test@example.com");
   await page.check("input[type=checkbox] >> nth=-1");
   await page.waitForTimeout(2600); // pass the bot timing trap
   // A failed delivery (server error) must not count as a lead.

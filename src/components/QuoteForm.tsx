@@ -420,7 +420,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
                   <TextField id="phone" label="Phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="e.g. 0412 345 678" value={data.phone} onChange={(v) => set("phone", v)} error={errors.phone} required />
                 </div>
                 <div className="mt-5">
-                  <TextField id="email" label="Email" type="email" inputMode="email" autoComplete="email" value={data.email} onChange={(v) => set("email", v)} error={errors.email} />
+                  <TextField id="email" label="Email" type="email" inputMode="email" autoComplete="email" value={data.email} onChange={(v) => set("email", v)} error={errors.email} required />
                 </div>
                 {commercial && <Requirements value={data.notes} onChange={(v) => set("notes", v)} placeholder="Areas to clean, access and security, anything we should know…" />}
                 <Consent checked={!!data.consent} onChange={(v) => set("consent", v)} error={errors.consent} />

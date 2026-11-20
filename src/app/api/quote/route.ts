@@ -53,17 +53,36 @@ function summary(q: QuoteRequest) {
   return rows.filter(([, v]) => v);
 }
 
+/** Resend email. Never throws: a network error or timeout counts as "not sent". */
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
   const key = process.env.RESEND_API_KEY;
   const from = leadFrom();
-  if (!key || !from) return false;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
-  });
-  if (!res.ok) console.error("[lead] resend failed", res.status, await res.text().catch(() => ""));
-  return res.ok;
+  if (!key || !from || !to) return false;
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) console.error("[lead] resend failed", res.status, await res.text().catch(() => ""));
+    return res.ok;
+  } catch (err) {
+    console.error("[lead] resend error", err);
+    return false;
+  }
+}
+
+/** Optional webhook (e.g. Make.com → BookingKoala). Never throws; independent of the email. */
+async function sendWebhook(url: string, body: unknown) {
+  try {
+    const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: AbortSignal.timeout(10_000) });
+    if (!r.ok) console.error("[lead] webhook failed", r.status);
+    return r.ok;
+  } catch (err) {
+    console.error("[lead] webhook error", err);
+    return false;
+  }
 }
 
 export async function POST(req: Request) {
@@ -111,32 +130,33 @@ export async function POST(req: Request) {
     .map(([k, v]) => `<tr><td style="color:#4a5578;vertical-align:top"><strong>${esc(k)}</strong></td><td>${esc(v!).replace(/\n/g, "<br>")}</td></tr>`)
     .join("")}</table>`;
 
-  const delivered: string[] = [];
+  // Two independent channels, sent in parallel: the Resend email to the business inbox (the
+  // primary record of every enquiry) and, when configured, the webhook (Make.com → BookingKoala).
+  // A missing or failing webhook never stops the email, and vice versa.
   const to = leadTo();
-  try {
-    if (to && (await sendEmail(to, title, `<h2 style="font-family:sans-serif">${esc(title)}</h2>${table}`, q.email))) delivered.push("email");
-    const hook = process.env.LEAD_WEBHOOK_URL;
-    if (hook) {
-      // One structured lead per request (quote or call-back) – e.g. a Make.com
-      // webhook that creates the lead in BookingKoala. See docs/LEAD-WEBHOOK.md.
-      const r = await fetch(hook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(buildLeadPayload(q, Object.fromEntries(rows))) });
-      if (r.ok) delivered.push("webhook");
-      else console.error("[lead] webhook failed", r.status);
-    }
-  } catch (err) {
-    console.error("[lead] delivery error", err);
-  }
+  const hook = process.env.LEAD_WEBHOOK_URL;
+  const [emailed, hooked] = await Promise.all([
+    sendEmail(to, title, `<h2 style="font-family:sans-serif">${esc(title)}</h2>${table}`, q.email),
+    hook ? sendWebhook(hook, buildLeadPayload(q, Object.fromEntries(rows))) : Promise.resolve(false),
+  ]);
+  const delivered = [...(emailed ? ["email"] : []), ...(hooked ? ["webhook"] : [])];
 
   if (!delivered.length) {
-    if (process.env.NODE_ENV !== "production" || process.env.LEAD_DEV_LOG === "1") {
+    // Local development and automated tests only: log instead of sending. Never on a Vercel
+    // production deployment, so the live site can't report success without delivering.
+    const logOnly = process.env.VERCEL_ENV !== "production" && (process.env.NODE_ENV !== "production" || process.env.LEAD_DEV_LOG === "1");
+    if (logOnly) {
       console.info("[lead] (no delivery configured – logged only)", JSON.stringify(Object.fromEntries(rows)));
       return NextResponse.json({ ok: true, delivered: ["log"] });
     }
-    console.error("[lead] NOT DELIVERED – configure RESEND_API_KEY (and verify sweptcleans.com.au in Resend) or LEAD_WEBHOOK_URL", JSON.stringify(Object.fromEntries(rows)));
+    // The visitor is told it didn't send (with the phone number and email address to use instead).
+    console.error("[lead] NOT DELIVERED – check RESEND_API_KEY (sweptcleans.com.au verified in Resend) and LEAD_WEBHOOK_URL", JSON.stringify(Object.fromEntries(rows)));
     return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 502 });
   }
+  if (process.env.RESEND_API_KEY && !emailed) console.error("[lead] email NOT sent – lead delivered by webhook only", JSON.stringify(Object.fromEntries(rows)));
 
-  // Customer confirmation (non-blocking for success).
+  // Customer acknowledgement (only once the enquiry itself has been delivered; its own failure
+  // doesn't fail the request). Replies go to the business inbox.
   if (q.email && process.env.RESEND_API_KEY) {
     const first = esc(q.name.split(" ")[0] ?? "");
     await sendEmail(

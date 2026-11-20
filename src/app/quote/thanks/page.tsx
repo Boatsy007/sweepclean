@@ -23,7 +23,7 @@ export default async function Thanks({ searchParams }: Props) {
         <p className="mx-auto mt-4 max-w-xl text-lg">
           {callback
             ? `We'll call you back ${site.quoteResponse}.`
-            : `We'll be in touch ${site.quoteResponse} to discuss your ${svc ? svc.name.toLowerCase() : "cleaning"} requirements and provide your personalised quote. If you gave us your email, check your inbox for a copy of your request.`}
+            : `We'll be in touch ${site.quoteResponse} to discuss your ${svc ? svc.name.toLowerCase() : "cleaning"} requirements and provide your personalised quote. Check your inbox for a copy of your request.`}
         </p>
         <div className="card mx-auto mt-10 max-w-xl p-6 text-left sm:p-8">
           <h2 className="text-xl font-bold">While you wait</h2>

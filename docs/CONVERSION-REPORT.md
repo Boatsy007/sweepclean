@@ -2,7 +2,7 @@
 
 > **Update (20 November 2026, branch `quote-only`) – quote-based cleaning.** Swept no longer publishes prices or takes online booking requests. Everything below this note describes the earlier booking-first set-up and is kept for history.
 > - **Every CTA** ("Book a clean", "Request booking", package cards, header tile, sticky bar, menu, footer, bands, hero, suburb/region/guide/service CTAs) is now **Get a free quote** → the central **`/quote`** form, with the service preselected where the page has one.
-> - **`/quote`** has **Residential** and **Commercial** tabs (no reload, no URL change), a three-step explainer (Tell us what you need → Get your personalised quote → Leave the cleaning to us), name and phone required, email optional.
+> - **`/quote`** has **Residential** and **Commercial** tabs (no reload, no URL change), a three-step explainer (Tell us what you need → Get your personalised quote → Leave the cleaning to us), name, phone and email required (front end and server).
 > - **Regular cleaning `#prices`**: the three package cards (and all prices, extras rates and price structured data) are replaced by **Weekly / Fortnightly / Monthly house cleaning** cards, each → `/quote?service=regular-house-cleaning&frequency=…`. Inclusions and optional extras are kept, without prices.
 > - **`/book-now`** (and `/book`) → one 308 redirect to `/quote?service=regular-house-cleaning`, keeping its query string (frequency, suburb, UTM, gclid…).
 > - **Analytics:** `generate_lead` once per successful quote (with `customer_type` and `cleaning_type`); `booking_request` and `booking_cta_click` retired. See `ANALYTICS.md`.

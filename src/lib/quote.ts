@@ -161,9 +161,10 @@ export type Errors = Partial<Record<keyof QuoteRequest, string>>;
 
 /**
  * Contact checks shared by the browser and the server. Name and phone are always required (Swept
- * phones every enquiry); email is optional unless `requireEmail` (the hero form still asks for it).
+ * phones every enquiry). Email is required on every quote form (residential, commercial and the
+ * quick quote form); the call-back form is phone-based, so its email is optional.
  */
-export function validateContact(d: Partial<QuoteRequest>, kind: QuoteRequest["kind"], requireEmail = false): Errors {
+export function validateContact(d: Partial<QuoteRequest>, kind: QuoteRequest["kind"], requireEmail = kind === "quote"): Errors {
   const e: Errors = {};
   if (!d.name || d.name.trim().length < 2) e.name = "Please tell us your name.";
   if (!d.phone || !AU_PHONE.test(normalisePhone(d.phone))) e.phone = "Please enter an Australian phone number, e.g. 0412 345 678.";

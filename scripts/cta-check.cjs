@@ -192,7 +192,7 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
     if (errors.length) fail(`quote form page errors: ${errors.join(" | ")}`);
     await c.close();
   }
-  // Residential, from the fortnightly card on the regular cleaning page (phone, real taps). Email left blank.
+  // Residential, from the fortnightly card on the regular cleaning page (phone, real taps). Email is required.
   {
     const c = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
     const page = await c.newPage();
@@ -218,13 +218,16 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
     await page.fill("#name", "Test Resident");
     await page.fill("#phone", "0412 345 678");
     await page.locator('form input[type="checkbox"]').first().check();
+    await page.locator('button[type="submit"]', { hasText: "Request My Free Quote" }).tap();
+    if (!(await page.locator("#email-error").count())) fail("residential: email not required");
+    await page.fill("#email", "test@example.com");
     await page.waitForTimeout(2600); // the API ignores submissions made in under 2.5s (bot trap)
     await page.locator('button[type="submit"]', { hasText: "Request My Free Quote" }).tap();
     await page.waitForURL((u) => u.pathname === "/quote/thanks" && u.searchParams.get("type") === "quote" && u.searchParams.get("service") === "regular-house-cleaning", { timeout: 10000 }).catch(() => fail(`residential quote did not reach the thank-you page (at ${page.url()})`));
     if (/Test/.test(new URL(page.url()).search)) fail("thank-you URL contains the customer's name");
     if (await page.getByText(/booking request|final price|confirm your appointment/i).count()) fail("thank-you page promises a booking confirmation or price");
     if (errors.length) fail(`residential journey page errors: ${errors.join(" | ")}`);
-    notes.push("Residential: fortnightly card → preselected form → validation → submit without email → thank-you OK");
+    notes.push("Residential: fortnightly card → preselected form → validation → email required → submit → thank-you OK");
     await c.close();
   }
   // Commercial, from the commercial service page (desktop).

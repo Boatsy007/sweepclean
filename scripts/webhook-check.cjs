@@ -73,8 +73,8 @@ const T = 2600; // older than the 2.5s bot timing trap
 const att = { gclid: "TEST-GCLID", utm_source: "google", utm_medium: "cpc", utm_campaign: "test", landing_page: "/services/regular-house-cleaning" };
 const cases = {
   a: [
-    ["new residential (regular, fortnightly, no email)", { kind: "quote", customerType: "residential", cleaningType: "regular", service: "regular-house-cleaning", frequency: "fortnightly", bedrooms: "3", bathrooms: "2", suburb: "Robina", postcode: "4226", startDate: "2030-01-15", name: "Test Resident", phone: "0412 345 678", notes: "Two dogs", consent: true, source: "google", attribution: att },
-      (j) => j.customer_type === "residential" && j.cleaning_type?.value === "regular" && j.service?.slug === "regular-house-cleaning" && j.frequency?.value === "fortnightly" && j.details.frequency?.value === "fortnightly" && j.property.bedrooms === "3" && j.customer.email === null && j.attribution?.gclid === "TEST-GCLID" && j.preferred_date === "2030-01-15"],
+    ["new residential (regular, fortnightly)", { kind: "quote", customerType: "residential", cleaningType: "regular", service: "regular-house-cleaning", frequency: "fortnightly", bedrooms: "3", bathrooms: "2", suburb: "Robina", postcode: "4226", startDate: "2030-01-15", name: "Test Resident", phone: "0412 345 678", email: "resident@example.com", notes: "Two dogs", consent: true, source: "google", attribution: att },
+      (j) => j.customer_type === "residential" && j.cleaning_type?.value === "regular" && j.service?.slug === "regular-house-cleaning" && j.frequency?.value === "fortnightly" && j.details.frequency?.value === "fortnightly" && j.property.bedrooms === "3" && j.customer.email === "resident@example.com" && j.attribution?.gclid === "TEST-GCLID" && j.preferred_date === "2030-01-15"],
     ["new commercial (strata, not sure, several times a week, after hours)", { kind: "quote", customerType: "commercial", cleaningType: "strata", service: "commercial-cleaning", frequency: "several_weekly", propertyType: "Strata / common areas", size: "Not sure", timePref: "After hours / overnight", suburb: "Southport", postcode: "4215", businessName: "Test Body Corporate", name: "Test Manager", phone: "0412 345 679", email: "test@example.com", notes: "Lobby and lifts", consent: true },
       (j) => j.customer_type === "commercial" && j.cleaning_type?.label === "Strata / common area cleaning" && j.customer.business_name === "Test Body Corporate" && j.frequency === null && j.details.frequency?.value === "several_weekly" && j.property.type === "Other" && j.details.premises_type === "Strata / common areas" && j.property.premises_size === null && j.details.floor_area === "Not sure" && j.preferred_time === null && j.details.preferred_times === "After hours / overnight" && j.summary["Business name"] === "Test Body Corporate" && j.summary["Frequency"] === "Several times a week"],
     ["hero quick form (unchanged)", { kind: "quote", consent: true, frequency: "weekly", suburb: "Burleigh Heads", postcode: "4220", name: "Hero Person", phone: "0412 111 222", email: "hero@example.com", service: "deep-cleaning", source: "hero:direct" },
@@ -85,9 +85,9 @@ const cases = {
       (j) => j.type === "quote_request" && j.customer_type === "residential" && j.service?.slug === "regular-house-cleaning" && j.property.address === "1 Test Street" && j.details.legacy_booking === true && /Spotless package/.test(j.summary["Old booking page"] || "") && j.package === null && j.estimate === null],
   ],
   b: [
-    ["residential other + not sure", { kind: "quote", customerType: "residential", cleaningType: "other", frequency: "not_sure", bedrooms: "2", bathrooms: "1", suburb: "4000", postcode: "4000", name: "Other Person", phone: "0412 555 666", consent: true },
+    ["residential other + not sure", { kind: "quote", customerType: "residential", cleaningType: "other", frequency: "not_sure", bedrooms: "2", bathrooms: "1", suburb: "4000", postcode: "4000", name: "Other Person", phone: "0412 555 666", email: "other@example.com", consent: true },
       (j) => j.service === null && j.cleaning_type?.value === "other" && j.frequency === null && j.details.frequency?.label === "Not sure yet" && j.customer_type === "residential"],
-    ["carpet (no rooms)", { kind: "quote", customerType: "residential", cleaningType: "carpet", service: "carpet-cleaning", frequency: "once", suburb: "Logan Central", name: "Carpet Person", phone: "0412 777 888", consent: true },
+    ["carpet (no rooms)", { kind: "quote", customerType: "residential", cleaningType: "carpet", service: "carpet-cleaning", frequency: "once", suburb: "Logan Central", name: "Carpet Person", phone: "0412 777 888", email: "carpet@example.com", consent: true },
       (j) => j.service?.slug === "carpet-cleaning" && j.frequency?.value === "once" && j.property.bedrooms === null],
     ["older multi-step quote tab (pre-change fields)", { kind: "quote", service: "regular-house-cleaning", propertyType: "House", bedrooms: "3", bathrooms: "2", pets: "Yes", extras: ["Oven & stove"], frequency: "monthly", timePref: "Morning", suburb: "Robina", postcode: "4226", name: "Older Tab", phone: "0412 999 000", email: "older@example.com", contactPref: "SMS", consent: true },
       (j) => j.property.type === "House" && j.property.pets === "Yes" && j.extras.quote_add_ons[0] === "Oven & stove" && j.customer.contact_preference === "SMS" && j.preferred_time === "Morning" && j.frequency?.value === "monthly"],
@@ -118,15 +118,16 @@ const cases = {
     else notes.push(`${label}: OK`);
   }
   if (CASES === "b") {
-    // Rejected (invalid cleaning type) and spam (honeypot) requests send nothing to Make.com.
+    // Rejected (no email, invalid cleaning type) and spam (honeypot) requests send nothing to Make.com.
     const before = received.length;
     const bad = await post({ kind: "quote", cleaningType: "window", suburb: "Robina", name: "Bad Type", phone: "0412 000 111", consent: true });
-    if (bad.status !== 422) fail(`invalid cleaning type → ${bad.status}`);
+    const badBody = await bad.json().catch(() => ({}));
+    if (bad.status !== 422 || !badBody.errors?.email || !badBody.errors?.cleaningType) fail(`quote without email / invalid cleaning type → ${bad.status} ${JSON.stringify(badBody)}`);
     const spam = await post({ kind: "quote", cleaningType: "regular", frequency: "weekly", suburb: "Robina", name: "Spam Bot", phone: "0412 000 222", consent: true, website: "http://spam" });
     if (spam.status !== 200) fail(`honeypot → ${spam.status}`);
     await new Promise((x) => setTimeout(x, 300));
     if (received.length !== before) fail(`rejected/spam requests reached the webhook (${received.length - before})`);
-    else notes.push("invalid cleaning type → 422, honeypot → silent 200; neither reached the webhook");
+    else notes.push("quote without email or with an invalid cleaning type → 422 (server-side), honeypot → silent 200; neither reached the webhook");
   }
   srv.close();
   notes.push(`new summary rows seen: ${[...newSummaryKeys].join(", ") || "none"}`);
