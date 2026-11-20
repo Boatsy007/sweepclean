@@ -7,7 +7,7 @@ import { track } from "@/lib/analytics";
 import { BOOK_PATH, LOGIN_PATH, primaryCta, type CtaIntent } from "@/lib/bookingKoala";
 import { Icon } from "./Icon";
 
-/** Primary action for a path: service pages follow their service (bookable → book, bond/commercial → quote); everything else books. */
+/** Primary action for a path: a free quote, with the service preselected on service pages. */
 function ctaForPath(path: string): { intent: CtaIntent; href: string } {
   const service = path.match(/^\/services\/([^/]+)/)?.[1];
   return primaryCta(service);
@@ -15,9 +15,9 @@ function ctaForPath(path: string): { intent: CtaIntent; href: string } {
 
 /**
  * Thumb-zone CTA on phones, pinned to the bottom of the screen: Call + the page's primary action.
- * Residential pages: Book a clean (/book-now). Commercial, bond and other quote-first services: Get a free quote.
- * A page can override the default with a hidden `[data-page-cta]` marker (e.g. bond guides → quote).
- * Hidden where a form is the page: the quote funnel and the BookingKoala booking and login pages.
+ * Every page: Get a free quote (service pages preselect their service).
+ * A page can override the destination with a hidden `[data-page-cta]` marker (e.g. bond guides → bond quote).
+ * Hidden where a form is the page: the quote funnel and the login page.
  * A spacer the same height keeps the footer clear of the bar.
  */
 export function MobileCtaBar() {
@@ -28,14 +28,13 @@ export function MobileCtaBar() {
     setHasInline(!!document.getElementById("quote"));
     const marker = document.querySelector<HTMLElement>("[data-page-cta]");
     const intent = marker?.dataset.pageCta;
-    setOverride(marker && (intent === "book" || intent === "quote") ? { intent, href: marker.dataset.pageCtaHref || (intent === "book" ? BOOK_PATH : "/quote") } : null);
+    setOverride(marker && (intent === "book" || intent === "quote") ? { intent: "quote", href: marker.dataset.pageCtaHref || "/quote" } : null);
   }, [path]);
   if (path.startsWith("/quote") || path === BOOK_PATH || path === LOGIN_PATH) return null;
 
   const cta = override ?? ctaForPath(path);
-  const book = cta.intent === "book";
   // On a page with the inline quote form, "Get a free quote" jumps to it instead of leaving the page.
-  const href = !book && hasInline ? "#quote" : cta.href;
+  const href = hasInline ? "#quote" : cta.href;
   return (
     <>
       <div aria-hidden="true" className="h-[calc(3.75rem+max(env(safe-area-inset-bottom),0.5rem))] lg:hidden" />
@@ -48,11 +47,11 @@ export function MobileCtaBar() {
           )}
           <Link
             href={href}
-            data-cta-intent={cta.intent}
-            onClick={() => track(book ? "booking_cta_click" : "quote_cta_click", { cta_location: "mobile_bar", destination: href.split("?")[0] })}
+            data-cta-intent="quote"
+            onClick={() => track("quote_cta_click", { cta_location: "mobile_bar", destination: href.split("?")[0] })}
             className="btn-primary !min-h-11 flex-[2] whitespace-nowrap !px-4"
           >
-            {book ? "Book a clean" : "Get a free quote"} <Icon name="arrow" className="size-4" />
+            Get a free quote <Icon name="arrow" className="size-4" />
           </Link>
         </div>
       </div>

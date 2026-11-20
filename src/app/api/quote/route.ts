@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { FREQUENCY_OPTIONS, SERVICE_OPTIONS, labelFor, sanitise, validateBooking, validateContact, type QuoteRequest } from "@/lib/quote";
-import { estimatePackage, exceedsBasis, packageById, regularPackages, type CleanPackage, type PackageEstimate } from "@/lib/packages";
+import { SERVICE_OPTIONS, cleaningTypeBy, frequencyLabel, labelFor, sanitise, validateContact, type QuoteRequest } from "@/lib/quote";
+import { LEGACY_PACKAGE_NAMES } from "@/lib/regularCleaning";
+import { services } from "@/lib/services";
 import { buildLeadPayload } from "@/lib/leadPayload";
 import { postcodeInArea } from "@/lib/areas";
 import { site } from "@/lib/site";
@@ -21,20 +22,18 @@ function limited(ip: string) {
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
-const money = (n: number) => `$${n.toFixed(2).replace(/\.00$/, "")}`;
-
-function summary(q: QuoteRequest, pkg?: CleanPackage, est?: PackageEstimate) {
+// Row names are kept from before the quote-only change (an automation may read them); new rows are only added.
+function summary(q: QuoteRequest) {
+  const ct = cleaningTypeBy(q.cleaningType);
   const rows: [string, string | undefined][] = [
-    ["Type", q.kind === "callback" ? "Call-back request" : q.kind === "booking" ? "Booking request (to confirm)" : "Quote request"],
+    ["Type", q.kind === "callback" ? "Call-back request" : "Quote request"],
+    ["Customer type", q.customerType === "commercial" ? "Commercial" : q.customerType === "residential" ? "Residential" : undefined],
+    ["Cleaning type", ct?.label],
     ["Service", q.service ? labelFor(SERVICE_OPTIONS, q.service) : undefined],
-    ["Package", pkg ? `${pkg.name} – from ${money(pkg.from)} + GST per clean (starting price for ${pkg.basis})` : undefined],
-    ["Extra time", q.kind === "booking" && Number(q.extraHours) > 0 ? `${q.extraHours} hr` : undefined],
-    ["Bed making", q.kind === "booking" && Number(q.bedMaking) > 0 ? `${q.bedMaking} bed(s)` : undefined],
-    ["Fresh linen change", q.kind === "booking" && Number(q.linenChange) > 0 ? `${q.linenChange} bed(s)` : undefined],
-    ["Estimated price", est ? `${money(est.total)} + GST per clean (estimate from published prices)` : undefined],
-    ["Size check", pkg && exceedsBasis(pkg, parseInt(q.bedrooms ?? "0"), parseInt(q.bathrooms ?? "0")) ? `Larger than the ${pkg.name} starting size – extra time may be needed; confirm price` : undefined],
+    ["Business name", q.businessName],
+    ["Old booking page", q.legacyBooking ? `Sent from an old booking page${q.package && LEGACY_PACKAGE_NAMES[q.package] ? ` (${LEGACY_PACKAGE_NAMES[q.package]} package)` : ""}${Number(q.extraHours) > 0 ? `, ${q.extraHours} extra hour(s)` : ""}${Number(q.bedMaking) > 0 ? `, bed making ${q.bedMaking} bed(s)` : ""}${Number(q.linenChange) > 0 ? `, linen change ${q.linenChange} bed(s)` : ""} – no price quoted` : undefined],
     ["Address", q.address],
-    ["Frequency", q.frequency ? labelFor(FREQUENCY_OPTIONS, q.frequency) : undefined],
+    ["Frequency", q.frequency ? frequencyLabel(q.frequency) : undefined],
     ["Property", q.propertyType],
     ["Bedrooms / bathrooms", q.bedrooms || q.bathrooms ? `${q.bedrooms ?? "?"} bed / ${q.bathrooms ?? "?"} bath` : undefined],
     ["Premises size", q.size],
@@ -85,21 +84,29 @@ export async function POST(req: Request) {
 
   const q = sanitise(raw);
   const errors = validateContact(q, q.kind);
-  if (q.kind === "quote" && !SERVICE_OPTIONS.some((o) => o.value === q.service)) errors.service = "invalid";
-  if (q.kind === "booking") {
-    Object.assign(errors, validateBooking(q, regularPackages.map((p) => p.id)));
-    q.service = "regular-house-cleaning"; // booking requests are for the regular cleaning packages only
+  if (q.kind === "quote") {
+    if (q.legacyBooking) {
+      // A stale /book-now tab (retired booking form): keep the enquiry as a regular-cleaning quote.
+      q.service = "regular-house-cleaning";
+      q.cleaningType = "regular";
+      q.customerType = "residential";
+    } else if (q.cleaningType) {
+      // Central quote form: the cleaning type decides the service and customer type.
+      const ct = cleaningTypeBy(q.cleaningType);
+      if (!ct) errors.cleaningType = "invalid";
+      else {
+        q.service = ct.service;
+        q.customerType = ct.customer;
+      }
+    } else if (!SERVICE_OPTIONS.some((o) => o.value === q.service)) errors.service = "invalid";
   }
+  if (!q.customerType && q.service) q.customerType = services.find((s) => s.slug === q.service)?.commercial ? "commercial" : "residential";
+  if (q.customerType !== "commercial") q.businessName = undefined;
   if (Object.keys(errors).length) return NextResponse.json({ ok: false, errors }, { status: 422 });
 
-  // Estimates are always recalculated here from src/lib/packages.ts – never taken from the browser.
-  const pkg = q.kind === "booking" ? packageById(q.package) : undefined;
-  const est = pkg ? estimatePackage(pkg, { extraHours: Number(q.extraHours), bedMaking: Number(q.bedMaking), linenChange: Number(q.linenChange) }) : undefined;
-  const rows = summary(q, pkg, est);
-  const title =
-    q.kind === "booking" && pkg
-      ? `Booking request: ${pkg.name}, ${labelFor(FREQUENCY_OPTIONS, q.frequency).toLowerCase()} – ${q.suburb}`
-      : `${q.kind === "callback" ? "Call back" : "Quote"}: ${q.service ? labelFor(SERVICE_OPTIONS, q.service) : "General"} – ${q.suburb}`;
+  const rows = summary(q);
+  const what = q.cleaningType ? cleaningTypeBy(q.cleaningType)?.label : q.service ? labelFor(SERVICE_OPTIONS, q.service) : "General";
+  const title = `${q.kind === "callback" ? "Call back" : q.customerType === "commercial" ? "Commercial quote" : "Quote"}: ${what} – ${q.suburb}`;
   const table = `<table cellpadding="6" style="border-collapse:collapse;font-family:sans-serif;font-size:14px">${rows
     .map(([k, v]) => `<tr><td style="color:#4a5578;vertical-align:top"><strong>${esc(k)}</strong></td><td>${esc(v!).replace(/\n/g, "<br>")}</td></tr>`)
     .join("")}</table>`;
@@ -110,9 +117,9 @@ export async function POST(req: Request) {
     if (to && (await sendEmail(to, title, `<h2 style="font-family:sans-serif">${esc(title)}</h2>${table}`, q.email))) delivered.push("email");
     const hook = process.env.LEAD_WEBHOOK_URL;
     if (hook) {
-      // One structured lead per request (quote, call-back or booking request) – e.g. a Make.com
+      // One structured lead per request (quote or call-back) – e.g. a Make.com
       // webhook that creates the lead in BookingKoala. See docs/LEAD-WEBHOOK.md.
-      const r = await fetch(hook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(buildLeadPayload(q, pkg, est, Object.fromEntries(rows))) });
+      const r = await fetch(hook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(buildLeadPayload(q, Object.fromEntries(rows))) });
       if (r.ok) delivered.push("webhook");
       else console.error("[lead] webhook failed", r.status);
     }
@@ -134,10 +141,8 @@ export async function POST(req: Request) {
     const first = esc(q.name.split(" ")[0] ?? "");
     await sendEmail(
       q.email,
-      q.kind === "booking" ? "We've got your booking request – Swept Cleaning" : "We've got your request – Swept Cleaning",
-      q.kind === "booking"
-        ? `<div style="font-family:sans-serif;font-size:15px;color:#0b1a3a;line-height:1.55"><p>Hi ${first},</p><p>Thanks for your booking request. We'll be in touch ${esc(site.quoteResponse)} to confirm your appointment and final price. Your clean isn't booked until we confirm it, and no payment is needed now.</p><p>Here's what you asked for:</p>${table}<p>Need to change something? Just reply to this email.</p><p>– The Swept team</p></div>`
-        : `<div style="font-family:sans-serif;font-size:15px;color:#0b1a3a;line-height:1.55"><p>Hi ${first},</p><p>Thanks for asking Swept about your clean. We'll be in touch ${esc(site.quoteResponse)} with your tailored quote.</p><p>Here's what you told us:</p>${table}<p>Need to change something? Just reply to this email.</p><p>– The Swept team</p></div>`,
+      "We've got your request – Swept Cleaning",
+      `<div style="font-family:sans-serif;font-size:15px;color:#0b1a3a;line-height:1.55"><p>Hi ${first},</p><p>Thanks for asking Swept about your clean. We'll be in touch ${esc(site.quoteResponse)} with your tailored quote.</p><p>Here's what you told us:</p>${table}<p>Need to change something? Just reply to this email.</p><p>– The Swept team</p></div>`,
       to,
     ).catch(() => false);
   }

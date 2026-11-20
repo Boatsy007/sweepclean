@@ -15,6 +15,9 @@ const suites = [
   ["seo", ["scripts/seo-check.cjs"]],
   ["bookingkoala", ["scripts/bookingkoala-check.cjs"]],
   ["cta", ["scripts/cta-check.cjs"]],
+  // Lead webhook payload (Make.com) – a local capture server stands in for the webhook.
+  ["webhook-a", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "a", WEBHOOK_PORT: "3299" }],
+  ["webhook-b", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "b", WEBHOOK_PORT: "3299" }],
 ];
 
 async function waitFor(url, ms = 30000) {
@@ -29,13 +32,13 @@ async function waitFor(url, ms = 30000) {
 (async () => {
   let failed = 0;
   let port = 3201;
-  for (const [name, args] of suites) {
+  for (const [name, args, serverEnv = {}, suiteEnv = {}] of suites) {
     const p = port++;
-    const server = spawn(process.execPath, [require.resolve("next/dist/bin/next", { paths: [root] }), "start", "-p", String(p)], { cwd: root, env: { ...process.env, LEAD_DEV_LOG: "1", PORT: String(p) }, stdio: "ignore" });
+    const server = spawn(process.execPath, [require.resolve("next/dist/bin/next", { paths: [root] }), "start", "-p", String(p)], { cwd: root, env: { ...process.env, LEAD_DEV_LOG: "1", PORT: String(p), ...serverEnv }, stdio: "ignore" });
     try {
       await waitFor(`http://localhost:${p}/robots.txt`);
       console.log(`\n=== ${name} (fresh server on :${p}) ===`);
-      const r = spawnSync(process.execPath, args, { cwd: root, env: { ...process.env, BASE: `http://localhost:${p}`, SITE_URL: process.env.SITE_URL || "https://sweptcleans.com.au" }, stdio: "inherit" });
+      const r = spawnSync(process.execPath, args, { cwd: root, env: { ...process.env, BASE: `http://localhost:${p}`, SITE_URL: process.env.SITE_URL || "https://sweptcleans.com.au", ...suiteEnv }, stdio: "inherit" });
       if (r.status !== 0) { failed++; console.log(`--- ${name}: FAILED`); } else console.log(`--- ${name}: passed`);
     } finally {
       server.kill();

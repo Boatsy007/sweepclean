@@ -76,7 +76,7 @@ export const services: Service[] = [
       "Anyone who works long hours or shifts and wants to come home to a reset house",
       "Homes that are generally tidy – we clean, we don't declutter",
     ],
-    // Matches the Regular package (src/lib/packages.ts). Spotless and Ultimate Platinum add more detail.
+    // Matches "Included in every regular clean" (src/lib/regularCleaning.ts).
     checklist: [
       { room: "Kitchen", items: ["Benchtops and accessible surfaces wiped", "Sink and taps cleaned", "Stovetop surface wiped", "Floors vacuumed and mopped"] },
       { room: "Bathrooms", items: ["Basins cleaned", "Toilets cleaned and sanitised", "Accessible surfaces wiped", "Routine shower cleaning", "Mirrors cleaned and polished"] },
@@ -116,7 +116,7 @@ export const services: Service[] = [
       },
       {
         q: "How much does regular house cleaning cost?",
-        a: "Our recurring packages start from $97 + GST per clean for Regular (based on 1 bedroom, 1 bathroom), $147 + GST for Spotless (2 bedrooms, 2 bathrooms) and $207 + GST for Ultimate Platinum (3 bedrooms, 2 bathrooms). Larger homes cost more, and you can add extra cleaning time for $67 + GST per hour. We confirm your fixed price before your clean.",
+        a: "It depends on the size of your home, how often we visit, its condition and any extras you'd like. Tell us about your home and we'll provide a personalised quote. For typical local prices, see our cleaning cost guides.",
       },
     ],
     recurring: true,

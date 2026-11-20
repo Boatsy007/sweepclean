@@ -34,7 +34,11 @@ const nextConfig: NextConfig = {
     return [
       { source: "/end-of-lease-cleaning", destination: "/services/bond-cleaning", permanent: true },
       { source: "/services/end-of-lease-cleaning", destination: "/services/bond-cleaning", permanent: true },
-      { source: "/book", destination: "/book-now", permanent: true },
+      // The retired booking request page: one hop to the central quote form with regular house
+      // cleaning preselected. Next.js passes the incoming query string through (frequency, suburb,
+      // UTM tags, gclid/gbraid/wbraid…), so ad attribution survives. /book goes straight there too.
+      { source: "/book-now", destination: "/quote?service=regular-house-cleaning", permanent: true },
+      { source: "/book", destination: "/quote?service=regular-house-cleaning", permanent: true },
       { source: "/get-a-quote", destination: "/quote", permanent: true },
       { source: "/about", destination: "/why-swept", permanent: true },
     ];

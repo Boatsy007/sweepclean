@@ -3,8 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "./Icon";
 import { track } from "@/lib/analytics";
-import { PACKAGES_HREF } from "@/lib/bookingKoala";
-import { CtaLink, type CtaContext } from "./CtaLink";
+import { type CtaContext } from "./CtaLink";
 
 /** Hero quick-start: capture the suburb first (low-effort commitment), then continue the quote. */
 export function QuickStart({ id = "hero", bookContext }: { id?: string; bookContext?: CtaContext }) {
@@ -28,14 +27,6 @@ export function QuickStart({ id = "hero", bookContext }: { id?: string; bookCont
         <button type="submit" className="btn-primary !min-h-12">Get a free quote <Icon name="arrow" className="size-4" /></button>
       </div>
       <p className="mt-3 text-sm">Free and no obligation · Takes about 2 minutes · <a href="#how-it-works" className="font-semibold text-violet underline underline-offset-4">How it works</a></p>
-      {bookContext && (
-        <p className="mt-2 text-sm">
-          Ready to book?{" "}
-          <CtaLink intent="book" location={`${id}_quickstart`} context={bookContext} href={PACKAGES_HREF} className="inline-flex items-center gap-1 font-semibold text-violet-ink underline underline-offset-4">
-            Book a clean online <Icon name="arrow" className="size-3.5" />
-          </CtaLink>
-        </p>
-      )}
     </form>
   );
 }

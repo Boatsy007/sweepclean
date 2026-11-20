@@ -21,17 +21,19 @@
 
 | Event | When | Parameters (never personal data) |
 |---|---|---|
-| `generate_lead` | Quote or call-back **successfully** submitted (server confirmed) | `lead_type` (`quote`, `quote_hero`, `callback`), `service`, `frequency`, `recurring`, `in_area` |
-| `booking_request` | Regular-package booking request **successfully** submitted | `lead_type=booking_request`, `service`, `package`, `frequency`, `recurring`, `value` (estimate, AUD ex GST), `currency=AUD`, `in_area` |
-| `booking_cta_click` | Any "Book a clean" or "Request booking" button (a click, not a booking) | `cta_location`, `destination`, `page_type`, `service`, `region`, `suburb`, `package` |
-| `quote_cta_click` | Any "Get a free quote" button, or quick-start submit (a click) | same as above |
+| `generate_lead` | Quote (Residential or Commercial tab, or hero quick form) or call-back **successfully** submitted (server confirmed) – exactly once per enquiry, never on a failed or rejected submission | `lead_type` (`quote`, `quote_hero`, `callback`), `customer_type` (`residential` / `commercial`, /quote form), `cleaning_type` (e.g. `regular`, `spring`, `office`, `strata` – /quote form), `service`, `frequency` (incl. `not_sure`, `several_weekly`), `recurring`, `in_area` |
+| `quote_cta_click` | Any "Get a free quote" button, or quick-start submit (a click) | `cta_location`, `destination`, `page_type`, `service`, `region`, `suburb`, `frequency` |
 | `click_to_call` | Any `tel:` link (one site-wide listener) | `link_location` (`header`, `mobile_bar`, `mobile_menu`, `footer`, `page`) |
 | `click_email` | Any `mailto:` link | `link_location` |
 | `login_click` | Customer login links | `location` |
 | `customer_login_view` | Login iframe loaded | `form` |
-| `quote_start` / `quote_step` / `quote_step_error` / `quote_submit_error` | Quote form funnel (field **names** only on errors) | `step`, `service`, `mode` |
+| `quote_start` / `quote_step` / `quote_step_error` / `quote_submit_error` | Quote form funnel (field **names** only on errors) | `step`, `step_name`, `service`, `mode`, `customer_type` |
 
-The GA4 enhanced measurement built into the container also sends `page_view`, `scroll`, `form_start`/`form_submit` (when a form is interacted with or submitted), outbound clicks, file downloads and video events. Use `generate_lead` and `booking_request` as conversions, not `form_submit`.
+**Retired (quote-only change, November 2026):** `booking_request` and `booking_cta_click` are no longer sent – nothing is booked or priced on the website, and every booking button became "Get a free quote". Their history stays in GA4. A browser tab left open on the old booking page could still send one `booking_request` from its old code; the new site never sends `booking_request` and `generate_lead` for the same enquiry.
+
+The GA4 enhanced measurement built into the container also sends `page_view`, `scroll`, `form_start`/`form_submit` (when a form is interacted with or submitted), outbound clicks, file downloads and video events. Use `generate_lead` as the conversion, not `form_submit`.
+
+**Google Ads after the quote-only change (do this in Google Ads – the website doesn't change account settings):** Goals → Conversions → Summary → open the `booking_request` conversion action → set it to **Secondary** (or remove it from the goals used for bidding) so bidding doesn't optimise towards a conversion that no longer happens. Keep the action (don't delete it) so its history stays. Make sure `generate_lead` is **Primary**; it has no value, so give it a default value in its settings if you use value-based bidding. In GA4 you can later un-mark `booking_request` as a key event (history is kept). Register `customer_type` and `cleaning_type` as event-scoped custom dimensions if you want to report on them.
 
 ## Required in Google (not done from the website)
 
@@ -41,11 +43,11 @@ The GA4 enhanced measurement built into the container also sends `page_view`, `s
 2. **Replace the `ads_conversion_Contact_Us_1` conversion.**
    - It's created from **every page view of `/contact`** and marked as a key event, so a visit counts as a Google Ads conversion. Testing confirmed the GA4 event and the Ads conversion ping both fire on a plain `/contact` page view.
    - Delete that event rule in GA4 (Admin → Events → Create event), and remove or demote the "Contact Us" conversion action in Google Ads.
-3. **GA4 → Admin → Key events:** mark `generate_lead` and `booking_request`. Optionally mark `click_to_call` as secondary.
+3. **GA4 → Admin → Key events:** mark `generate_lead` (`booking_request` is retired – see above). Optionally mark `click_to_call` as secondary.
 4. **GA4 → Admin → Custom definitions:** register event-scoped dimensions:
-   - `lead_type`, `service`, `package`, `frequency`, `cta_location`, `page_type`, `region`, `suburb`, `link_location`, `origin_path`;
+   - `lead_type`, `customer_type`, `cleaning_type`, `service`, `frequency`, `cta_location`, `page_type`, `region`, `suburb`, `link_location`, `origin_path` (`package` only for historical data);
    - and a `value` metric if you want it.
-5. **Google Ads:** GA4 is already linked (the container has the Ads link). Import the `generate_lead` and `booking_request` key events as conversions. Use `booking_request`'s value as the conversion value. Keep `click_to_call` as secondary.
+5. **Google Ads:** GA4 is already linked (the container has the Ads link). Use `generate_lead` as the primary conversion; `booking_request` should be secondary (retired). Keep `click_to_call` as secondary.
 6. **Confirmed (paid) bookings – offline conversions.**
    - Bookings are confirmed in BookingKoala, not on the website, so the website can't see them.
    - Every enquiry's webhook payload now includes `attribution`: `gclid` / `gbraid` / `wbraid` plus the UTM tags and landing page of the visit (see `LEAD-WEBHOOK.md`).
@@ -53,7 +55,7 @@ The GA4 enhanced measurement built into the container also sends `page_view`, `s
    - BookingKoala's own "Tracking & Conversion" settings apply only to its own booking form, which the site no longer uses.
 
 ## Privacy and consent
-- No names, emails, phone numbers, addresses or notes are ever sent in events. This is checked automatically by `npm run test:smoke`, and was checked against the real container.
+- No names, emails, phone numbers, addresses, business names or notes/requirements are ever sent in events. This is checked automatically by `npm run test:smoke`, and was checked against the real container.
 - The thank-you URL has no personal details.
 - The ad attribution (click IDs and UTMs) is kept in this browser tab's `sessionStorage` and sent only with an enquiry.
 - **Australia:** the privacy policy already says analytics collects anonymous usage information.
@@ -67,7 +69,7 @@ The GA4 enhanced measurement built into the container also sends `page_view`, `s
   - that click event and the landing page's `page_view` aren't recorded;
   - the visit starts at the next page.
 
-  Early clicks that *don't* change page (phone, email) are queued and sent. Quote and booking submissions always happen long after the tag has loaded.
+  Early clicks that *don't* change page (phone, email) are queued and sent. Quote submissions always happen long after the tag has loaded.
 
 ## Testing
 - `npm run test:all`: each suite on its own fresh server (rate limits untouched). The smoke test installs a recording `gtag` and checks exact event counts, parameters and the absence of personal data.

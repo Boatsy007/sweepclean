@@ -37,7 +37,7 @@ export function HeroQuoteForm({ defaultSuburb, title = "Request your free quote"
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const errs: Errors = validateContact(d, "quote");
+    const errs: Errors = validateContact(d, "quote", true); // the hero form still asks for an email
     if (!d.service) errs.service = "Choose a service.";
     if (Object.keys(errs).length) {
       setErrors(errs);

@@ -10,7 +10,7 @@
  *  - client-side navigation between embed pages keeps exactly one copy of embed.js;
  *  - the header Customer Login link is visible without the menu, ≥ 44px touch target, and doesn't
  *    change header height or cause horizontal overflow from 320px to 1440px;
- *  - layout shift on /book-now and console errors from our own code.
+ *  - layout shift on /quote and console errors from our own code.
  * Whether BookingKoala's own form renders, resizes and submits can only be confirmed where
  * BookingKoala is reachable (see BK_REACHABLE below) – this environment's IP is blocked by its Cloudflare.
  */
@@ -95,14 +95,14 @@ async function inspectEmbed(page, e, label) {
     await page.locator(sel).first().click();
     await page.waitForURL("**/login");
     await inspectEmbed(page, embeds[0], `client nav → /login @${w}px`);
-    // Leaving the login page: the embed (and its script) must not follow onto the booking request page.
+    // Leaving the login page: the embed (and its script) must not follow onto the quote form.
     await page.goto(BASE + "/services/regular-house-cleaning", { waitUntil: "networkidle" });
     page.on("request", (r) => r.url().includes("bookingkoala.com") && bkOnBook.push(r.url()));
-    await page.locator('#prices a[href="/book-now?package=spotless"]').first().click();
-    await page.waitForURL("**/book-now?package=spotless");
+    await page.locator('#prices a[href="/quote?service=regular-house-cleaning&frequency=fortnightly"]').first().click();
+    await page.waitForURL("**/quote?service=regular-house-cleaning&frequency=fortnightly");
     await page.waitForTimeout(1200);
     const left = await page.evaluate(() => ({ scripts: document.querySelectorAll('script[src*="bookingkoala.com"]').length, iframes: document.querySelectorAll('iframe[src*="bookingkoala.com"]').length }));
-    if (left.iframes || bkOnBook.length) fail(`client nav → /book-now @${w}px: BookingKoala still present (${left.iframes} iframe, ${bkOnBook.length} requests)`);
+    if (left.iframes || bkOnBook.length) fail(`client nav → /quote @${w}px: BookingKoala still present (${left.iframes} iframe, ${bkOnBook.length} requests)`);
     await page.goBack();
     await page.goBack();
     await page.waitForURL("**/login");
@@ -137,18 +137,18 @@ async function inspectEmbed(page, e, label) {
     await page.close();
   }
 
-  // 5. Layout shift on the booking page.
+  // 5. Layout shift on the quote page (the central form).
   {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     await page.addInitScript(() => {
       window.__cls = 0;
       new PerformanceObserver((l) => l.getEntries().forEach((e) => { if (!e.hadRecentInput) window.__cls += e.value; })).observe({ type: "layout-shift", buffered: true });
     });
-    await page.goto(BASE + "/book-now", { waitUntil: "networkidle" });
+    await page.goto(BASE + "/quote?service=regular-house-cleaning", { waitUntil: "networkidle" });
     await page.waitForTimeout(3000);
     const cls = await page.evaluate(() => window.__cls);
-    notes.push(`/book-now CLS (mobile, first 3s): ${cls.toFixed(3)}`);
-    if (cls > 0.1) fail(`/book-now: CLS ${cls.toFixed(3)} > 0.1`);
+    notes.push(`/quote CLS (mobile, first 3s): ${cls.toFixed(3)}`);
+    if (cls > 0.1) fail(`/quote: CLS ${cls.toFixed(3)} > 0.1`);
     await page.close();
   }
 

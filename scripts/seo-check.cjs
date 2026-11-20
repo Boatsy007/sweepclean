@@ -253,8 +253,9 @@ function walkLd(ld) {
   const thanks = await get(BASE + "/quote/thanks");
   if (thanks.status !== 200 || !/<meta name="robots" content="noindex/.test(thanks.text)) fail("/quote/thanks must be 200 + noindex");
   if (smPaths.has("/quote/thanks")) fail("/quote/thanks is in the sitemap");
-  // BookingKoala utility pages: reachable, noindex, follow, not in the sitemap.
-  for (const p of ["/login", "/book-now"]) {
+  // Customer login (BookingKoala): reachable, noindex, follow, not in the sitemap.
+  // (/book-now is retired – a single 308 to /quote, checked with the redirects below.)
+  for (const p of ["/login"]) {
     const r = await get(BASE + p);
     if (r.status !== 200 || !/<meta name="robots" content="noindex, follow"/.test(r.text)) fail(`${p} must be 200 + noindex, follow`);
     if (smPaths.has(p)) fail(`${p} is in the sitemap`);
@@ -262,7 +263,7 @@ function walkLd(ld) {
   }
   const notFoundHtml = await (await fetch(BASE + "/this-page-does-not-exist")).text();
   if (/rel="canonical"/.test(notFoundHtml)) fail("404 page has a canonical tag");
-  const redirects = { "/about": "/why-swept", "/book": "/book-now", "/get-a-quote": "/quote", "/end-of-lease-cleaning": "/services/bond-cleaning", "/services/end-of-lease-cleaning": "/services/bond-cleaning" };
+  const redirects = { "/about": "/why-swept", "/book": "/quote", "/book-now": "/quote", "/get-a-quote": "/quote", "/end-of-lease-cleaning": "/services/bond-cleaning", "/services/end-of-lease-cleaning": "/services/bond-cleaning" };
   for (const [from, to] of Object.entries(redirects)) {
     const r = await get(BASE + from);
     const loc = r.location ? new URL(r.location, BASE).pathname : null;
