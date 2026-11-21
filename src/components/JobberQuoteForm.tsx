@@ -105,7 +105,8 @@ export function JobberQuoteForm() {
         </div>
       )}
       <div
-        className={`card relative overflow-hidden p-2 sm:p-4 ${state === "failed" ? "hidden" : ""} ${state === "loading" ? "min-h-[40rem]" : ""}`}
+        // The card's look without the .card class, so the site's scroll-in animation (main .card) doesn't move or clip the form.
+        className={`relative overflow-hidden rounded-[var(--radius-card)] border border-lilac bg-white p-2 shadow-soft sm:p-4 ${state === "failed" ? "hidden" : ""} ${state === "loading" ? "min-h-[40rem]" : ""}`}
         aria-busy={state === "loading"}
       >
         <div ref={hostRef} data-jobber-form />
