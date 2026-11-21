@@ -23,6 +23,13 @@ const fail = (m) => failures.push(m);
 const notes = [];
 
 const decode = (s) => s.replace(/&amp;/g, "&");
+// /quote embeds Jobber's request form; the form journeys below test the site's own form, which /quote
+// shows when Jobber can't load (scripts/jobber-check.cjs covers Jobber) – so Jobber is blocked here.
+async function jobberBlocked(browser, opts) {
+  const c = await browser.newContext(opts);
+  await c.route(/clienthub\.getjobber\.com/, (r) => r.abort());
+  return c;
+}
 const mainOf = (html) => html.slice(html.indexOf("<main"), html.indexOf("</main>"));
 function ctas(html) {
   return [...html.matchAll(/<a\s[^>]*>/g)]
@@ -100,7 +107,7 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
     ["/services/bond-cleaning/logan", "/quote?service=bond-cleaning"],
     ["/cleaning-guides/bond-cleaning-cost-gold-coast", "/quote?service=bond-cleaning"],
   ];
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
+  const ctx = await jobberBlocked(browser, { viewport: { width: 390, height: 844 }, hasTouch: true });
   for (const [p, href] of barExpect) {
     const page = await ctx.newPage();
     await page.goto(BASE + p, { waitUntil: "networkidle" });
@@ -117,7 +124,7 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
   }
 
   for (const w of [320, 360, 375, 390, 414, 430, 768, 820]) {
-    const c = await browser.newContext({ viewport: { width: w, height: 800 }, hasTouch: true });
+    const c = await jobberBlocked(browser, { viewport: { width: w, height: 800 }, hasTouch: true });
     const page = await c.newPage();
     const tapTo = async (locator, expect, label) => {
       await locator.first().tap();
@@ -154,7 +161,7 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
   // (Each suite runs against its own fresh server – npm run test:all – so the quote API rate limit is untouched.)
   const selected = (page) => page.locator('[role="tab"][aria-selected="true"]').getAttribute("data-quote-tab");
   {
-    const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const c = await jobberBlocked(browser, { viewport: { width: 1280, height: 900 } });
     const page = await c.newPage();
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
@@ -194,7 +201,7 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
   }
   // Residential, from the fortnightly card on the regular cleaning page (phone, real taps). Email is required.
   {
-    const c = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
+    const c = await jobberBlocked(browser, { viewport: { width: 390, height: 844 }, hasTouch: true });
     const page = await c.newPage();
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
@@ -232,7 +239,7 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
   }
   // Commercial, from the commercial service page (desktop).
   {
-    const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const c = await jobberBlocked(browser, { viewport: { width: 1280, height: 900 } });
     const page = await c.newPage();
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));

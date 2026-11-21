@@ -12,6 +12,7 @@
     "test:cta": "node scripts/cta-check.cjs",
     "test:webhook": "node scripts/webhook-check.cjs",
     "test:delivery": "node scripts/delivery-check.cjs",
+    "test:jobber": "node scripts/jobber-check.cjs",
     "test:all": "node scripts/run-suites.cjs"
   },
   "dependencies": {

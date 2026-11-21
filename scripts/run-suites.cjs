@@ -15,6 +15,8 @@ const suites = [
   ["seo", ["scripts/seo-check.cjs"]],
   ["bookingkoala", ["scripts/bookingkoala-check.cjs"]],
   ["cta", ["scripts/cta-check.cjs"]],
+  // Jobber's embedded request form on /quote (real snippet + simulated Jobber success).
+  ["jobber", ["scripts/jobber-check.cjs"]],
   // Lead webhook payload (Make.com) – a local capture server stands in for the webhook.
   ["webhook-a", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "a", WEBHOOK_PORT: "3299" }],
   ["webhook-b", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "b", WEBHOOK_PORT: "3299" }],

@@ -26,6 +26,9 @@ const ok = (m) => console.log("  ✓ " + m);
     // tel:/mailto: clicks are tracked, but don't let the browser try to open a dialler/mail app.
     window.addEventListener("click", (e) => { const a = e.target && e.target.closest && e.target.closest('a[href^="tel:"],a[href^="mailto:"]'); if (a) e.preventDefault(); });
   });
+  // /quote embeds Jobber's request form. This suite tests the site's own form, which /quote shows when
+  // Jobber can't load (scripts/jobber-check.cjs covers Jobber) – so Jobber is blocked here on purpose.
+  await ctx.route(/clienthub\.getjobber\.com/, (r) => r.abort());
   const page = await ctx.newPage();
   const gtagEvents = async () => (await page.evaluate(() => JSON.parse(sessionStorage.getItem("__gtag") || "[]"))).filter((c) => c[0] === "event").map((c) => ({ name: c[1], params: c[2] || {} }));
   const resetGtag = () => page.evaluate(() => sessionStorage.removeItem("__gtag"));
@@ -44,7 +47,7 @@ const ok = (m) => console.log("  ✓ " + m);
     if (mockedApiError && /status of (502|422)/.test(m.text())) return;
     const where = (m.location() && m.location().url) || "";
     const status = Number((m.text().match(/status of (\d{3})/) || [])[1]);
-    if (/bookingkoala\.com/.test(where + m.text()) || (status && bkFailed.has(status))) thirdParty.push(`${page.url()}: ${m.text()}`);
+    if (/bookingkoala\.com|getjobber\.com|d3ey4dbjkt2f6s\.cloudfront\.net/.test(where + m.text()) || (status && bkFailed.has(status))) thirdParty.push(`${page.url()}: ${m.text()}`);
     else consoleErrors.push(`${page.url()}: ${m.text()}`);
   });
   page.on("pageerror", (e) => consoleErrors.push(`${page.url()}: ${e.message}`));
