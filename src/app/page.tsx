@@ -68,8 +68,10 @@ export default function Home() {
       <section className="relative isolate overflow-hidden bg-white">
         {/* Very soft lavender light, top right – the only decoration; the logo carries the personality */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 hidden lg:block bg-[radial-gradient(60rem_32rem_at_100%_0%,rgb(243_248_249)_0%,rgb(243_248_249/0.6)_45%,transparent_75%)]" />
-        <div className="container-x grid items-center gap-6 pb-10 pt-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12">
-          <div className="hero-drift hero-fill relative min-w-0">
+        {/* With BookingKoala's (taller) form, the left column is placed where it sat when centred against the
+            original 804px quote card (desktop only), instead of being centred against the taller form. */}
+        <div className={`container-x grid gap-6 pb-10 pt-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:pb-20 lg:pt-12 ${quoteFormMode() === "bookingkoala" ? "items-center lg:items-start" : "items-center"}`}>
+          <div className={`hero-drift hero-fill relative min-w-0 ${quoteFormMode() === "bookingkoala" ? "lg:mt-24 xl:mt-[122px]" : ""}`}>
             {/* Phones/tablets: a bright, airy photo behind the headline under a soft white veil, fading into white */}
             <div aria-hidden="true" className="pointer-events-none absolute -left-4 -right-4 -top-5 bottom-[-1.5rem] -z-10 overflow-hidden sm:-left-6 sm:-right-6 lg:hidden">
               <MobileHeroPhoto />
