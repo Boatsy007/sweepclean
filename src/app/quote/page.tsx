@@ -22,8 +22,9 @@ export default function QuotePage() {
           <QuoteSteps className="mt-5 sm:mt-6" />
         </div>
       </div>
-      {/* With BookingKoala's form the form column is wider (about 700px on desktop); the site's own form keeps the original 1.6 : 1 columns. */}
-      <div className={`container-x grid gap-10 pb-20 pt-6 sm:pt-8 ${quoteFormMode() === "bookingkoala" ? "lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,700px)_minmax(0,1fr)]" : "lg:grid-cols-[1.6fr_1fr]"}`}>
+      {/* BookingKoala's form gets the full content width (about 1,130px on desktop), with "Your details are safe" below it;
+          the site's own form keeps the original two columns (form 1.6 : 1 sidebar). */}
+      <div className={`container-x grid gap-10 pb-20 pt-6 sm:pt-8 ${quoteFormMode() === "bookingkoala" ? "" : "lg:grid-cols-[1.6fr_1fr]"}`}>
         <div>
           {/* BookingKoala's lead form; NEXT_PUBLIC_QUOTE_FORM=native shows the site's own form instead. */}
           {quoteFormMode() === "bookingkoala" ? (

@@ -13,7 +13,7 @@ const IFRAME_ID = "iFrameResizer0"; // as supplied in BookingKoala's embed code 
 
 type Resizable = HTMLIFrameElement & { iFrameResizer?: { removeListeners?: () => void }; iframeResizer?: { disconnect?: () => void } };
 type ResizeFn = (options: Record<string, unknown>, target: HTMLIFrameElement) => unknown;
-type Diag = { resizeFn: string; initialisedBy: string; dynamicScript: boolean; sizerMessages: number; lastHeight: string; otherMessages: string[]; frameHeight: number };
+type Diag = { resizeFn: string; initialisedBy: string; dynamicScript: boolean; sizerMessages: number; lastHeight: string; otherMessages: string[]; frameHeight: number; frameWidth: number };
 
 /**
  * BookingKoala's lead enquiry form (embed code supplied by Swept), used on /quote.
@@ -40,7 +40,7 @@ export function BookingKoalaLeadForm() {
     const dbg = window.location.origin !== PRODUCTION_ORIGIN && new URLSearchParams(window.location.search).get("bkdebug") === "1";
     setDebug(dbg);
     const w = window as unknown as { iFrameResize?: ResizeFn; iframeResize?: ResizeFn };
-    const d: Diag = { resizeFn: "not found", initialisedBy: "not yet", dynamicScript: false, sizerMessages: 0, lastHeight: "", otherMessages: [], frameHeight: 0 };
+    const d: Diag = { resizeFn: "not found", initialisedBy: "not yet", dynamicScript: false, sizerMessages: 0, lastHeight: "", otherMessages: [], frameHeight: 0, frameWidth: 0 };
     const initialised = () => !!(frame.iFrameResizer || frame.iframeResizer);
     const tryInit = () => {
       if (!frame.isConnected) return true;
@@ -75,6 +75,7 @@ export function BookingKoalaLeadForm() {
       if (dbg) {
         d.resizeFn = w.iFrameResize ? "window.iFrameResize" : w.iframeResize ? "window.iframeResize" : "not found";
         d.frameHeight = Math.round(frame.getBoundingClientRect().height);
+        d.frameWidth = Math.round(frame.getBoundingClientRect().width);
         setDiag({ ...d, otherMessages: [...d.otherMessages] });
       }
     }, 250);
@@ -114,7 +115,7 @@ resize function:   ${diag.resizeFn}
 set up by:         ${diag.initialisedBy}
 extra script copy: ${diag.dynamicScript ? "added" : "not needed"}
 size messages:     ${diag.sizerMessages}${diag.lastHeight ? ` (last height ${diag.lastHeight}px)` : ""}
-iframe height now: ${diag.frameHeight}px
+iframe size now:   ${diag.frameWidth} × ${diag.frameHeight}px (width × height)
 other messages:    ${diag.otherMessages.length ? "\n  " + diag.otherMessages.join("\n  ") : "none"}`}
         </pre>
       )}
