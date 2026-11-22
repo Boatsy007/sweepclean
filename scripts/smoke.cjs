@@ -117,6 +117,11 @@ const ok = (m) => console.log("  ✓ " + m);
     const attrs = await page.evaluate(() => ["firstName", "lastName", "suburb", "phone", "email"].map((k) => { const e = document.getElementById("hq-" + k); return `${k}:${e.type}:${e.autocomplete}:${e.inputMode || ""}`; }).join(" "));
     if (attrs === "firstName:text:given-name: lastName:text:family-name: suburb:text:address-level2: phone:tel:tel:tel email:email:email:email") ok("input types, autocomplete and mobile keyboards"); else fail(`attrs ${attrs}`);
     if ((await page.textContent("#quote button[type=submit]")).trim() === "Get My Free Quote") ok("button says Get My Free Quote"); else fail("button text");
+    // Three rows of two on desktop; one column where the hero card is narrow (1024–1151px) and on phones.
+    const cols = async (w) => { await page.setViewportSize({ width: w, height: 900 }); return page.evaluate(() => getComputedStyle(document.querySelector("#hq-firstName").closest(".gap-x-4")).gridTemplateColumns.split(" ").length); };
+    const got = [await cols(1366), await cols(1152), await cols(1100), await cols(390)];
+    await page.setViewportSize({ width: 1366, height: 900 });
+    if (got.join() === "2,2,1,1") ok("hero form: 2 columns at 1152px+, 1 column at 1100px and on phones"); else fail(`hero form columns at 1366/1152/1100/390: ${got.join()}`);
   }
   // No errors before interaction; leaving an empty field shows nothing; a wrong value shows on leaving it.
   await page.focus("#hq-firstName");
@@ -217,6 +222,42 @@ const ok = (m) => console.log("  ✓ " + m);
   ok("quote links preselect the matching cleaning type");
   if (await page.evaluate(() => window.dataLayer === undefined)) ok("no dataLayer events from the site outside production"); else fail("site wrote to dataLayer");
 
+  // /quote: the quick call-back option (same call-back form as /contact), and back to the quote form.
+  await page.goto(`${BASE}/quote`, { waitUntil: "networkidle" });
+  await page.click("text=Request a quick call back");
+  if (await page.isVisible("h2:has-text('Request a call back')") && !(await page.locator("#qf-firstName").count())) ok("/quote: Request a quick call back opens the call-back form"); else fail("/quote call-back link");
+  await page.click("text=Back to the online quote");
+  if (await page.isVisible("#qf-firstName")) ok("/quote: back to the quote form"); else fail("/quote: back from call-back");
+  await page.goto(`${BASE}/quote?mode=callback`, { waitUntil: "networkidle" });
+  if (await page.isVisible("h2:has-text('Request a call back')")) ok("/quote?mode=callback opens the call-back form"); else fail("?mode=callback");
+
+  // Suburb page: the same form, suburb prefilled, real submission.
+  await page.goto(`${BASE}/areas/gold-coast/burleigh-heads`, { waitUntil: "networkidle" });
+  await resetGtag();
+  {
+    const n = await page.locator("#quote input:not([type=checkbox]):not([name=website]), #quote select, #quote textarea").count();
+    const title = (await page.textContent("#hq-title")).trim();
+    if (n === 6 && title === "Get a quote in Burleigh Heads" && (await page.inputValue("#hq-suburb")) === "Burleigh Heads 4220") ok("suburb page: six-field form, heading kept, suburb prefilled"); else fail(`suburb form: ${n} fields, "${title}", suburb ${await page.inputValue("#hq-suburb")}`);
+  }
+  let suburbBody = null;
+  page.on("request", (r) => { if (r.url().endsWith("/api/quote") && r.method() === "POST") suburbBody = JSON.parse(r.postData() || "{}"); });
+  await page.fill("#hq-firstName", "Suburbia");
+  await page.fill("#hq-lastName", "Person");
+  await page.selectOption("#hq-cleaningType", "deep");
+  await page.fill("#hq-phone", "0412 345 611");
+  await page.fill("#hq-email", "suburb@example.com");
+  await page.check("#hq-consent");
+  await page.waitForTimeout(2600);
+  await page.click("#quote button[type=submit]");
+  await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("suburb form → thank-you page (real API)"), () => fail("suburb form did not submit"));
+  {
+    const ev = await gtagEvents();
+    allEvents.push(...ev);
+    const gl = ev.filter((e) => e.name === "generate_lead");
+    if (gl.length === 1 && gl[0].params.form_location === "suburb_hero" && gl[0].params.lead_type === "quote_hero" && gl[0].params.cleaning_type === "deep") ok("suburb success → exactly one generate_lead (suburb_hero)"); else fail(`suburb generate_lead ${JSON.stringify(gl)}`);
+    if (suburbBody?.formLocation === "suburb_hero" && suburbBody.suburb === "Burleigh Heads" && suburbBody.postcode === "4220" && suburbBody.pageUrl === "/areas/gold-coast/burleigh-heads") ok("suburb request: form location, suburb + postcode, page"); else fail(`suburb body ${JSON.stringify(suburbBody)}`);
+  }
+
   // Callback flow
   await page.goto(`${BASE}/contact`, { waitUntil: "networkidle" });
   await resetGtag();
@@ -254,7 +295,7 @@ const ok = (m) => console.log("  ✓ " + m);
   }
   // No personal details in any analytics parameter.
   {
-    const pii = ["zelda", '"person"', '"test"', "hero@example.com", "0412", "5555", "test@example.com", "call me", "0400111222", "burleigh", "robina", "tweed heads"];
+    const pii = ["zelda", "suburbia", "suburb@example.com", "0412 345 611", '"person"', '"test"', "hero@example.com", "0412", "5555", "test@example.com", "call me", "0400111222", "burleigh", "robina", "tweed heads"];
     const leaked = allEvents.filter((e) => pii.some((x) => JSON.stringify(e.params).toLowerCase().includes(x)));
     if (!leaked.length && allEvents.length) ok(`no personal details in ${allEvents.length} analytics events`); else fail(`personal details in analytics: ${JSON.stringify(leaked).slice(0, 200)}`);
   }

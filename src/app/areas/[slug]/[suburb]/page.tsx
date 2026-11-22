@@ -10,7 +10,7 @@ import type { Faq } from "@/lib/services";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CtaBand } from "@/components/CtaBand";
 import { Faqs } from "@/components/Faqs";
-import { HeroQuoteForm } from "@/components/HeroQuoteForm";
+import { LeadQuoteForm } from "@/components/LeadQuoteForm";
 import { Icon } from "@/components/Icon";
 import { JsonLd } from "@/components/JsonLd";
 import { pageMeta } from "@/lib/seo";
@@ -153,7 +153,7 @@ export default async function SuburbPage({ params }: Props) {
               <span className="text-sm">or use the quick form <span className="lg:hidden">below</span><span className="hidden lg:inline">alongside</span></span>
             </div>
           </div>
-          <HeroQuoteForm defaultSuburb={`${s.name} ${s.postcode}`} title={`Get a quote in ${s.name}`} />
+          <LeadQuoteForm variant="hero" location="suburb_hero" defaultSuburb={`${s.name} ${s.postcode}`} title={`Get a quote in ${s.name}`} />
         </div>
       </section>
 

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { DEFAULT_LEAD_CLEANING_TYPE, FREQUENCY_OPTIONS, LEAD_CLEANING_TYPES, leadCleaningTypeBy, splitSuburbPostcode, validateLead, type Errors, type LeadFormLocation, type QuoteRequest } from "@/lib/quote";
 import { postcodeInArea } from "@/lib/areas";
 import { site, telHref, trustLabel } from "@/lib/site";
@@ -34,16 +34,37 @@ function firstConfirmation(id: string) {
 }
 
 /**
- * The six-field quote form: first name, last name, cleaning type, suburb, phone and email.
- * Homepage hero (variant "hero", the original hero card) and /quote (variant "page").
+ * The one quote form used across the site: first name, last name, cleaning type, suburb, phone and email.
+ * Hero card (variant "hero"): homepage and every suburb page. Plain card (variant "page"): /quote.
  * Posts to /api/quote → Resend email to the business inbox + Make.com webhook → BookingKoala lead.
  * Swept phones the customer, then books the clean in BookingKoala – nothing is booked here.
  */
-export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" } = {}) {
+export function LeadQuoteForm({
+  variant = "page",
+  location = variant === "hero" ? "homepage_hero" : "quote_page",
+  title = "Request your free quote",
+  defaultSuburb,
+  service,
+  promiseNote = location === "homepage_hero",
+  after,
+}: {
+  variant?: "hero" | "page";
+  /** Where the form sits (sent with the enquiry as form_location). */
+  location?: LeadFormLocation;
+  /** Hero card heading (suburb pages: "Get a quote in …"). */
+  title?: string;
+  /** Suburb prefilled from the page (suburb pages). */
+  defaultSuburb?: string;
+  /** Service slug preselected from the page (its cleaning type), if the page is about one service. */
+  service?: string;
+  /** "Something missed? We'll come back and fix it." under the button (homepage hero). */
+  promiseNote?: boolean;
+  /** Extra content at the bottom of the form (e.g. the call-back link on /quote). */
+  after?: ReactNode;
+} = {}) {
   const router = useRouter();
   const p = variant === "hero" ? "hq" : "qf";
-  const location: LeadFormLocation = variant === "hero" ? "homepage_hero" : "quote_page";
-  const [d, setD] = useState<Data>({ consent: false });
+  const [d, setD] = useState<Data>({ consent: false, suburb: defaultSuburb, cleaningType: service ? DEFAULT_LEAD_CLEANING_TYPE[service] : undefined });
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -72,7 +93,7 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
   function set<K extends Key>(k: K, v: Data[K]) {
     if (!started.current) {
       started.current = true;
-      track("quote_start", { mode: variant });
+      track("quote_start", { mode: variant, form_location: location });
     }
     const next = { ...d, [k]: v };
     setD(next);
@@ -102,7 +123,7 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
     const errs = check(d);
     if (Object.keys(errs).length) {
       setErrors(errs);
-      track("quote_step_error", { step: variant === "hero" ? "hero" : "quote_page", fields: Object.keys(errs).join(",") });
+      track("quote_step_error", { step: location === "quote_page" ? "quote_page" : "hero", fields: Object.keys(errs).join(",") });
       document.getElementById(`${p}-${FIELDS.find((f) => errs[f])}`)?.focus();
       return;
     }
@@ -124,7 +145,7 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
       email: d.email?.trim(),
       consent: d.consent,
       frequency: frequency.current,
-      source: new URLSearchParams(window.location.search).get("utm_source") ?? `${variant === "hero" ? "hero" : "quote"}:${document.referrer || "direct"}`,
+      source: new URLSearchParams(window.location.search).get("utm_source") ?? `${location === "quote_page" ? "quote" : "hero"}:${document.referrer || "direct"}`,
       pageUrl: (window.location.pathname + window.location.search).slice(0, 300),
       website: hp,
       elapsed: Date.now() - mountedAt.current,
@@ -137,7 +158,7 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
       // Only after the server confirms delivery, once per enquiry. Category values only – never personal data.
       if (firstConfirmation(enquiryId.current)) {
         track("generate_lead", {
-          lead_type: variant === "hero" ? "quote_hero" : "quote",
+          lead_type: location === "quote_page" ? "quote" : "quote_hero",
           form_location: location,
           cleaning_type: d.cleaningType ?? "",
           customer_type: ct?.customer ?? "",
@@ -159,7 +180,7 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
   const fields = (
     // Two columns from 640px. In the homepage hero between 1024 and 1151px the card is too narrow
     // for two (fields ~160px wide), so it shows one column there.
-    <div className={`grid gap-x-4 gap-y-2 sm:grid-cols-2 ${variant === "hero" ? "lg:grid-cols-1 min-[1152px]:grid-cols-2" : ""}`}>
+    <div className={`grid gap-x-4 gap-y-2 sm:grid-cols-2 ${variant === "hero" ? "lg:max-[72rem]:grid-cols-1" : ""}`}>
       <Field p={p} id="firstName" label="First Name" error={errors.firstName}>
         <input id={`${p}-firstName`} name="given-name" className={fieldCls(errors.firstName)} autoComplete="given-name" autoCapitalize="words" maxLength={60} value={d.firstName ?? ""} onChange={(e) => set("firstName", e.target.value)} onBlur={(e) => blur("firstName", e)} required aria-required="true" aria-invalid={!!errors.firstName} aria-describedby={errors.firstName ? `${p}-firstName-error` : undefined} />
       </Field>
@@ -222,7 +243,7 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
         <div className="relative -mx-5 -mt-5 mb-4 aspect-[16/10] overflow-hidden lg:hidden">
           <Image src={photos.quoteCleaner.src} alt={photos.quoteCleaner.alt} fill sizes="(min-width: 640px) 600px, 100vw" quality={70} placeholder="blur" className="object-cover object-[50%_20%]" />
         </div>
-        <h2 id="hq-title" className="text-center text-[1.3rem] font-extrabold uppercase tracking-wide sm:text-[1.65rem]">Request your free quote</h2>
+        <h2 id="hq-title" className="text-center text-[1.3rem] font-extrabold uppercase tracking-wide sm:text-[1.65rem]">{title}</h2>
         <p className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-center text-sm">
           <span>Free, no obligation</span>
           <span className="inline-flex items-center gap-1 whitespace-nowrap font-medium text-navy"><Icon name="clock" className="size-4 shrink-0 text-violet" />We reply within 1 hour during business hours</span>
@@ -230,10 +251,13 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
         </p>
         <div className="mt-5">{fields}</div>
         {rest}
-        <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-sm font-medium text-navy">
-          <Icon name="shieldSparkle" className="size-4 shrink-0 text-violet" />
-          Something missed? <a href={site.promise.path} className="font-semibold text-violet underline underline-offset-2">We&apos;ll come back and fix it.</a>
-        </p>
+        {promiseNote && (
+          <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-sm font-medium text-navy">
+            <Icon name="shieldSparkle" className="size-4 shrink-0 text-violet" />
+            Something missed? <a href={site.promise.path} className="font-semibold text-violet underline underline-offset-2">We&apos;ll come back and fix it.</a>
+          </p>
+        )}
+        {after}
       </form>
     );
   }
@@ -244,6 +268,7 @@ export function LeadQuoteForm({ variant = "page" }: { variant?: "hero" | "page" 
       {honeypot}
       {fields}
       {rest}
+      {after}
     </form>
   );
 }

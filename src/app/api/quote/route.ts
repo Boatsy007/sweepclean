@@ -63,7 +63,7 @@ function summary(q: QuoteRequest) {
     ["Contact preference", q.contactPref],
     ["Notes", q.notes],
     ["Source", q.source],
-    ["Form", q.formLocation === "homepage_hero" ? "Homepage quote form" : q.formLocation === "quote_page" ? "Quote page (/quote)" : undefined],
+    ["Form", q.formLocation === "homepage_hero" ? "Homepage quote form" : q.formLocation === "quote_page" ? "Quote page (/quote)" : q.formLocation === "suburb_hero" ? "Suburb page quote form" : undefined],
     ["Page", q.pageUrl],
     ["Enquiry ID", q.enquiryId],
   ];
@@ -204,7 +204,7 @@ async function deliver(q: QuoteRequest) {
     await sendEmail(
       q.email,
       "We've got your request – Swept Cleaning",
-      `<div style="font-family:sans-serif;font-size:15px;color:#0b1a3a;line-height:1.55"><p>Hi ${first},</p><p>Thanks for asking Swept about your clean. We'll be in touch ${esc(site.quoteResponse)} with your tailored quote.</p><p>Here's what you told us:</p>${table}<p>Need to change something? Just reply to this email.</p><p>– The Swept team</p></div>`,
+      `<div style="font-family:sans-serif;font-size:15px;color:#0b1a3a;line-height:1.55"><p>Hi ${first},</p><p>Thanks for asking Swept about your clean. We'll be in touch within 1 hour during business hours to discuss your cleaning needs and provide a personalised, no-obligation quote.</p><p>Here's what you told us:</p>${table}<p>Need to change something? Just reply to this email.</p><p>– The Swept team</p></div>`,
       to,
     ).catch(() => false);
   }

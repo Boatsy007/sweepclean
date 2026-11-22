@@ -92,8 +92,8 @@ export const DEFAULT_LEAD_CLEANING_TYPE: Record<string, string> = {
   "carpet-cleaning": "not_sure",
 };
 
-/** Where the six-field form sits (sent as `form_location`; also marks a request as coming from it). */
-export const LEAD_FORM_LOCATIONS = ["homepage_hero", "quote_page"] as const;
+/** Where the quote form sits (sent as `form_location`; also marks a request as coming from it). */
+export const LEAD_FORM_LOCATIONS = ["homepage_hero", "quote_page", "suburb_hero"] as const;
 export type LeadFormLocation = (typeof LEAD_FORM_LOCATIONS)[number];
 export const isLeadForm = (q: Pick<QuoteRequest, "formLocation">) => LEAD_FORM_LOCATIONS.some((l) => l === q.formLocation);
 

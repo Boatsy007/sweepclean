@@ -8,7 +8,7 @@ Every enquiry form posts to `/api/quote`, which:
 1. validates the request on the server: name, phone and **email are required on every quote form** (residential, commercial and the homepage/suburb quick quote); the call-back form is phone-based (email optional). Plus the spam honeypot, 2.5-second timing trap and rate limit of 5 requests per 10 minutes per IP;
 2. emails it to the business inbox, `LEAD_TO_EMAIL` (default **hey@sweptcleans.com.au**), via **Resend**, with the customer's email as reply-to – the primary record of every enquiry;
 3. at the same time, and independently, POSTs the JSON below to `LEAD_WEBHOOK_URL` if it's set (e.g. a Make.com custom webhook);
-4. once the enquiry has been delivered, emails the customer an acknowledgement ("We've got your request – Swept Cleaning", with a copy of what they sent; replies go to the business inbox). Its own failure doesn't fail the enquiry.
+4. once the enquiry has been delivered, emails the customer an acknowledgement ("We've got your request – Swept Cleaning", promising a reply within 1 hour during business hours, with a copy of what they sent; replies go to the business inbox). Its own failure doesn't fail the enquiry.
 
 Delivery rules:
 - The email and the webhook are **independent**: either one failing, timing out (10 seconds) or not being configured never stops the other.
@@ -21,13 +21,12 @@ Delivery rules:
 
 | Form | Where | `type` | `customer_type` |
 |---|---|---|---|
-| Six-field quote form | `/quote` (and `/book-now`, which redirects there) and the homepage hero | `quote_request` | from the cleaning type (`commercial` for Commercial / Office, `null` for Other / Not Sure, else `residential`) |
-| Quick quote (unchanged) | suburb page hero forms | `quote_request` | from the service (`commercial` for commercial cleaning, else `residential`) |
+| Quote form (one form site-wide) | `/quote` (and `/book-now`, which redirects there), the homepage hero and every suburb page | `quote_request` | from the cleaning type (`commercial` for Commercial / Office, `null` for Other / Not Sure, else `residential`) |
 | Call-back (unchanged) | `/contact`, `/quote` (call-back mode) | `callback_request` | from the service, or `null` |
 
 The retired booking request form (`/book-now?package=…`) no longer exists. A request from a browser tab that was still open on it is accepted as a regular-cleaning `quote_request` (never priced); the summary row "Old booking page" records the package and extras it named, and `details.legacy_booking` is `true`.
 
-## The six-field quote form (`/quote` and homepage hero)
+## The quote form (`/quote`, homepage hero, suburb pages)
 
 Fields (all required, checked in the browser and again on the server): **First Name, Last Name, What type of cleaning do you need?, What suburb is the property in?, Phone Number, Email** – plus the existing "Swept can contact me" consent tick. Phone accepts Australian mobiles and landlines (`0412 345 678`, `07 3123 4567`, `+61 412 345 678`). It captures a lead only: Swept phones the customer and books in BookingKoala.
 
@@ -44,7 +43,7 @@ Where the six fields are in the payload (same **version 1** structure – only f
 | Phone | `customer.phone` |
 | Email | `customer.email` |
 
-Added for this form (null for the other forms): `enquiry_id` (random ID per enquiry), `form_location` (`homepage_hero` / `quote_page`), `page_url` (path and query of the page), `lead_notes` (ready-made text: cleaning type, suburb, frequency if the link carried one, form and enquiry ID). The `summary` object gains rows "Form", "Page" and "Enquiry ID". Unchanged: `type` = `quote_request`, `submitted_at`, `source`, `attribution` (gclid / gbraid / wbraid and UTM tags of the visit), `frequency` (only when the visitor came from a Weekly / Fortnightly / Monthly card on the regular cleaning page – there is no frequency question).
+Added for this form (null for the other forms): `enquiry_id` (random ID per enquiry), `form_location` (`homepage_hero` / `quote_page` / `suburb_hero`), `page_url` (path and query of the page), `lead_notes` (ready-made text: cleaning type, suburb, frequency if the link carried one, form and enquiry ID). The `summary` object gains rows "Form", "Page" and "Enquiry ID". Unchanged: `type` = `quote_request`, `submitted_at`, `source`, `attribution` (gclid / gbraid / wbraid and UTM tags of the visit), `frequency` (only when the visitor came from a Weekly / Fortnightly / Monthly card on the regular cleaning page – there is no frequency question).
 
 Sample (produced by the real API on a local build, with a local receiver in place of Make.com):
 

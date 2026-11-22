@@ -87,7 +87,7 @@ export function buildLeadPayload(q: QuoteRequest, summary: Record<string, string
     summary,
     /** Random ID of this enquiry (six-field form; null otherwise). A repeat of the same ID is the same enquiry – use it to de-duplicate. */
     enquiry_id: q.enquiryId ?? null,
-    /** homepage_hero | quote_page (six-field form); null for the other forms. */
+    /** homepage_hero | quote_page | suburb_hero (the quote form); null for the call-back form and older forms. */
     form_location: q.formLocation ?? null,
     /** The page the enquiry was sent from (path and query), when the form sends it. */
     page_url: q.pageUrl ?? null,
@@ -103,7 +103,7 @@ function leadNotes(q: QuoteRequest, cleaningType?: string) {
     `Suburb: ${[q.suburb, q.postcode].filter(Boolean).join(" ")}`,
     q.frequency ? `Frequency (chosen on the website): ${frequencyLabel(q.frequency)}` : undefined,
     q.notes ? `Notes: ${q.notes}` : undefined,
-    `Website enquiry${q.formLocation === "homepage_hero" ? " – homepage form" : q.formLocation === "quote_page" ? " – quote page" : ""}${q.enquiryId ? ` (ID ${q.enquiryId})` : ""}`,
+    `Website enquiry${q.formLocation === "homepage_hero" ? " – homepage form" : q.formLocation === "quote_page" ? " – quote page" : q.formLocation === "suburb_hero" ? ` – suburb page${q.pageUrl ? ` ${q.pageUrl.split("?")[0]}` : ""}` : ""}${q.enquiryId ? ` (ID ${q.enquiryId})` : ""}`,
   ];
   return lines.filter(Boolean).join("\n");
 }

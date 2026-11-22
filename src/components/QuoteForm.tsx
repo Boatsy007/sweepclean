@@ -72,7 +72,7 @@ function clear() {
  * Residential and Commercial tabs switch in place (no reload, no URL change); each is a short
  * four-step form. Every quote goes to /api/quote → email + Make.com webhook → BookingKoala lead.
  */
-export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "callback" } = {}) {
+export function QuoteForm({ initialMode = "quote", onBackToQuote }: { initialMode?: "quote" | "callback"; /** /quote: "Back to the online quote" returns to the quote form. */ onBackToQuote?: () => void } = {}) {
   const router = useRouter();
   const params = useSearchParams();
   // Start in the requested mode so the first render already has the right layout (no shift).
@@ -326,7 +326,7 @@ export function QuoteForm({ initialMode = "quote" }: { initialMode?: "quote" | "
         )}
 
         {isCallback ? (
-          <CallbackFields data={data} set={set} errors={errors} headingRef={headingRef} onBack={() => { set("kind", "quote"); go(0); }} />
+          <CallbackFields data={data} set={set} errors={errors} headingRef={headingRef} onBack={onBackToQuote ?? (() => { set("kind", "quote"); go(0); })} />
         ) : (
           <>
             {step === 0 && (
