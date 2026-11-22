@@ -1,15 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { BOOKINGKOALA_LEAD_FORM_URL, BOOKINGKOALA_ORIGIN, BOOKINGKOALA_RESIZER_SCRIPT } from "@/lib/bookingKoala";
 import { ALL_FREQUENCIES } from "@/lib/quote";
 import { services } from "@/lib/services";
+import { photos } from "@/lib/photos";
+import { site, trustLabel } from "@/lib/site";
 import { PRODUCTION_ORIGIN } from "@/lib/siteConfig";
 import { Icon } from "./Icon";
 
 const SCRIPT_ID = "bookingkoala-iframe-resizer";
-const IFRAME_ID = "iFrameResizer0"; // as supplied in BookingKoala's embed code (one form per page)
+const IFRAME_ID = "iFrameResizer"; // + instance number: iFrameResizer0 as in BookingKoala's embed code (one form per page)
 
 type Resizable = HTMLIFrameElement & { iFrameResizer?: { removeListeners?: () => void }; iframeResizer?: { disconnect?: () => void } };
 type ResizeFn = (options: Record<string, unknown>, target: HTMLIFrameElement) => unknown;
@@ -26,19 +29,23 @@ type Diag = { resizeFn: string; initialisedBy: string; dynamicScript: boolean; s
  * Without the resizer the form still works at its 1000px starting height, with scrolling.
  *
  * Preview diagnostics: on a non-production host, /quote?bkdebug=1 shows whether the resizer started
- * and which messages BookingKoala's form sends (message types only – never form content). Nothing is
- * tracked or sent anywhere.
+ * and which messages BookingKoala's form sends (message types only – never form content), and
+ * &bkwidth=860 (280–1400) tries a narrower form card on /quote. Nothing is tracked or sent anywhere,
+ * and none of this works on the production domain.
  */
-export function BookingKoalaLeadForm() {
+export function BookingKoalaLeadForm({ variant = "page", instance = 0 }: { variant?: "page" | "hero"; instance?: number } = {}) {
   const frameRef = useRef<Resizable>(null);
   const [debug, setDebug] = useState(false);
   const [diag, setDiag] = useState<Diag | null>(null);
+  const [trialWidth, setTrialWidth] = useState<number | null>(null); // preview-only width trial (?bkwidth=…)
 
   useEffect(() => {
     const frame = frameRef.current;
     if (!frame) return;
     const dbg = window.location.origin !== PRODUCTION_ORIGIN && new URLSearchParams(window.location.search).get("bkdebug") === "1";
     setDebug(dbg);
+    const bw = Number(new URLSearchParams(window.location.search).get("bkwidth"));
+    if (dbg && bw >= 280 && bw <= 1400) setTrialWidth(bw);
     const w = window as unknown as { iFrameResize?: ResizeFn; iframeResize?: ResizeFn };
     const d: Diag = { resizeFn: "not found", initialisedBy: "not yet", dynamicScript: false, sizerMessages: 0, lastHeight: "", otherMessages: [], frameHeight: 0, frameWidth: 0 };
     const initialised = () => !!(frame.iFrameResizer || frame.iframeResizer);
@@ -88,37 +95,75 @@ export function BookingKoalaLeadForm() {
     };
   }, []);
 
+  const iframe = (
+    <iframe
+      ref={frameRef}
+      id={`${IFRAME_ID}${instance}`}
+      title="Request a free cleaning quote from Swept (secure form by BookingKoala)"
+      src={BOOKINGKOALA_LEAD_FORM_URL}
+      style={{ border: 0, display: "block" }}
+      height="1000px"
+      width="100%"
+      scrolling="yes"
+    />
+  );
+  // BookingKoala's resizer, exactly as in their embed code (runs on direct visits; one tag per page).
+  const resizerScript = <script id={SCRIPT_ID} src={BOOKINGKOALA_RESIZER_SCRIPT} defer />;
+  const diagnostics = debug && diag && (
+    <pre data-bk-debug className="mt-4 overflow-x-auto rounded-xl border border-lilac bg-white p-4 text-left text-xs text-navy">
+{`BookingKoala form diagnostics (preview only)
+resize function:   ${diag.resizeFn}
+set up by:         ${diag.initialisedBy}
+extra script copy: ${diag.dynamicScript ? "added" : "not needed"}
+size messages:     ${diag.sizerMessages}${diag.lastHeight ? ` (last height ${diag.lastHeight}px)` : ""}
+iframe size now:   ${diag.frameWidth} × ${diag.frameHeight}px (width × height)${trialWidth ? `\nwidth trial:       card limited to ${trialWidth}px (?bkwidth)` : ""}
+other messages:    ${diag.otherMessages.length ? "\n  " + diag.otherMessages.join("\n  ") : "none"}`}
+    </pre>
+  );
+
+  if (variant === "hero") {
+    // The homepage hero card – same card, photo (phones), title, trust line and promise note as the
+    // quick quote form it replaces; BookingKoala's form takes the place of the fields, edge to edge.
+    return (
+      <HeroCard>
+        <div className="-mx-5 mt-4 sm:-mx-8">{iframe}</div>
+        {resizerScript}
+        {diagnostics}
+      </HeroCard>
+    );
+  }
+
   return (
     <div>
       <Suspense fallback={null}>
         <ChosenService />
       </Suspense>
       {/* The card's look without the .card class (so the site's scroll-in animation doesn't move or clip the form), and no inner padding. */}
-      <div className="overflow-hidden rounded-[var(--radius-card)] border border-lilac bg-white shadow-soft">
-        <iframe
-          ref={frameRef}
-          id={IFRAME_ID}
-          title="Request a free cleaning quote from Swept (secure form by BookingKoala)"
-          src={BOOKINGKOALA_LEAD_FORM_URL}
-          style={{ border: 0, display: "block" }}
-          height="1000px"
-          width="100%"
-          scrolling="yes"
-        />
+      <div className="overflow-hidden rounded-[var(--radius-card)] border border-lilac bg-white shadow-soft" style={trialWidth ? { maxWidth: trialWidth } : undefined}>{iframe}</div>
+      {resizerScript}
+      {diagnostics}
+    </div>
+  );
+}
+
+function HeroCard({ children }: { children: ReactNode }) {
+  return (
+    <div id="quote" className="relative scroll-mt-24 overflow-hidden rounded-[1.75rem] bg-white p-5 text-slate shadow-[0_30px_60px_-20px_rgb(6_27_73/0.39)] sm:p-8" aria-labelledby="hq-title">
+      {/* Mobile: a real person front and centre, right where people enquire */}
+      <div className="relative -mx-5 -mt-5 mb-4 aspect-[16/10] overflow-hidden lg:hidden">
+        <Image src={photos.quoteCleaner.src} alt={photos.quoteCleaner.alt} fill sizes="(min-width: 640px) 600px, 100vw" quality={70} placeholder="blur" className="object-cover object-[50%_20%]" />
       </div>
-      {/* BookingKoala's resizer, exactly as in their embed code (runs on direct visits). */}
-      <script id={SCRIPT_ID} src={BOOKINGKOALA_RESIZER_SCRIPT} defer />
-      {debug && diag && (
-        <pre data-bk-debug className="mt-4 overflow-x-auto rounded-xl border border-lilac bg-white p-4 text-xs text-navy">
-{`BookingKoala form diagnostics (preview only)
-resize function:   ${diag.resizeFn}
-set up by:         ${diag.initialisedBy}
-extra script copy: ${diag.dynamicScript ? "added" : "not needed"}
-size messages:     ${diag.sizerMessages}${diag.lastHeight ? ` (last height ${diag.lastHeight}px)` : ""}
-iframe size now:   ${diag.frameWidth} × ${diag.frameHeight}px (width × height)
-other messages:    ${diag.otherMessages.length ? "\n  " + diag.otherMessages.join("\n  ") : "none"}`}
-        </pre>
-      )}
+      <h2 id="hq-title" className="text-center text-[1.3rem] font-extrabold uppercase tracking-wide sm:text-[1.65rem]">Request your free quote</h2>
+      <p className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-center text-sm">
+        <span>Free, no obligation</span>
+        <span className="inline-flex items-center gap-1 whitespace-nowrap font-medium text-navy"><Icon name="clock" className="size-4 shrink-0 text-violet" />We reply {site.quoteResponse}</span>
+        {trustLabel() && <span className="inline-flex items-center gap-1 whitespace-nowrap font-medium text-navy"><Icon name="shield" className="size-4 shrink-0 text-violet" />{trustLabel()}</span>}
+      </p>
+      {children}
+      <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-sm font-medium text-navy">
+        <Icon name="shieldSparkle" className="size-4 shrink-0 text-violet" />
+        Something missed? <a href={site.promise.path} className="font-semibold text-violet underline underline-offset-2">We&apos;ll come back and fix it.</a>
+      </p>
     </div>
   );
 }

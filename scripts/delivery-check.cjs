@@ -115,7 +115,7 @@ const expect = (label, cond, detail) => (cond ? notes.push(`✓ ${label}`) : fai
     const b = await chromium.launch();
     const page = await b.newPage({ viewport: { width: 1280, height: 900 } });
     await page.addInitScript(() => { window.__ev = []; window.gtag = (...a) => window.__ev.push(a); });
-    await page.goto(`${base}/`, { waitUntil: "networkidle" });
+    await page.goto(`${base}/areas/gold-coast/burleigh-heads`, { waitUntil: "networkidle" }); // a page with the quick quote form
     await page.evaluate(() => { window.gtag = (...a) => window.__ev.push(a); });
     await page.fill("#hq-name", "Browser Test"); await page.fill("#hq-phone", "0412 345 679"); await page.fill("#hq-email", "browser@example.com");
     await page.fill("#hq-suburb", "Robina 4226"); await page.selectOption("#hq-service", "deep-cleaning"); await page.check("#hq-consent");

@@ -24,8 +24,8 @@ const fail = (m) => failures.push(m);
 
 // BookingKoala is embedded on the customer login page only (booking and contact use our own forms).
 const embeds = [{ path: "/login", src: `https://${BK}/login?embed=true`, height: 650 }];
-const plain = ["/", "/services/bond-cleaning", "/areas/gold-coast/helensvale", "/cleaning-guides/bond-cleaning-cost-brisbane", "/services/regular-house-cleaning", "/contact"];
-// /quote (and /book-now, which redirects there): by default BookingKoala's lead form – checked separately below.
+const plain = ["/services/bond-cleaning", "/areas/gold-coast/helensvale", "/cleaning-guides/bond-cleaning-cost-brisbane", "/services/regular-house-cleaning", "/contact"];
+// The homepage, /quote (and /book-now, which redirects there): by default BookingKoala's lead form – checked separately below.
 const LEAD_FORM = "/leads/form/8a30eb91-5b26-4ddf-ac12-29ff53bba421";
 
 async function inspectEmbed(page, e, label) {
@@ -59,9 +59,9 @@ async function inspectEmbed(page, e, label) {
 (async () => {
   const browser = await chromium.launch();
 
-  // 1b. /quote: the lead form iframe and BookingKoala's iframe resizer only (never embed.js), or nothing
+  // 1b. Homepage and /quote: the lead form iframe and BookingKoala's iframe resizer only (never embed.js), or nothing
   //     at all in the native build.
-  for (const p of ["/quote", "/book-now?package=spotless"]) {
+  for (const p of ["/", "/quote", "/book-now?package=spotless"]) {
     const page = await browser.newPage();
     const bk = [];
     page.on("request", (r) => r.url().includes("bookingkoala.com") && bk.push(r.url()));

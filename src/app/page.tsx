@@ -11,6 +11,8 @@ import { photos } from "@/lib/photos";
 import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
 import { HeroQuoteForm } from "@/components/HeroQuoteForm";
+import { BookingKoalaLeadForm } from "@/components/BookingKoalaLeadForm";
+import { quoteFormMode } from "@/lib/bookingKoala";
 import { PromisePanel } from "@/components/SweptPromise";
 import { tasks } from "@/lib/tasks";
 import { pageMeta } from "@/lib/seo";
@@ -112,7 +114,8 @@ export default function Home() {
           </div>
 
           <div className="intro-right [--d:220ms]">
-            <HeroQuoteForm promiseNote />
+            {/* BookingKoala's lead form in the hero card; NEXT_PUBLIC_QUOTE_FORM=native brings back the quick quote form. */}
+            {quoteFormMode() === "bookingkoala" ? <BookingKoalaLeadForm variant="hero" /> : <HeroQuoteForm promiseNote />}
           </div>
         </div>
       </section>

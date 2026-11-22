@@ -56,10 +56,10 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
     }
     if (!p.startsWith("/cleaning-guides/") && SWEPT_PRICE.test(textOf(html))) fail(`${p}: Swept price, price markup or booking wording found: ${textOf(html).match(SWEPT_PRICE)[0]}`);
     if (p.startsWith("/cleaning-guides/") && /minPrice|PriceSpecification|"price"\s*:/.test(html)) fail(`${p}: price structured data`);
-    // BookingKoala: the customer login embed on /login, and (by default) the lead form iframe on /quote only.
+    // BookingKoala: the customer login embed on /login, and (by default) the lead form iframe on / and /quote only.
     const bkRefs = [...html.matchAll(/https:\/\/[a-z.]*bookingkoala\.com[^"'\s<]*/g)].map((m) => m[0]);
-    const allowed = p === "/quote" ? bkRefs.every((u) => u.includes("/leads/form/8a30eb91-5b26-4ddf-ac12-29ff53bba421") || u.endsWith("/resources/iframeResizer.min.js")) : false;
-    if (bkRefs.length && !allowed) fail(`${p}: references BookingKoala (${bkRefs[0]}) – allowed only on /login and the /quote lead form`);
+    const allowed = p === "/quote" || p === "/" ? bkRefs.every((u) => u.includes("/leads/form/8a30eb91-5b26-4ddf-ac12-29ff53bba421") || u.endsWith("/resources/iframeResizer.min.js")) : false;
+    if (bkRefs.length && !allowed) fail(`${p}: references BookingKoala (${bkRefs[0]}) – allowed only on /login and the lead form on / and /quote`);
   }
   notes.push(`Server HTML: ${paths.length} sitemap pages, ${quoteCtas} quote CTAs, no booking CTAs, no Swept prices`);
   {

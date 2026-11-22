@@ -12,6 +12,7 @@
  * B. SIMULATED resizer: BookingKoala's iframeResizer.min.js can't be read from here, so both ways it
  *    might work are simulated – (1) it only defines iFrameResize(), (2) it also sizes #iFrameResizer0
  *    itself when it loads – to check every iframe is set up exactly once in both cases.
+ * A2. REAL: the homepage hero shows the same form inside the existing hero card.
  * Skipped (with a note) when /quote shows the site's own form (NEXT_PUBLIC_QUOTE_FORM=native).
  */
 const { chromium, devices } = require("playwright");
@@ -70,7 +71,7 @@ const events = (page) => page.evaluate(() => window.__ev.filter((e) => e[0] === 
     await page.locator('header a[href="/"]').first().click();
     await page.waitForURL((u) => u.pathname === "/", { timeout: 10000 });
     await page.waitForTimeout(600);
-    ok(await page.locator("#iFrameResizer0").count() === 0, "form removed when leaving /quote");
+    ok(await page.locator("iframe").count() === 1 && await page.locator("#quote iframe#iFrameResizer0").count() === 1 && await page.locator("[data-chosen-service]").count() === 0, "leaving /quote for the homepage: /quote's form removed, the homepage hero's form shown (one form)");
     await page.locator('header a[data-cta-intent="quote"] >> visible=true').first().click();
     await page.waitForURL((u) => u.pathname === "/quote", { timeout: 10000 });
     await page.waitForTimeout(1500);
@@ -94,6 +95,47 @@ const events = (page) => page.evaluate(() => window.__ev.filter((e) => e[0] === 
     await c.close();
   }
 
+  // ---- A2. REAL: homepage hero (same component, hero variant)
+  {
+    const homeHtml = await (await fetch(`${BASE}/`)).text();
+    ok(/<h2[^>]*id="hq-title"[^>]*>Request your free quote<\/h2>/.test(homeHtml) && homeHtml.includes('id="quote"'), "homepage hero card keeps its heading and #quote anchor");
+    for (const [label, opts] of [["desktop 1366", { viewport: { width: 1366, height: 900 } }], ["laptop 1280", { viewport: { width: 1280, height: 800 } }], ["tablet 820", { viewport: { width: 820, height: 1180 }, hasTouch: true }], ["phone", { ...devices["iPhone 13"] }], ["320px", { viewport: { width: 320, height: 700 }, hasTouch: true }]]) {
+      const { c } = await ctx(browser, opts);
+      const page = await c.newPage();
+      await page.addInitScript(() => { window.__cls = 0; new PerformanceObserver((l) => l.getEntries().forEach((e) => { if (!e.hadRecentInput) window.__cls += e.value; })).observe({ type: "layout-shift", buffered: true }); });
+      await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
+      await page.waitForTimeout(3000);
+      const m = await page.evaluate(() => {
+        const frames = document.querySelectorAll("iframe");
+        const f = document.querySelector("#quote iframe#iFrameResizer0");
+        const card = document.getElementById("quote");
+        return { frames: frames.length, inCard: !!f, w: f ? Math.round(f.getBoundingClientRect().width) : 0, cardW: Math.round(card.getBoundingClientRect().width), cardH: Math.round(card.getBoundingClientRect().height), ov: document.documentElement.scrollWidth - innerWidth, cls: window.__cls, quickForm: !!document.getElementById("hq-name") };
+      });
+      ok(m.frames === 1 && m.inCard && !m.quickForm, `homepage ${label}: one BookingKoala form, inside the hero card (quick form replaced)`, JSON.stringify(m));
+      ok(m.w === m.cardW, `homepage ${label}: form spans the hero card edge to edge (${m.w}px of ${m.cardW}px); card ${m.cardH}px tall at the 1000px starting height`);
+      ok(m.ov <= 0, `homepage ${label}: no horizontal overflow`, `${m.ov}px`);
+      ok(m.cls < 0.1, `homepage ${label}: layout shift ${m.cls.toFixed(3)}`);
+      await c.close();
+    }
+    // Home → /quote → home without reloading: one form on each page, never two.
+    const { c, resizerRequests } = await ctx(browser, { viewport: { width: 1366, height: 900 } });
+    const page = await c.newPage();
+    await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(1500);
+    await page.locator('header a[data-cta-intent="quote"] >> visible=true').first().click();
+    await page.waitForURL((u) => u.pathname === "/quote", { timeout: 10000 });
+    await page.waitForTimeout(1200);
+    const onQuote = await page.locator("iframe#iFrameResizer0").count();
+    await page.goBack();
+    await page.waitForURL((u) => u.pathname === "/", { timeout: 10000 });
+    await page.waitForTimeout(1500);
+    const backHome = await page.evaluate(() => ({ frames: document.querySelectorAll("iframe").length, inCard: !!document.querySelector("#quote iframe#iFrameResizer0") }));
+    ok(onQuote === 1 && backHome.frames === 1 && backHome.inCard, "home → /quote → Back (client-side): exactly one form on each page", `${onQuote} / ${JSON.stringify(backHome)}`);
+    ok(await page.locator("script[data-bk-dynamic]").count() <= 1 && resizerRequests.length <= 2, `resizer script not duplicated across pages (${resizerRequests.length} requests – blocked here, so one backup copy is expected)`);
+    ok(!(await events(page)).some((e) => e === "generate_lead"), "no generate_lead from loading the homepage form");
+    await c.close();
+  }
+
   // ---- B. SIMULATED resizer (both possible behaviours)
   for (const stub of ["function", "auto"]) {
     const { c } = await ctx(browser, { viewport: { width: 1366, height: 900 } }, { stub });
@@ -110,7 +152,9 @@ const events = (page) => page.evaluate(() => window.__ev.filter((e) => e[0] === 
     await page.waitForURL((u) => u.pathname === "/quote", { timeout: 10000 });
     await page.waitForTimeout(1000);
     const second = await page.evaluate(() => window.__resizeCalls);
-    ok(removed === 1 && JSON.stringify(second) === '["iFrameResizer0","iFrameResizer0"]', `simulated resizer (${stub}): listeners removed on leaving, new iframe set up once after coming back`, `removed ${removed}, calls ${JSON.stringify(second)}`);
+    // /quote → homepage (its hero form) → /quote: three iframes in turn, each set up exactly once, the previous one released.
+    const removedAfter = await page.evaluate(() => window.__removed || 0);
+    ok(removed === 1 && removedAfter === 2 && JSON.stringify(second) === '["iFrameResizer0","iFrameResizer0","iFrameResizer0"]', `simulated resizer (${stub}): each iframe (/quote, homepage, /quote) set up exactly once, the previous one released`, `removed ${removed}/${removedAfter}, calls ${JSON.stringify(second)}`);
     await c.close();
   }
 

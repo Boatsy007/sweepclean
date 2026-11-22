@@ -103,8 +103,9 @@ const ok = (m) => console.log("  ✓ " + m);
 
   // 3. Quote funnel
   console.log("Quote funnel");
-  // Hero form (home page)
-  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
+  // Quick quote hero form – on the suburb pages (the homepage hero shows BookingKoala's lead form by default,
+  // covered by scripts/bk-lead-check.cjs; in the native build it's the same quick form as here).
+  await page.goto(`${BASE}/areas/gold-coast/burleigh-heads`, { waitUntil: "networkidle" });
   await resetGtag();
   await page.click("#quote button[type=submit]");
   if (await page.isVisible("#hq-name-error")) ok("hero form validation shown"); else fail("hero form validation missing");

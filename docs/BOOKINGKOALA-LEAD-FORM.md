@@ -1,6 +1,6 @@
 # BookingKoala lead form on /quote
 
-**Status:** branch `bookingkoala-lead-form`, preview only – not deployed. `/quote` shows BookingKoala's lead enquiry form (form `8a30eb91-5b26-4ddf-ac12-29ff53bba421`); enquiries made there go straight into BookingKoala as leads. Everything else on the site is unchanged.
+**Status:** branch `bookingkoala-lead-form`, preview only – not deployed. `/quote` and the homepage hero show BookingKoala's lead enquiry form (form `8a30eb91-5b26-4ddf-ac12-29ff53bba421`); enquiries made there go straight into BookingKoala as leads. Everything else on the site is unchanged.
 
 ## What's built
 - `src/components/BookingKoalaLeadForm.tsx` renders the iframe exactly as supplied (id `iFrameResizer0`, src, `border:0`, height `1000px`, width `100%`, `scrolling="yes"`) plus an accessible title, inside a card in the site's style with no inner padding. There is only ever one form per page.
@@ -10,15 +10,19 @@
 - Links like `/quote?service=…&frequency=…` show a reminder above the form ("You're asking about … – please select this in the form below"), because prefilling BookingKoala's form from the link hasn't been verified. UTM tags and click IDs stay in the page URL, but they aren't passed into BookingKoala.
 - The site sends no analytics events for the form.
 
+- **Homepage hero:** the same component (`variant="hero"`) inside the existing hero card – same card, photo on phones, "Request your free quote" heading, trust line and promise note; BookingKoala's form replaces the quick form's fields, edge to edge in the card (486px wide on desktop). The quick form's "Use the full quote form" link is dropped, since both places now show the same form. Suburb pages keep the quick quote form (the shared `HeroQuoteForm` component is unchanged).
+- Preview-only tools (non-production host): `/quote?bkdebug=1` (resizer status, BookingKoala's messages, iframe size) and `&bkwidth=860` (try a narrower form card on `/quote`).
+
 ## Not changed (decisions needed)
-- **Homepage and suburb page heroes** (`HeroQuoteForm`, home + 112 suburb pages) still show the site's quick quote form. BookingKoala's form couldn't be seen from the test machine, so whether it fits the hero couldn't be checked. Options: (A) the iframe inside the existing hero card – the card grows to the form's height; (B) the hero card keeps its design but shows a short "Get your free quote" panel with a button to `/quote` instead of fields (no iframe in the hero); (C) the iframe at a fixed height with its own scrolling (not recommended). Check the form's height on the preview's `/quote` first.
+- **Suburb page heroes** (`HeroQuoteForm`, 112 pages) still show the site's quick quote form.
+- **Hero height:** until BookingKoala's resizer works, the iframe keeps its 1000px starting height, so the homepage hero card is about 1,198px tall on desktop (the quick form card was 804px). Once resizing works, the card follows the form's real height.
 - **Contact page call-back form**: phone-based and not a quote form – recommended to keep as is (it goes to the business inbox via Resend and to BookingKoala via Make.com).
 
 ## Which forms go where
 | Form | Where | Goes to |
 |---|---|---|
-| BookingKoala lead form | `/quote` (and `/book-now`, which redirects there) | BookingKoala directly – the site's `/api/quote`, Resend and the Make.com webhook are not involved, so there are no duplicate leads |
-| Quick quote form | homepage and suburb heroes (until decided) | `/api/quote` → Resend email + Make.com webhook → BookingKoala lead |
+| BookingKoala lead form | `/quote` (and `/book-now`, which redirects there) and the homepage hero | BookingKoala directly – the site's `/api/quote`, Resend and the Make.com webhook are not involved, so there are no duplicate leads |
+| Quick quote form | suburb page heroes | `/api/quote` → Resend email + Make.com webhook → BookingKoala lead |
 | Call-back form | `/contact` | `/api/quote` → Resend email + Make.com webhook |
 
 ## Conversion tracking (release-blocking – not solved)
@@ -39,7 +43,7 @@ Options, in order of preference:
 
 ## Rollback (no rebuild)
 - Vercel → Deployments → the current production deployment (commit `6649070`) → **Instant Rollback** / Promote. This switches back immediately without building.
-- Alternatively `NEXT_PUBLIC_QUOTE_FORM=native` makes `/quote` show the site's own form again (requires a redeploy).
+- Alternatively `NEXT_PUBLIC_QUOTE_FORM=native` makes `/quote` and the homepage hero show the site's own forms again (requires a redeploy).
 - Resend, `/api/quote`, the webhook and all form components are untouched.
 
 ## Tests
