@@ -1,5 +1,4 @@
-import { Suspense } from "react";
-import { QuoteForm } from "@/components/QuoteForm";
+import { LeadQuoteForm } from "@/components/LeadQuoteForm";
 import { QuoteSteps } from "@/components/QuoteSteps";
 import { Icon } from "@/components/Icon";
 import { pageMeta } from "@/lib/seo";
@@ -22,9 +21,7 @@ export default function QuotePage() {
       </div>
       <div className="container-x grid gap-10 pb-20 pt-6 sm:pt-8 lg:grid-cols-[1.6fr_1fr]">
         <div>
-          <Suspense fallback={<div className="card h-[32rem]" />}>
-            <QuoteForm />
-          </Suspense>
+          <LeadQuoteForm />
         </div>
         <aside className="space-y-5">
           <div className="rounded-[var(--radius-card)] border border-lilac bg-white/60 p-6 text-[0.95rem]">

@@ -61,6 +61,46 @@ export const CLEANING_TYPES: readonly CleaningType[] = [
 ];
 
 export const cleaningTypeBy = (v?: string | null) => CLEANING_TYPES.find((t) => t.value === v);
+
+/* ---------------------------------------------------------------------------------------------
+ * The six-field quote form (homepage hero and /quote): first name, last name, cleaning type,
+ * suburb, phone, email. It captures a lead – Swept phones the customer and books in BookingKoala.
+ * Each option maps to an existing service (no new services or pages). Carpet cleaning, spring
+ * cleaning and the commercial sub-types aren't listed here – "Other / Not Sure" covers them.
+ * ------------------------------------------------------------------------------------------- */
+export type LeadCleaningType = { value: string; label: string; service?: string; customer?: CustomerType };
+export const LEAD_CLEANING_TYPES: readonly LeadCleaningType[] = [
+  { value: "regular", label: "Regular House Cleaning", service: "regular-house-cleaning", customer: "residential" },
+  { value: "one_off", label: "One-Off House Cleaning", service: "deep-cleaning", customer: "residential" },
+  { value: "deep", label: "Deep Cleaning", service: "deep-cleaning", customer: "residential" },
+  { value: "bond", label: "Bond / End of Lease Cleaning", service: "bond-cleaning", customer: "residential" },
+  { value: "airbnb", label: "Airbnb / Holiday Rental Cleaning", service: "airbnb-cleaning", customer: "residential" },
+  { value: "commercial", label: "Commercial / Office Cleaning", service: "commercial-cleaning", customer: "commercial" },
+  { value: "ndis_home_care", label: "NDIS / Home Care Cleaning", service: "ndis-cleaning", customer: "residential" },
+  { value: "not_sure", label: "Other / Not Sure" },
+];
+export const leadCleaningTypeBy = (v?: string | null) => LEAD_CLEANING_TYPES.find((t) => t.value === v);
+
+/** The option a page's quote link preselects (/quote?service=…, ?type=commercial). */
+export const DEFAULT_LEAD_CLEANING_TYPE: Record<string, string> = {
+  "regular-house-cleaning": "regular",
+  "deep-cleaning": "deep",
+  "bond-cleaning": "bond",
+  "airbnb-cleaning": "airbnb",
+  "commercial-cleaning": "commercial",
+  "ndis-cleaning": "ndis_home_care",
+  "carpet-cleaning": "not_sure",
+};
+
+/** Where the six-field form sits (sent as `form_location`; also marks a request as coming from it). */
+export const LEAD_FORM_LOCATIONS = ["homepage_hero", "quote_page"] as const;
+export type LeadFormLocation = (typeof LEAD_FORM_LOCATIONS)[number];
+export const isLeadForm = (q: Pick<QuoteRequest, "formLocation">) => LEAD_FORM_LOCATIONS.some((l) => l === q.formLocation);
+
+/** The cleaning type of any request: the six-field form's list or the earlier /quote form's list. */
+export function cleaningTypeOf(q: Pick<QuoteRequest, "formLocation" | "cleaningType">): { value: string; label: string } | undefined {
+  return isLeadForm(q) ? leadCleaningTypeBy(q.cleaningType) : cleaningTypeBy(q.cleaningType);
+}
 export const cleaningTypesFor = (c: CustomerType) => CLEANING_TYPES.filter((t) => t.customer === c);
 
 /** The cleaning type a service page's quote link preselects (?service=…). */
@@ -133,6 +173,9 @@ export type QuoteRequest = {
   suburb: string;
   postcode?: string;
   name: string;
+  /** Six-field form: first and last name as entered (`name` is both joined). */
+  firstName?: string;
+  lastName?: string;
   phone: string;
   email?: string;
   contactPref?: string;
@@ -146,6 +189,12 @@ export type QuoteRequest = {
   bedMaking?: string;
   linenChange?: string;
   address?: string;
+  /** Six-field form: a random ID per enquiry (repeat sends of the same enquiry are delivered once). */
+  enquiryId?: string;
+  /** Six-field form: homepage_hero | quote_page. */
+  formLocation?: string;
+  /** The page the form was sent from (path and query). */
+  pageUrl?: string;
   /** Ad click ID / UTM tags of the visit (no personal data) – lets a confirmed booking be matched to its ad. */
   attribution?: Record<string, string>;
 };
@@ -176,6 +225,22 @@ export function validateContact(d: Partial<QuoteRequest>, kind: QuoteRequest["ki
   return e;
 }
 
+/**
+ * The six-field form's checks, shared by the browser and the server: first name, last name,
+ * cleaning type, suburb, Australian phone and email are all required (plus the contact consent).
+ */
+export function validateLead(d: Partial<QuoteRequest>): Errors {
+  const e: Errors = {};
+  if (!d.firstName?.trim()) e.firstName = "Please enter your first name.";
+  if (!d.lastName?.trim()) e.lastName = "Please enter your last name.";
+  if (!leadCleaningTypeBy(d.cleaningType)) e.cleaningType = "Please choose the type of cleaning you need.";
+  if (!d.suburb || d.suburb.trim().length < 2) e.suburb = "Please enter the property's suburb.";
+  if (!d.phone || !AU_PHONE.test(normalisePhone(d.phone))) e.phone = "Please enter an Australian mobile or landline, e.g. 0412 345 678.";
+  if (!d.email || !EMAIL.test(d.email.trim())) e.email = "Please enter a valid email address.";
+  if (!d.consent) e.consent = "Please confirm we can contact you about this request.";
+  return e;
+}
+
 const MAX = 2000;
 const str = (v: unknown, max = 200) => (typeof v === "string" ? v.trim().slice(0, max) : undefined);
 
@@ -200,6 +265,8 @@ export function sanitise(raw: Record<string, unknown>): QuoteRequest {
     suburb: str(raw.suburb, 80) ?? "",
     postcode: str(raw.postcode, 4),
     name: str(raw.name, 100) ?? "",
+    firstName: str(raw.firstName, 60),
+    lastName: str(raw.lastName, 60),
     phone: str(raw.phone, 20) ?? "",
     email: str(raw.email, 200),
     contactPref: str(raw.contactPref, 20),
@@ -211,6 +278,9 @@ export function sanitise(raw: Record<string, unknown>): QuoteRequest {
     bedMaking: str(raw.bedMaking, 2),
     linenChange: str(raw.linenChange, 2),
     address: str(raw.address, 160),
+    enquiryId: typeof raw.enquiryId === "string" && /^[A-Za-z0-9-]{8,64}$/.test(raw.enquiryId) ? raw.enquiryId : undefined,
+    formLocation: LEAD_FORM_LOCATIONS.find((l) => l === raw.formLocation),
+    pageUrl: str(raw.pageUrl, 300),
     attribution: attributionFrom(raw.attribution),
   };
 }

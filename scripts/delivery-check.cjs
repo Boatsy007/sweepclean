@@ -60,6 +60,7 @@ async function withServer(env, fn) {
   } finally { server.kill(); }
 }
 const quote = { kind: "quote", customerType: "residential", cleaningType: "regular", service: "regular-house-cleaning", frequency: "weekly", bedrooms: "2", bathrooms: "1", suburb: "Robina", postcode: "4226", name: "Delivery Test", phone: "0412 345 678", email: "customer@example.com", consent: true };
+const six = { kind: "quote", formLocation: "homepage_hero", enquiryId: "test-enquiry-0001", firstName: "Sixfield", lastName: "Tester", cleaningType: "bond", suburb: "Southport", postcode: "4215", phone: "0412 345 680", email: "six@example.com", consent: true, pageUrl: "/", source: "hero:direct" };
 const callback = { kind: "callback", name: "Call Test", phone: "0400 111 222", suburb: "Logan Central", consent: true };
 const post = async (base, b) => { const r = await fetch(`${base}/api/quote`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ website: "", elapsed: 4000, ...b }) }); return { status: r.status, json: await r.json().catch(() => ({})) }; };
 const RESEND = { RESEND_API_KEY: "re_test_not_a_real_key", RESEND_MOCK_URL: `http://127.0.0.1:${RESEND_PORT}` };
@@ -92,6 +93,21 @@ const expect = (label, cond, detail) => (cond ? notes.push(`✓ ${label}`) : fai
   await withServer({ ...RESEND, ...HOOK }, async (base) => {
     const q = await post(base, quote);
     expect("Resend + webhook: delivered by both", q.status === 200 && JSON.stringify(q.json.delivered) === '["email","webhook"]' && hooks.length === 1 && hooks[0].type === "quote_request" && hooks[0].customer.email === "customer@example.com", JSON.stringify(q));
+    // The six-field form: every field reaches the business email, the acknowledgement and the webhook.
+    emails = []; hooks = [];
+    const s6 = await post(base, six);
+    const biz = emails.find((e) => e.to?.[0] === BUSINESS), ack = emails.find((e) => e.to?.[0] === "six@example.com"), h = hooks[0];
+    expect("Six-field form: delivered by email and webhook", s6.status === 200 && JSON.stringify(s6.json.delivered) === '["email","webhook"]', JSON.stringify(s6));
+    expect("Six-field form: business email has name, cleaning type, suburb, phone and email", biz && ["Sixfield Tester", "Bond / End of Lease Cleaning", "Southport 4215", "0412 345 680", "six@example.com", "test-enquiry-0001"].every((x) => biz.html.includes(x)) && /Bond \/ End of Lease Cleaning – Southport/.test(biz.subject), JSON.stringify(biz).slice(0, 400));
+    expect("Six-field form: customer acknowledgement sent (Hi Sixfield)", ack && /Hi Sixfield/.test(ack.html), JSON.stringify(ack).slice(0, 300));
+    expect("Six-field form: webhook carries first/last name, cleaning type, suburb, phone, email, enquiry ID, form location, lead notes",
+      h && h.type === "quote_request" && h.customer.first_name === "Sixfield" && h.customer.last_name === "Tester" && h.customer.phone === "0412 345 680" && h.customer.email === "six@example.com" && h.cleaning_type?.label === "Bond / End of Lease Cleaning" && h.property.suburb === "Southport" && h.service?.slug === "bond-cleaning" && h.enquiry_id === "test-enquiry-0001" && h.form_location === "homepage_hero" && /Cleaning type: Bond/.test(h.lead_notes) && /Suburb: Southport 4215/.test(h.lead_notes),
+      JSON.stringify(h).slice(0, 600));
+    emails = []; hooks = [];
+    const again = await post(base, six);
+    expect("Six-field form: the same enquiry sent again → 200 (duplicate), no second email or webhook", again.status === 200 && again.json.duplicate === true && emails.length === 0 && hooks.length === 0, `${JSON.stringify(again)} ${emails.length} emails ${hooks.length} hooks`);
+    const noLast = await post(base, { ...six, enquiryId: "test-enquiry-0002", lastName: "" });
+    expect("Six-field form: missing last name → 422 (server-side)", noLast.status === 422 && noLast.json.errors?.lastName, JSON.stringify(noLast));
   });
 
   // 3. Webhook failing (500) or unreachable – the email still goes.
@@ -117,8 +133,8 @@ const expect = (label, cond, detail) => (cond ? notes.push(`✓ ${label}`) : fai
     await page.addInitScript(() => { window.__ev = []; window.gtag = (...a) => window.__ev.push(a); });
     await page.goto(`${base}/`, { waitUntil: "networkidle" });
     await page.evaluate(() => { window.gtag = (...a) => window.__ev.push(a); });
-    await page.fill("#hq-name", "Browser Test"); await page.fill("#hq-phone", "0412 345 679"); await page.fill("#hq-email", "browser@example.com");
-    await page.fill("#hq-suburb", "Robina 4226"); await page.selectOption("#hq-service", "deep-cleaning"); await page.check("#hq-consent");
+    await page.fill("#hq-firstName", "Browser"); await page.fill("#hq-lastName", "Test"); await page.fill("#hq-phone", "0412 345 679"); await page.fill("#hq-email", "browser@example.com");
+    await page.fill("#hq-suburb", "Robina 4226"); await page.selectOption("#hq-cleaningType", "deep"); await page.check("#hq-consent");
     await page.waitForTimeout(2700);
     await page.click("#quote button[type=submit]");
     await page.waitForTimeout(2500);

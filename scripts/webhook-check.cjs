@@ -12,7 +12,7 @@
  *    request (so an existing Make.com mapping never receives a new kind of value);
  *  - the new fields (customer_type, cleaning_type, customer.business_name, details) are filled in;
  *  - no price, package or estimate is sent; rejected and spam requests send nothing.
- * At most 5 requests per run (the API rate limit is per server – each CASES set gets a fresh server).
+ * Each request uses its own test address (x-forwarded-for), so the per-IP rate limit isn't reached.
  */
 const http = require("http");
 
@@ -79,6 +79,12 @@ const cases = {
       (j) => j.customer_type === "commercial" && j.cleaning_type?.label === "Strata / common area cleaning" && j.customer.business_name === "Test Body Corporate" && j.frequency === null && j.details.frequency?.value === "several_weekly" && j.property.type === "Other" && j.details.premises_type === "Strata / common areas" && j.property.premises_size === null && j.details.floor_area === "Not sure" && j.preferred_time === null && j.details.preferred_times === "After hours / overnight" && j.summary["Business name"] === "Test Body Corporate" && j.summary["Frequency"] === "Several times a week"],
     ["hero quick form (unchanged)", { kind: "quote", consent: true, frequency: "weekly", suburb: "Burleigh Heads", postcode: "4220", name: "Hero Person", phone: "0412 111 222", email: "hero@example.com", service: "deep-cleaning", source: "hero:direct" },
       (j) => j.customer_type === "residential" && j.cleaning_type === null && j.service?.slug === "deep-cleaning" && j.frequency?.value === "weekly" && j.customer.email === "hero@example.com"],
+    ["six-field form – homepage hero (bond)", { kind: "quote", formLocation: "homepage_hero", enquiryId: "wh-test-0001", firstName: "Mary Jane", lastName: "Citizen-Smith", cleaningType: "bond", suburb: "Burleigh Heads", postcode: "4220", phone: "07 5555 1234", email: "mary@example.com", consent: true, pageUrl: "/", source: "hero:direct", attribution: att },
+      (j) => j.type === "quote_request" && j.customer.first_name === "Mary Jane" && j.customer.last_name === "Citizen-Smith" && j.customer.name === "Mary Jane Citizen-Smith" && j.cleaning_type?.value === "bond" && j.cleaning_type?.label === "Bond / End of Lease Cleaning" && j.service?.slug === "bond-cleaning" && j.customer_type === "residential" && j.property.suburb === "Burleigh Heads" && j.property.postcode === "4220" && j.customer.phone === "07 5555 1234" && j.customer.email === "mary@example.com" && j.enquiry_id === "wh-test-0001" && j.form_location === "homepage_hero" && j.page_url === "/" && j.frequency === null && j.attribution?.gclid === "TEST-GCLID" && /Cleaning type: Bond \/ End of Lease Cleaning\nSuburb: Burleigh Heads 4220/.test(j.lead_notes) && j.summary["Cleaning type"] === "Bond / End of Lease Cleaning" && j.summary["Enquiry ID"] === "wh-test-0001"],
+    ["six-field form – /quote (regular, weekly from the link)", { kind: "quote", formLocation: "quote_page", enquiryId: "wh-test-0002", firstName: "Sam", lastName: "Lee", cleaningType: "regular", frequency: "weekly", suburb: "Robina", postcode: "4226", phone: "0412 345 600", email: "sam@example.com", consent: true, pageUrl: "/quote?service=regular-house-cleaning&frequency=weekly" },
+      (j) => j.cleaning_type?.value === "regular" && j.service?.slug === "regular-house-cleaning" && j.frequency?.value === "weekly" && j.form_location === "quote_page" && /Frequency \(chosen on the website\): Weekly/.test(j.lead_notes)],
+    ["six-field form – Other / Not Sure (commercial unknown)", { kind: "quote", formLocation: "quote_page", enquiryId: "wh-test-0003", firstName: "Alex", lastName: "Ng", cleaningType: "not_sure", frequency: "weekly", suburb: "Tweed Heads", phone: "0412 345 601", email: "alex@example.com", consent: true },
+      (j) => j.cleaning_type?.label === "Other / Not Sure" && j.service === null && j.customer_type === null && j.frequency === null && j.customer.business_name === null],
     ["contact call-back (unchanged)", { kind: "callback", name: "Call Me", phone: "0400 111 222", suburb: "Tweed Heads", timePref: "Morning", consent: true },
       (j) => j.type === "callback_request" && j.customer_type === null && j.preferred_time === "Morning" && j.service === null],
     ["stale /book-now tab (retired booking form)", { kind: "booking", service: "regular-house-cleaning", package: "spotless", bedrooms: "4", bathrooms: "2", frequency: "fortnightly", extraHours: "1", bedMaking: "2", linenChange: "0", startDate: "2030-02-01", name: "Old Tab", phone: "0412 333 444", email: "old@example.com", address: "1 Test Street", suburb: "Robina", postcode: "4226", consent: true },
@@ -102,7 +108,9 @@ const cases = {
     req.on("end", () => { try { received.push(JSON.parse(body)); } catch { received.push({ bad: body }); } res.end("ok"); });
   });
   await new Promise((r) => srv.listen(PORT, "127.0.0.1", r));
-  const post = (b) => fetch(`${BASE}/api/quote`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ website: "", elapsed: T, ...b }) });
+  // Each request from its own test address, so the API's per-IP rate limit (5 / 10 min) isn't reached.
+  let ip = 0;
+  const post = (b) => fetch(`${BASE}/api/quote`, { method: "POST", headers: { "Content-Type": "application/json", "x-forwarded-for": `198.51.100.${++ip}` }, body: JSON.stringify({ website: "", elapsed: T, ...b }) });
   const newSummaryKeys = new Set();
 
   for (const [label, body, expect] of cases[CASES]) {
@@ -126,8 +134,20 @@ const cases = {
     const spam = await post({ kind: "quote", cleaningType: "regular", frequency: "weekly", suburb: "Robina", name: "Spam Bot", phone: "0412 000 222", consent: true, website: "http://spam" });
     if (spam.status !== 200) fail(`honeypot → ${spam.status}`);
     await new Promise((x) => setTimeout(x, 300));
+    // Six-field form: last name and a listed cleaning type are required; a repeated enquiry ID is sent once.
+    const noLast = await post({ kind: "quote", formLocation: "quote_page", enquiryId: "wh-test-0100", firstName: "No", cleaningType: "deep", suburb: "Robina", phone: "0412 000 333", email: "n@example.com", consent: true });
+    const noLastBody = await noLast.json().catch(() => ({}));
+    if (noLast.status !== 422 || !noLastBody.errors?.lastName) fail(`six-field without last name → ${noLast.status} ${JSON.stringify(noLastBody)}`);
+    const oldType = await post({ kind: "quote", formLocation: "quote_page", enquiryId: "wh-test-0101", firstName: "A", lastName: "B", cleaningType: "strata", suburb: "Robina", phone: "0412 000 334", email: "n@example.com", consent: true });
+    if (oldType.status !== 422) fail(`six-field with an unlisted cleaning type → ${oldType.status}`);
     if (received.length !== before) fail(`rejected/spam requests reached the webhook (${received.length - before})`);
-    else notes.push("quote without email or with an invalid cleaning type → 422 (server-side), honeypot → silent 200; neither reached the webhook");
+    const dupBody = { kind: "quote", formLocation: "homepage_hero", enquiryId: "wh-test-0200", firstName: "Dup", lastName: "Check", cleaningType: "deep", suburb: "Robina", phone: "0412 000 335", email: "d@example.com", consent: true };
+    const d1 = await (await post(dupBody)).json();
+    const d2 = await (await post(dupBody)).json();
+    await new Promise((x) => setTimeout(x, 300));
+    if (received.length !== before + 1 || !d2.duplicate || !d1.ok) fail(`repeated enquiry ID: ${received.length - before} webhook posts ${JSON.stringify([d1, d2])}`);
+    else notes.push("six-field: missing last name / unlisted type → 422; the same enquiry ID sent twice → one webhook post");
+    notes.push("quote without email or with an invalid cleaning type → 422 (server-side), honeypot → silent 200; neither reached the webhook");
   }
   srv.close();
   notes.push(`new summary rows seen: ${[...newSummaryKeys].join(", ") || "none"}`);

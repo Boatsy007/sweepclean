@@ -19,12 +19,21 @@ export default async function Thanks({ searchParams }: Props) {
     <section className="bg-gradient-to-b from-white to-lavender/70">
       <div className="container-x max-w-3xl py-16 text-center sm:py-24">
         <SweptMark size={84} className="mx-auto" />
-        <h1 className="mt-6 text-4xl font-extrabold sm:text-5xl">Thanks<ThanksName /> – we&apos;ve got it.</h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg">
-          {callback
-            ? `We'll call you back ${site.quoteResponse}.`
-            : `We'll be in touch ${site.quoteResponse} to discuss your ${svc ? svc.name.toLowerCase() : "cleaning"} requirements and provide your personalised quote. Check your inbox for a copy of your request.`}
-        </p>
+        {callback ? (
+          <>
+            <h1 className="mt-6 text-4xl font-extrabold sm:text-5xl">Thanks<ThanksName /> – we&apos;ve got it.</h1>
+            <p className="mx-auto mt-4 max-w-xl text-lg">{`We'll call you back ${site.quoteResponse}.`}</p>
+          </>
+        ) : (
+          <>
+            <h1 className="mt-6 text-4xl font-extrabold sm:text-5xl">Thanks! We&apos;ve received your enquiry.</h1>
+            <div className="mx-auto mt-4 max-w-xl space-y-3 text-lg">
+              <p className="font-semibold text-navy">Thanks for contacting Swept Cleaning!</p>
+              <p>Our team will be in touch within 1 hour during business hours to discuss your cleaning needs and provide a personalised, no-obligation quote.</p>
+              <p>We look forward to helping you!</p>
+            </div>
+          </>
+        )}
         <div className="card mx-auto mt-10 max-w-xl p-6 text-left sm:p-8">
           <h2 className="text-xl font-bold">While you wait</h2>
           <ul className="mt-4 space-y-3">

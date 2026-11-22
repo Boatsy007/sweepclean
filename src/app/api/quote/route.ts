@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { SERVICE_OPTIONS, cleaningTypeBy, frequencyLabel, labelFor, sanitise, validateContact, type QuoteRequest } from "@/lib/quote";
+import { SERVICE_OPTIONS, cleaningTypeBy, cleaningTypeOf, frequencyLabel, isLeadForm, labelFor, leadCleaningTypeBy, sanitise, validateContact, validateLead, type QuoteRequest } from "@/lib/quote";
 import { LEGACY_PACKAGE_NAMES } from "@/lib/regularCleaning";
 import { services } from "@/lib/services";
 import { buildLeadPayload } from "@/lib/leadPayload";
@@ -20,11 +20,25 @@ function limited(ip: string) {
   return recent.length > 5;
 }
 
+/*
+ * Best-effort duplicate guard (per instance, 30 min): the six-field form sends a random enquiry ID
+ * and reuses it if the visitor retries, so a retry of an enquiry that was already delivered isn't
+ * sent again. The webhook payload carries the same `enquiry_id` for Make.com to de-duplicate on.
+ */
+const delivered = new Map<string, number>();
+const inFlight = new Set<string>();
+function alreadyDelivered(id?: string) {
+  if (!id) return false;
+  const now = Date.now();
+  for (const [k, t] of delivered) if (now - t > 30 * 60_000) delivered.delete(k);
+  return delivered.has(id);
+}
+
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
 // Row names are kept from before the quote-only change (an automation may read them); new rows are only added.
 function summary(q: QuoteRequest) {
-  const ct = cleaningTypeBy(q.cleaningType);
+  const ct = cleaningTypeOf(q);
   const rows: [string, string | undefined][] = [
     ["Type", q.kind === "callback" ? "Call-back request" : "Quote request"],
     ["Customer type", q.customerType === "commercial" ? "Commercial" : q.customerType === "residential" ? "Residential" : undefined],
@@ -49,6 +63,9 @@ function summary(q: QuoteRequest) {
     ["Contact preference", q.contactPref],
     ["Notes", q.notes],
     ["Source", q.source],
+    ["Form", q.formLocation === "homepage_hero" ? "Homepage quote form" : q.formLocation === "quote_page" ? "Quote page (/quote)" : undefined],
+    ["Page", q.pageUrl],
+    ["Enquiry ID", q.enquiryId],
   ];
   return rows.filter(([, v]) => v);
 }
@@ -102,8 +119,20 @@ export async function POST(req: Request) {
   }
 
   const q = sanitise(raw);
-  const errors = validateContact(q, q.kind);
-  if (q.kind === "quote") {
+  const lead = q.kind === "quote" && isLeadForm(q);
+  if (lead) {
+    // Six-field form: the name is first + last; the cleaning type decides the service.
+    q.name = [q.firstName, q.lastName].filter(Boolean).join(" ").slice(0, 100);
+    q.notes = undefined;
+  }
+  const errors = lead ? validateLead(q) : validateContact(q, q.kind);
+  if (lead) {
+    const ct = leadCleaningTypeBy(q.cleaningType);
+    q.service = ct?.service;
+    q.customerType = ct?.customer;
+    // Only the regular cleaning page's frequency cards send a frequency (no frequency question).
+    if (q.service !== "regular-house-cleaning") q.frequency = undefined;
+  } else if (q.kind === "quote") {
     if (q.legacyBooking) {
       // A stale /book-now tab (retired booking form): keep the enquiry as a regular-cleaning quote.
       q.service = "regular-house-cleaning";
@@ -122,9 +151,20 @@ export async function POST(req: Request) {
   if (!q.customerType && q.service) q.customerType = services.find((s) => s.slug === q.service)?.commercial ? "commercial" : "residential";
   if (q.customerType !== "commercial") q.businessName = undefined;
   if (Object.keys(errors).length) return NextResponse.json({ ok: false, errors }, { status: 422 });
+  // The same enquiry sent again (e.g. a retry after a lost connection): already delivered.
+  if (alreadyDelivered(q.enquiryId)) return NextResponse.json({ ok: true, duplicate: true });
+  if (q.enquiryId && inFlight.has(q.enquiryId)) return NextResponse.json({ ok: false, error: "in_progress" }, { status: 409 });
+  if (q.enquiryId) inFlight.add(q.enquiryId);
+  try {
+    return await deliver(q);
+  } finally {
+    if (q.enquiryId) inFlight.delete(q.enquiryId);
+  }
+}
 
+async function deliver(q: QuoteRequest) {
   const rows = summary(q);
-  const what = q.cleaningType ? cleaningTypeBy(q.cleaningType)?.label : q.service ? labelFor(SERVICE_OPTIONS, q.service) : "General";
+  const what = q.cleaningType ? cleaningTypeOf(q)?.label : q.service ? labelFor(SERVICE_OPTIONS, q.service) : "General";
   const title = `${q.kind === "callback" ? "Call back" : q.customerType === "commercial" ? "Commercial quote" : "Quote"}: ${what} – ${q.suburb}`;
   const table = `<table cellpadding="6" style="border-collapse:collapse;font-family:sans-serif;font-size:14px">${rows
     .map(([k, v]) => `<tr><td style="color:#4a5578;vertical-align:top"><strong>${esc(k)}</strong></td><td>${esc(v!).replace(/\n/g, "<br>")}</td></tr>`)
@@ -139,20 +179,22 @@ export async function POST(req: Request) {
     sendEmail(to, title, `<h2 style="font-family:sans-serif">${esc(title)}</h2>${table}`, q.email),
     hook ? sendWebhook(hook, buildLeadPayload(q, Object.fromEntries(rows))) : Promise.resolve(false),
   ]);
-  const delivered = [...(emailed ? ["email"] : []), ...(hooked ? ["webhook"] : [])];
+  const channels = [...(emailed ? ["email"] : []), ...(hooked ? ["webhook"] : [])];
 
-  if (!delivered.length) {
+  if (!channels.length) {
     // Local development and automated tests only: log instead of sending. Never on a Vercel
     // production deployment, so the live site can't report success without delivering.
     const logOnly = process.env.VERCEL_ENV !== "production" && (process.env.NODE_ENV !== "production" || process.env.LEAD_DEV_LOG === "1");
     if (logOnly) {
       console.info("[lead] (no delivery configured – logged only)", JSON.stringify(Object.fromEntries(rows)));
+      if (q.enquiryId) delivered.set(q.enquiryId, Date.now());
       return NextResponse.json({ ok: true, delivered: ["log"] });
     }
     // The visitor is told it didn't send (with the phone number and email address to use instead).
     console.error("[lead] NOT DELIVERED – check RESEND_API_KEY (sweptcleans.com.au verified in Resend) and LEAD_WEBHOOK_URL", JSON.stringify(Object.fromEntries(rows)));
     return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 502 });
   }
+  if (q.enquiryId) delivered.set(q.enquiryId, Date.now());
   if (process.env.RESEND_API_KEY && !emailed) console.error("[lead] email NOT sent – lead delivered by webhook only", JSON.stringify(Object.fromEntries(rows)));
 
   // Customer acknowledgement (only once the enquiry itself has been delivered; its own failure
@@ -167,5 +209,5 @@ export async function POST(req: Request) {
     ).catch(() => false);
   }
 
-  return NextResponse.json({ ok: true, delivered });
+  return NextResponse.json({ ok: true, delivered: channels });
 }

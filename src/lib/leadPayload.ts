@@ -1,5 +1,5 @@
 import { postcodeInArea } from "./areas";
-import { FREQUENCY_OPTIONS, PREMISES_OPTIONS, PROPERTY_OPTIONS, SERVICE_OPTIONS, SIZE_OPTIONS, TIME_OPTIONS, cleaningTypeBy, frequencyLabel, labelFor, type QuoteRequest } from "./quote";
+import { FREQUENCY_OPTIONS, PREMISES_OPTIONS, PROPERTY_OPTIONS, SERVICE_OPTIONS, SIZE_OPTIONS, TIME_OPTIONS, cleaningTypeOf, frequencyLabel, labelFor, type QuoteRequest } from "./quote";
 
 /**
  * The JSON posted to LEAD_WEBHOOK_URL for every enquiry – designed for a Make.com scenario
@@ -18,9 +18,12 @@ const stateFor = (postcode?: string) => (!postcode ? undefined : postcode.starts
 const oneOf = (list: readonly string[], v?: string) => (v && list.includes(v) ? v : null);
 
 export function buildLeadPayload(q: QuoteRequest, summary: Record<string, string | undefined>) {
-  const [first, ...rest] = q.name.trim().split(/\s+/);
+  const [splitFirst, ...rest] = q.name.trim().split(/\s+/);
+  // The six-field form sends first and last name separately – used exactly as entered.
+  const first = q.firstName ?? splitFirst;
+  const last = q.lastName ?? rest.join(" ");
   const commercial = q.customerType === "commercial";
-  const ct = cleaningTypeBy(q.cleaningType);
+  const ct = cleaningTypeOf(q);
   const legacyFrequency = FREQUENCY_OPTIONS.find((f) => f.value === q.frequency);
   // Legacy property.type values: residential types, or the premises list (anything else → "Other").
   const propertyType = commercial ? (q.propertyType ? oneOf(PREMISES_OPTIONS, q.propertyType) ?? "Other" : null) : oneOf([...PROPERTY_OPTIONS, ...PREMISES_OPTIONS], q.propertyType);
@@ -35,7 +38,7 @@ export function buildLeadPayload(q: QuoteRequest, summary: Record<string, string
     customer: {
       name: q.name,
       first_name: first ?? "",
-      last_name: rest.join(" "),
+      last_name: last,
       email: q.email ?? null,
       phone: q.phone,
       contact_preference: q.contactPref ?? null,
@@ -82,5 +85,25 @@ export function buildLeadPayload(q: QuoteRequest, summary: Record<string, string
     },
     /** The same human-readable rows as the notification email – handy for a lead's notes field. */
     summary,
+    /** Random ID of this enquiry (six-field form; null otherwise). A repeat of the same ID is the same enquiry – use it to de-duplicate. */
+    enquiry_id: q.enquiryId ?? null,
+    /** homepage_hero | quote_page (six-field form); null for the other forms. */
+    form_location: q.formLocation ?? null,
+    /** The page the enquiry was sent from (path and query), when the form sends it. */
+    page_url: q.pageUrl ?? null,
+    /** Ready-made text for the BookingKoala lead's notes: cleaning type, suburb and where it came from. */
+    lead_notes: leadNotes(q, ct?.label),
   };
+}
+
+/** Plain-text notes for the CRM lead, so the cleaning type and suburb are never lost in mapping. */
+function leadNotes(q: QuoteRequest, cleaningType?: string) {
+  const lines = [
+    `Cleaning type: ${cleaningType ?? (q.service ? labelFor(SERVICE_OPTIONS, q.service) : "Not given")}`,
+    `Suburb: ${[q.suburb, q.postcode].filter(Boolean).join(" ")}`,
+    q.frequency ? `Frequency (chosen on the website): ${frequencyLabel(q.frequency)}` : undefined,
+    q.notes ? `Notes: ${q.notes}` : undefined,
+    `Website enquiry${q.formLocation === "homepage_hero" ? " – homepage form" : q.formLocation === "quote_page" ? " – quote page" : ""}${q.enquiryId ? ` (ID ${q.enquiryId})` : ""}`,
+  ];
+  return lines.filter(Boolean).join("\n");
 }

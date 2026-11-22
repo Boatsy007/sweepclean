@@ -10,7 +10,7 @@ import { ServiceVisual } from "@/components/ServiceVisual";
 import { photos } from "@/lib/photos";
 import { Faqs } from "@/components/Faqs";
 import { CtaBand } from "@/components/CtaBand";
-import { HeroQuoteForm } from "@/components/HeroQuoteForm";
+import { LeadQuoteForm } from "@/components/LeadQuoteForm";
 import { PromisePanel } from "@/components/SweptPromise";
 import { tasks } from "@/lib/tasks";
 import { pageMeta } from "@/lib/seo";
@@ -112,7 +112,7 @@ export default function Home() {
           </div>
 
           <div className="intro-right [--d:220ms]">
-            <HeroQuoteForm promiseNote />
+            <LeadQuoteForm variant="hero" />
           </div>
         </div>
       </section>
