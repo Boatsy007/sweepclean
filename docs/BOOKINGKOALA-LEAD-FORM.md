@@ -11,12 +11,22 @@
 - The site sends no analytics events for the form.
 
 - **Homepage hero:** the same component (`variant="hero"`) inside the existing hero card – same card, photo on phones, "Request your free quote" heading, trust line and promise note; BookingKoala's form replaces the quick form's fields, edge to edge in the card (486px wide on desktop). The quick form's "Use the full quote form" link is dropped, since both places now show the same form. Suburb pages keep the quick quote form (the shared `HeroQuoteForm` component is unchanged).
+- The iframe has `loading="lazy"`: it is still in the page from the start (so BookingKoala's resizer can find it), but the browser starts loading it just after the page's first paint. Without it, desktop first paint was 0.25 → 0.60s on the homepage; with it, first paint matches production.
+- Homepage hero (desktop): the left column is placed where it sat when centred against the original 804px quote card, not centred against the taller form. Mobile is unchanged. The card header says "We reply within 1 hour (business hours)".
 - Preview-only tools (non-production host): `/quote?bkdebug=1` (resizer status, BookingKoala's messages, iframe size) and `&bkwidth=860` (try a narrower form card on `/quote`).
 
 ## Not changed (decisions needed)
 - **Suburb page heroes** (`HeroQuoteForm`, 112 pages) still show the site's quick quote form.
 - **Hero height:** until BookingKoala's resizer works, the iframe keeps its 1000px starting height, so the homepage hero card is about 1,198px tall on desktop (the quick form card was 804px). Once resizing works, the card follows the form's real height.
 - **Contact page call-back form**: phone-based and not a quote form – recommended to keep as is (it goes to the business inbox via Resend and to BookingKoala via Make.com).
+
+## Width and two columns (findings)
+- BookingKoala switches to its two-column layout somewhere between ~700px (single column on `/quote` at 698px) and ~1,134px of iframe width (two columns). Find the exact width with `/quote?bkdebug=1&bkwidth=…`.
+- The homepage hero's left column needs about 520–594px to keep the headline's line breaks and the paragraph and benefits as they are. Inside the 1,200px container that leaves at most ~500–570px for the form, so the hero form stays single column. A desktop-only hero width increase would only help on screens wider than roughly 1,480px if the threshold is around 768px.
+
+## Height (findings)
+- The iframe keeps its 1000px starting height unless BookingKoala's resizer works. BookingKoala's snippet loads `iframeResizer.min.js` but never calls it; the component calls `iFrameResize()` if the script provides it. Resizing also needs BookingKoala's form page to send size messages (the iframe-resizer "contentWindow" script inside the form).
+- `?bkdebug=1` shows which case applies: "size messages: 0" means BookingKoala's form page isn't sending sizes (a BookingKoala-side fix); a number above 0 means resizing works.
 
 ## Which forms go where
 | Form | Where | Goes to |

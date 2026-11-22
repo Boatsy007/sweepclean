@@ -105,6 +105,7 @@ export function BookingKoalaLeadForm({ variant = "page", instance = 0 }: { varia
       height="1000px"
       width="100%"
       scrolling="yes"
+      loading="lazy"
     />
   );
   // BookingKoala's resizer, exactly as in their embed code (runs on direct visits; one tag per page).
