@@ -2,14 +2,20 @@
  * BookingKoala – Swept's customer management, scheduling, recurring bookings, payments and
  * customer accounts.
  *
- * On the website, BookingKoala is used for one thing only: the customer login embed on /login
- * (official iframe + embed.js – no API, no credentials). Bookings and enquiries are taken by our
- * own forms (/quote and the contact call-back) and reach BookingKoala as leads via
- * LEAD_WEBHOOK_URL (e.g. Make.com) – see docs/LEAD-WEBHOOK.md.
+ * On the website, BookingKoala is embedded in two places: the customer login on /login (official
+ * iframe + embed.js) and the lead enquiry form on /quote (official iframe + iframeResizer.min.js –
+ * see docs/BOOKINGKOALA-LEAD-FORM.md). No API, no credentials. The site's own forms (quick quote,
+ * call-back, and the native /quote form) reach BookingKoala as leads via LEAD_WEBHOOK_URL
+ * (e.g. Make.com) – see docs/LEAD-WEBHOOK.md.
  */
 
 export const BOOKINGKOALA_ORIGIN = "https://sweptresidentialandcommercialcleaning.bookingkoala.com";
 export const BOOKINGKOALA_EMBED_SCRIPT = `${BOOKINGKOALA_ORIGIN}/resources/embed.js`;
+/** Lead enquiry form (embed code supplied by Swept) and BookingKoala's iframe resizer, used on /quote. */
+export const BOOKINGKOALA_LEAD_FORM_URL = `${BOOKINGKOALA_ORIGIN}/leads/form/8a30eb91-5b26-4ddf-ac12-29ff53bba421?embed=true`;
+export const BOOKINGKOALA_RESIZER_SCRIPT = `${BOOKINGKOALA_ORIGIN}/resources/iframeResizer.min.js`;
+/** Which form /quote shows (build-time): "bookingkoala" (default) or "native" (the site's own form). */
+export const quoteFormMode = (): "bookingkoala" | "native" => (process.env.NEXT_PUBLIC_QUOTE_FORM === "native" ? "native" : "bookingkoala");
 
 export type BookingKoalaForm = "login";
 

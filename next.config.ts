@@ -14,6 +14,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Tests only: NEXT_DIST_DIR=.next-native lets the site's-own-form build (rollback) sit beside the normal build.
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   poweredByHeader: false,
   // AVIF first (smaller files at the same quality setting), WebP for browsers without AVIF.
   images: { qualities: [70, 75], formats: ["image/avif", "image/webp"] },

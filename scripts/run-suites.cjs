@@ -15,6 +15,8 @@ const suites = [
   ["seo", ["scripts/seo-check.cjs"]],
   ["bookingkoala", ["scripts/bookingkoala-check.cjs"]],
   ["cta", ["scripts/cta-check.cjs"]],
+  // BookingKoala's lead form on /quote (skipped in the NEXT_PUBLIC_QUOTE_FORM=native build).
+  ["bk-lead", ["scripts/bk-lead-check.cjs"]],
   // Lead webhook payload (Make.com) – a local capture server stands in for the webhook.
   ["webhook-a", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "a", WEBHOOK_PORT: "3299" }],
   ["webhook-b", ["scripts/webhook-check.cjs"], { LEAD_WEBHOOK_URL: "http://127.0.0.1:3299/hook" }, { CASES: "b", WEBHOOK_PORT: "3299" }],

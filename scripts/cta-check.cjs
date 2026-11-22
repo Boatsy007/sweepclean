@@ -56,7 +56,10 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
     }
     if (!p.startsWith("/cleaning-guides/") && SWEPT_PRICE.test(textOf(html))) fail(`${p}: Swept price, price markup or booking wording found: ${textOf(html).match(SWEPT_PRICE)[0]}`);
     if (p.startsWith("/cleaning-guides/") && /minPrice|PriceSpecification|"price"\s*:/.test(html)) fail(`${p}: price structured data`);
-    if (/bookingkoala\.com/.test(html)) fail(`${p}: references BookingKoala (it belongs only on /login)`);
+    // BookingKoala: the customer login embed on /login, and (by default) the lead form iframe on /quote only.
+    const bkRefs = [...html.matchAll(/https:\/\/[a-z.]*bookingkoala\.com[^"'\s<]*/g)].map((m) => m[0]);
+    const allowed = p === "/quote" ? bkRefs.every((u) => u.includes("/leads/form/8a30eb91-5b26-4ddf-ac12-29ff53bba421")) : false;
+    if (bkRefs.length && !allowed) fail(`${p}: references BookingKoala (${bkRefs[0]}) – allowed only on /login and the /quote lead form`);
   }
   notes.push(`Server HTML: ${paths.length} sitemap pages, ${quoteCtas} quote CTAs, no booking CTAs, no Swept prices`);
   {
@@ -150,122 +153,128 @@ const textOf = (html) => html.replace(/<script(?![^>]*application\/ld\+json)[\s\
     await page.close();
   }
 
-  // ---- 4. The quote form
-  // (Each suite runs against its own fresh server – npm run test:all – so the quote API rate limit is untouched.)
-  const selected = (page) => page.locator('[role="tab"][aria-selected="true"]').getAttribute("data-quote-tab");
-  {
-    const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-    const page = await c.newPage();
-    const errors = [];
-    page.on("pageerror", (e) => errors.push(e.message));
-    // Tabs switch in place: no navigation, no URL change; keyboard arrows work.
-    await page.goto(BASE + "/quote", { waitUntil: "networkidle" });
-    await page.evaluate(() => (window.__noReload = 1));
-    if ((await selected(page)) !== "residential") fail("/quote: Residential should be the default tab");
-    const url0 = page.url();
-    await page.click('[data-quote-tab="commercial"]');
-    if ((await selected(page)) !== "commercial") fail("tab click: Commercial not selected");
-    const opts = await page.locator("#cleaningType option").allTextContents();
-    for (const o of ["Office cleaning", "Retail / shop cleaning", "Commercial cleaning", "Strata / common area cleaning", "Other commercial cleaning"]) if (!opts.includes(o)) fail(`commercial options missing ${o}`);
-    if (opts.some((o) => /window|carpet/i.test(o))) fail(`commercial options include an unconfirmed service: ${opts.join(", ")}`);
-    await page.keyboard.press("ArrowLeft");
-    if ((await selected(page)) !== "residential") fail("keyboard ArrowLeft: Residential not selected");
-    const ropts = await page.locator("#cleaningType option").allTextContents();
-    for (const o of ["Regular house cleaning", "Deep cleaning", "Spring cleaning", "Bond / end-of-lease cleaning", "One-off cleaning", "NDIS cleaning", "Home care cleaning", "Airbnb / holiday rental cleaning", "Carpet cleaning", "Other residential cleaning"]) if (!ropts.includes(o)) fail(`residential options missing ${o}`);
-    if (ropts.some((o) => /window/i.test(o))) fail("residential options include window cleaning (unconfirmed)");
-    if (page.url() !== url0 || !(await page.evaluate(() => window.__noReload === 1))) fail("tab switch reloaded the page or changed the URL");
-    // Bond: no frequency question; carpet: no bedrooms/bathrooms.
-    await page.selectOption("#cleaningType", "bond");
-    if (await page.locator('input[name="frequency"]').count()) fail("bond: frequency question shown");
-    await page.selectOption("#cleaningType", "regular");
-    if ((await page.locator('input[name="frequency"]').count()) !== 5) fail("regular: expected 5 frequency options");
-    await page.selectOption("#cleaningType", "carpet");
-    await page.click("text=Continue");
-    if (await page.locator('input[name="bedrooms"]').count()) fail("carpet: bedrooms asked");
-    // Retired package links show no banner or package name; ?type=commercial opens Commercial.
-    await page.goto(BASE + "/quote?service=regular-house-cleaning&package=spotless", { waitUntil: "networkidle" });
-    if (await page.getByText(/Spotless|package|\$\d/i).count()) fail("?package=spotless: package or price shown");
-    await page.goto(BASE + "/quote?type=commercial", { waitUntil: "networkidle" });
-    if ((await selected(page)) !== "commercial") fail("?type=commercial: Commercial not selected");
-    const canon = await page.locator('link[rel="canonical"]').getAttribute("href");
-    if (!/\/quote$/.test(canon || "")) fail(`?type=commercial canonical ${canon}`);
-    if (errors.length) fail(`quote form page errors: ${errors.join(" | ")}`);
-    await c.close();
-  }
-  // Residential, from the fortnightly card on the regular cleaning page (phone, real taps). Email is required.
-  {
-    const c = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
-    const page = await c.newPage();
-    const errors = [];
-    page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto(BASE + "/services/regular-house-cleaning", { waitUntil: "networkidle" });
-    await page.locator('#prices a[href="/quote?service=regular-house-cleaning&frequency=fortnightly"]').tap();
-    await page.waitForURL((u) => u.pathname === "/quote" && u.searchParams.get("frequency") === "fortnightly", { timeout: 8000 }).catch(() => fail("fortnightly card → /quote"));
-    await page.waitForSelector("text=Tell us about your home", { timeout: 5000 }).catch(() => fail("preselected regular + fortnightly should open at 'Your home'"));
-    if ((await selected(page)) !== "residential") fail("regular preselect: Residential not selected");
-    await page.locator("button", { hasText: "Continue" }).tap();
-    const errCount = await page.locator('form [role="alert"]').count();
-    if (errCount < 3) fail(`residential step 2: expected 3 validation errors, got ${errCount}`);
-    await page.locator('label:has(input[name="bedrooms"][value="3"])').tap();
-    await page.locator('label:has(input[name="bathrooms"][value="2"])').tap();
-    await page.fill("#suburb", "Robina 4226");
-    await page.locator("button", { hasText: "Continue" }).tap();
-    await page.fill("#notes", "Two dogs");
-    await page.locator("button", { hasText: "Continue" }).tap();
-    await page.waitForTimeout(400);
-    // Reaching the last step must not submit it (no errors before the customer has typed anything).
-    if (await page.locator('form [role="alert"]').count()) fail(`residential: errors shown on arrival at the details step (Continue submitted the form): ${(await page.locator('form [role="alert"]').allTextContents()).join(" / ")}`);
-    await page.fill("#name", "Test Resident");
-    await page.fill("#phone", "0412 345 678");
-    await page.locator('form input[type="checkbox"]').first().check();
-    await page.locator('button[type="submit"]', { hasText: "Request My Free Quote" }).tap();
-    if (!(await page.locator("#email-error").count())) fail("residential: email not required");
-    await page.fill("#email", "test@example.com");
-    await page.waitForTimeout(2600); // the API ignores submissions made in under 2.5s (bot trap)
-    await page.locator('button[type="submit"]', { hasText: "Request My Free Quote" }).tap();
-    await page.waitForURL((u) => u.pathname === "/quote/thanks" && u.searchParams.get("type") === "quote" && u.searchParams.get("service") === "regular-house-cleaning", { timeout: 10000 }).catch(() => fail(`residential quote did not reach the thank-you page (at ${page.url()})`));
-    if (/Test/.test(new URL(page.url()).search)) fail("thank-you URL contains the customer's name");
-    if (await page.getByText(/booking request|final price|confirm your appointment/i).count()) fail("thank-you page promises a booking confirmation or price");
-    if (errors.length) fail(`residential journey page errors: ${errors.join(" | ")}`);
-    notes.push("Residential: fortnightly card → preselected form → validation → email required → submit → thank-you OK");
-    await c.close();
-  }
-  // Commercial, from the commercial service page (desktop).
-  {
-    const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-    const page = await c.newPage();
-    const errors = [];
-    page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto(BASE + "/services/commercial-cleaning", { waitUntil: "networkidle" });
-    await page.locator('main a[data-cta-intent="quote"]').first().click();
-    await page.waitForURL((u) => u.pathname === "/quote" && u.searchParams.get("service") === "commercial-cleaning", { timeout: 8000 });
-    await page.waitForTimeout(300);
-    if ((await selected(page)) !== "commercial") fail("commercial preselect: Commercial not selected");
-    if ((await page.inputValue("#cleaningType")) !== "commercial") fail("commercial preselect: cleaning type not preselected");
-    await page.click("text=Continue");
-    if (!(await page.locator("#propertyType-error").count())) fail("commercial: property type not required");
-    await page.selectOption("#cleaningType", "strata");
-    await page.click('label:has(input[name="propertyType"][value="Strata / common areas"])');
-    await page.click("text=Continue");
-    await page.click('label:has(input[name="size"][value="Not sure"])');
-    await page.fill("#suburb", "4000");
-    await page.click("text=Continue");
-    await page.click('label:has(input[name="frequency"][value="Several times a week"])');
-    await page.click('label:has(input[name="timePref"][value="After hours / overnight"])');
-    await page.click("text=Continue");
-    await page.waitForTimeout(400);
-    if (await page.locator('form [role="alert"]').count()) fail("commercial: errors shown on arrival at the details step (Continue submitted the form)");
-    await page.fill("#businessName", "Test Strata Pty Ltd");
-    await page.fill("#name", "Test Manager");
-    await page.fill("#phone", "0412 345 679");
-    await page.fill("#email", "test@example.com");
-    await page.locator('form input[type="checkbox"]').first().check();
-    await page.waitForTimeout(2600);
-    await page.click('button[type="submit"]');
-    await page.waitForURL((u) => u.pathname === "/quote/thanks" && u.searchParams.get("service") === "commercial-cleaning", { timeout: 10000 }).catch(() => fail(`commercial quote did not reach the thank-you page (at ${page.url()})`));
-    if (errors.length) fail(`commercial journey page errors: ${errors.join(" | ")}`);
-    notes.push("Commercial: service page → Commercial tab preselected → strata, Not sure, several times a week, after hours → thank-you OK");
-    await c.close();
+  // ---- 4. The quote form. By default /quote shows BookingKoala's lead form (scripts/bk-lead-check.cjs);
+  // the site's own form journeys below run when /quote shows that form (the NEXT_PUBLIC_QUOTE_FORM=native build).
+  const bkQuote = (await (await fetch(`${BASE}/quote`)).text()).includes('id="iFrameResizer0"');
+  if (bkQuote) notes.push("/quote shows the BookingKoala lead form – the site's own form journeys run in the native build");
+  else {
+    // ---- 4. The quote form
+    // (Each suite runs against its own fresh server – npm run test:all – so the quote API rate limit is untouched.)
+    const selected = (page) => page.locator('[role="tab"][aria-selected="true"]').getAttribute("data-quote-tab");
+    {
+      const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+      const page = await c.newPage();
+      const errors = [];
+      page.on("pageerror", (e) => errors.push(e.message));
+      // Tabs switch in place: no navigation, no URL change; keyboard arrows work.
+      await page.goto(BASE + "/quote", { waitUntil: "networkidle" });
+      await page.evaluate(() => (window.__noReload = 1));
+      if ((await selected(page)) !== "residential") fail("/quote: Residential should be the default tab");
+      const url0 = page.url();
+      await page.click('[data-quote-tab="commercial"]');
+      if ((await selected(page)) !== "commercial") fail("tab click: Commercial not selected");
+      const opts = await page.locator("#cleaningType option").allTextContents();
+      for (const o of ["Office cleaning", "Retail / shop cleaning", "Commercial cleaning", "Strata / common area cleaning", "Other commercial cleaning"]) if (!opts.includes(o)) fail(`commercial options missing ${o}`);
+      if (opts.some((o) => /window|carpet/i.test(o))) fail(`commercial options include an unconfirmed service: ${opts.join(", ")}`);
+      await page.keyboard.press("ArrowLeft");
+      if ((await selected(page)) !== "residential") fail("keyboard ArrowLeft: Residential not selected");
+      const ropts = await page.locator("#cleaningType option").allTextContents();
+      for (const o of ["Regular house cleaning", "Deep cleaning", "Spring cleaning", "Bond / end-of-lease cleaning", "One-off cleaning", "NDIS cleaning", "Home care cleaning", "Airbnb / holiday rental cleaning", "Carpet cleaning", "Other residential cleaning"]) if (!ropts.includes(o)) fail(`residential options missing ${o}`);
+      if (ropts.some((o) => /window/i.test(o))) fail("residential options include window cleaning (unconfirmed)");
+      if (page.url() !== url0 || !(await page.evaluate(() => window.__noReload === 1))) fail("tab switch reloaded the page or changed the URL");
+      // Bond: no frequency question; carpet: no bedrooms/bathrooms.
+      await page.selectOption("#cleaningType", "bond");
+      if (await page.locator('input[name="frequency"]').count()) fail("bond: frequency question shown");
+      await page.selectOption("#cleaningType", "regular");
+      if ((await page.locator('input[name="frequency"]').count()) !== 5) fail("regular: expected 5 frequency options");
+      await page.selectOption("#cleaningType", "carpet");
+      await page.click("text=Continue");
+      if (await page.locator('input[name="bedrooms"]').count()) fail("carpet: bedrooms asked");
+      // Retired package links show no banner or package name; ?type=commercial opens Commercial.
+      await page.goto(BASE + "/quote?service=regular-house-cleaning&package=spotless", { waitUntil: "networkidle" });
+      if (await page.getByText(/Spotless|package|\$\d/i).count()) fail("?package=spotless: package or price shown");
+      await page.goto(BASE + "/quote?type=commercial", { waitUntil: "networkidle" });
+      if ((await selected(page)) !== "commercial") fail("?type=commercial: Commercial not selected");
+      const canon = await page.locator('link[rel="canonical"]').getAttribute("href");
+      if (!/\/quote$/.test(canon || "")) fail(`?type=commercial canonical ${canon}`);
+      if (errors.length) fail(`quote form page errors: ${errors.join(" | ")}`);
+      await c.close();
+    }
+    // Residential, from the fortnightly card on the regular cleaning page (phone, real taps). Email is required.
+    {
+      const c = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
+      const page = await c.newPage();
+      const errors = [];
+      page.on("pageerror", (e) => errors.push(e.message));
+      await page.goto(BASE + "/services/regular-house-cleaning", { waitUntil: "networkidle" });
+      await page.locator('#prices a[href="/quote?service=regular-house-cleaning&frequency=fortnightly"]').tap();
+      await page.waitForURL((u) => u.pathname === "/quote" && u.searchParams.get("frequency") === "fortnightly", { timeout: 8000 }).catch(() => fail("fortnightly card → /quote"));
+      await page.waitForSelector("text=Tell us about your home", { timeout: 5000 }).catch(() => fail("preselected regular + fortnightly should open at 'Your home'"));
+      if ((await selected(page)) !== "residential") fail("regular preselect: Residential not selected");
+      await page.locator("button", { hasText: "Continue" }).tap();
+      const errCount = await page.locator('form [role="alert"]').count();
+      if (errCount < 3) fail(`residential step 2: expected 3 validation errors, got ${errCount}`);
+      await page.locator('label:has(input[name="bedrooms"][value="3"])').tap();
+      await page.locator('label:has(input[name="bathrooms"][value="2"])').tap();
+      await page.fill("#suburb", "Robina 4226");
+      await page.locator("button", { hasText: "Continue" }).tap();
+      await page.fill("#notes", "Two dogs");
+      await page.locator("button", { hasText: "Continue" }).tap();
+      await page.waitForTimeout(400);
+      // Reaching the last step must not submit it (no errors before the customer has typed anything).
+      if (await page.locator('form [role="alert"]').count()) fail(`residential: errors shown on arrival at the details step (Continue submitted the form): ${(await page.locator('form [role="alert"]').allTextContents()).join(" / ")}`);
+      await page.fill("#name", "Test Resident");
+      await page.fill("#phone", "0412 345 678");
+      await page.locator('form input[type="checkbox"]').first().check();
+      await page.locator('button[type="submit"]', { hasText: "Request My Free Quote" }).tap();
+      if (!(await page.locator("#email-error").count())) fail("residential: email not required");
+      await page.fill("#email", "test@example.com");
+      await page.waitForTimeout(2600); // the API ignores submissions made in under 2.5s (bot trap)
+      await page.locator('button[type="submit"]', { hasText: "Request My Free Quote" }).tap();
+      await page.waitForURL((u) => u.pathname === "/quote/thanks" && u.searchParams.get("type") === "quote" && u.searchParams.get("service") === "regular-house-cleaning", { timeout: 10000 }).catch(() => fail(`residential quote did not reach the thank-you page (at ${page.url()})`));
+      if (/Test/.test(new URL(page.url()).search)) fail("thank-you URL contains the customer's name");
+      if (await page.getByText(/booking request|final price|confirm your appointment/i).count()) fail("thank-you page promises a booking confirmation or price");
+      if (errors.length) fail(`residential journey page errors: ${errors.join(" | ")}`);
+      notes.push("Residential: fortnightly card → preselected form → validation → email required → submit → thank-you OK");
+      await c.close();
+    }
+    // Commercial, from the commercial service page (desktop).
+    {
+      const c = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+      const page = await c.newPage();
+      const errors = [];
+      page.on("pageerror", (e) => errors.push(e.message));
+      await page.goto(BASE + "/services/commercial-cleaning", { waitUntil: "networkidle" });
+      await page.locator('main a[data-cta-intent="quote"]').first().click();
+      await page.waitForURL((u) => u.pathname === "/quote" && u.searchParams.get("service") === "commercial-cleaning", { timeout: 8000 });
+      await page.waitForTimeout(300);
+      if ((await selected(page)) !== "commercial") fail("commercial preselect: Commercial not selected");
+      if ((await page.inputValue("#cleaningType")) !== "commercial") fail("commercial preselect: cleaning type not preselected");
+      await page.click("text=Continue");
+      if (!(await page.locator("#propertyType-error").count())) fail("commercial: property type not required");
+      await page.selectOption("#cleaningType", "strata");
+      await page.click('label:has(input[name="propertyType"][value="Strata / common areas"])');
+      await page.click("text=Continue");
+      await page.click('label:has(input[name="size"][value="Not sure"])');
+      await page.fill("#suburb", "4000");
+      await page.click("text=Continue");
+      await page.click('label:has(input[name="frequency"][value="Several times a week"])');
+      await page.click('label:has(input[name="timePref"][value="After hours / overnight"])');
+      await page.click("text=Continue");
+      await page.waitForTimeout(400);
+      if (await page.locator('form [role="alert"]').count()) fail("commercial: errors shown on arrival at the details step (Continue submitted the form)");
+      await page.fill("#businessName", "Test Strata Pty Ltd");
+      await page.fill("#name", "Test Manager");
+      await page.fill("#phone", "0412 345 679");
+      await page.fill("#email", "test@example.com");
+      await page.locator('form input[type="checkbox"]').first().check();
+      await page.waitForTimeout(2600);
+      await page.click('button[type="submit"]');
+      await page.waitForURL((u) => u.pathname === "/quote/thanks" && u.searchParams.get("service") === "commercial-cleaning", { timeout: 10000 }).catch(() => fail(`commercial quote did not reach the thank-you page (at ${page.url()})`));
+      if (errors.length) fail(`commercial journey page errors: ${errors.join(" | ")}`);
+      notes.push("Commercial: service page → Commercial tab preselected → strata, Not sure, several times a week, after hours → thank-you OK");
+      await c.close();
+    }
   }
 
   await browser.close();

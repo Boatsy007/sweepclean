@@ -126,118 +126,126 @@ const ok = (m) => console.log("  ✓ " + m);
     if (n === 1 && count(ev, "generate_lead") === 1) ok("hero form success → exactly one generate_lead (quote_hero)"); else fail(`hero form generate_lead count ${count(ev, "generate_lead")}`);
   }
 
-  // Central quote form – Residential tab, arriving with a suburb pre-filled. Email is required.
-  await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
-  await page.evaluate(() => localStorage.clear());
-  await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
-  await resetGtag();
-  await page.click("text=Continue");
-  if (await page.isVisible("text=Choose the type of cleaning you need.")) ok("step 1 validation shown"); else fail("step 1 validation missing");
-  await page.selectOption("#cleaningType", "spring");
-  if (await page.locator('input[name="frequency"]').count()) fail("spring clean asks how often (should be one-off)"); else ok("one-off cleaning type skips the frequency question");
-  await page.selectOption("#cleaningType", "regular");
-  await page.click("text=Continue");
-  if (await page.isVisible("text=How often would you like us to come?")) ok("frequency validation shown"); else fail("frequency validation missing");
-  await page.click("label:has-text('Fortnightly')");
-  await page.click("text=Continue");
-  if ((await page.inputValue("#suburb")) === "Robina") ok("suburb prefilled from URL"); else fail("suburb not prefilled");
-  await page.click("text=Continue");
-  if (await page.isVisible("text=How many bedrooms?")) ok("step 2 validation shown"); else fail("step 2 validation missing");
-  await page.click("fieldset:has-text('Bedrooms') label:has-text('3')");
-  await page.click("fieldset:has-text('Bathrooms') label:has-text('2')");
-  await page.fill("#suburb", "Robina 4226");
-  await page.click("text=Continue");
-  await page.fill("#notes", "Please focus on the oven");
-  await page.click("text=Continue");
-  await page.fill("#name", "Test Person");
-  await page.fill("#phone", "123");
-  await page.click("button:has-text('Request My Free Quote')");
-  if (await page.isVisible("text=Please enter an Australian phone number")) ok("phone validation shown"); else fail("phone validation missing");
-  if (await page.isVisible("#email-error")) ok("email required (validation shown)"); else fail("email not required");
-  await page.fill("#phone", "0412 345 678");
-  await page.fill("#email", "test@example.com");
-  await page.check("input[type=checkbox] >> nth=-1");
-  await page.waitForTimeout(2600); // pass the bot timing trap
-  // A failed delivery (server error) must not count as a lead.
-  mockedApiError = true;
-  await page.route("**/api/quote", (r) => r.fulfill({ status: 502, contentType: "application/json", body: '{"ok":false}' }));
-  await page.click("button:has-text('Request My Free Quote')");
-  await page.waitForSelector("text=your request didn", { timeout: 5000 }).catch(() => {});
-  if (count(await gtagEvents(), "generate_lead") === 0) ok("no generate_lead when the submission fails"); else fail("generate_lead fired on a failed submission");
-  await page.unroute("**/api/quote");
-  mockedApiError = false;
-  await page.click("button:has-text('Request My Free Quote')");
-  await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("submission → thank-you page"), () => fail("did not reach thank-you page"));
-  {
-    const ev = await gtagEvents();
-    allEvents.push(...ev);
-    if (count(ev, "quote_start") === 1 && count(ev, "quote_start", (p) => p.customer_type === "residential")) ok("quote_start sent once (customer_type residential)"); else fail(`quote_start ${JSON.stringify(ev.filter((e) => e.name === "quote_start"))}`);
-    if (count(ev, "quote_step") >= 3) ok("quote_step sent per step"); else fail(`quote_step count ${count(ev, "quote_step")}`);
-    const gl = ev.filter((e) => e.name === "generate_lead");
-    if (gl.length === 1 && gl[0].params.lead_type === "quote" && gl[0].params.customer_type === "residential" && gl[0].params.service === "regular-house-cleaning" && gl[0].params.cleaning_type === "regular" && gl[0].params.frequency === "fortnightly") ok("residential success → exactly one generate_lead (quote, residential, regular, fortnightly)"); else fail(`residential generate_lead ${JSON.stringify(gl)}`);
-    if (count(ev, "booking_request") === 0) ok("no booking_request"); else fail("booking_request fired");
-    if (count(ev, "quote_step_error") >= 1) ok("validation errors tracked as quote_step_error (field names only)"); else fail("quote_step_error missing");
-    if (!ev.some((e) => e.name === "quote_step_error" && e.params.step === 4 && /name/.test(e.params.fields || ""))) ok("no premature last-step errors"); else fail("the details step was submitted before it was filled in");
-  }
-  // The first name is handed over in sessionStorage and rendered just after the page loads.
-  if (await page.waitForSelector("text=Thanks, Test", { timeout: 4000 }).then(() => true, () => false)) ok("thank-you personalised"); else fail("thank-you not personalised");
-  if (/[?&]name=/.test(page.url()) || /Test/.test(new URL(page.url()).search)) fail("thank-you URL contains the customer's name"); else ok("thank-you URL has no personal details");
-  // Client navigations (with the page crossfade) update <head> a moment after the URL changes – wait for it.
-  await page.waitForFunction(() => (document.querySelector('meta[name="robots"]')?.content || "").includes("noindex"), null, { timeout: 4000 }).catch(() => {});
-  const robots = await page.evaluate(() => document.querySelector('meta[name="robots"]')?.content || "");
-  if (robots.includes("noindex")) ok("thank-you page is noindex"); else fail("thank-you page indexable");
+  // /quote shows BookingKoala's lead form by default (scripts/bk-lead-check.cjs covers it). The site's
+  // own quote form journeys below run when /quote shows that form (the NEXT_PUBLIC_QUOTE_FORM=native build).
+  const bkQuote = (await (await fetch(`${BASE}/quote`)).text()).includes('id="iFrameResizer0"');
+  if (bkQuote) {
+    ok("/quote shows the BookingKoala lead form (the site's own form journeys run in the native build)");
+    if (await page.evaluate(() => window.dataLayer === undefined)) ok("no dataLayer events from the site outside production"); else fail("site wrote to dataLayer");
+  } else {
+    // Central quote form – Residential tab, arriving with a suburb pre-filled. Email is required.
+    await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
+    await page.evaluate(() => localStorage.clear());
+    await page.goto(`${BASE}/quote?suburb=Robina`, { waitUntil: "networkidle" });
+    await resetGtag();
+    await page.click("text=Continue");
+    if (await page.isVisible("text=Choose the type of cleaning you need.")) ok("step 1 validation shown"); else fail("step 1 validation missing");
+    await page.selectOption("#cleaningType", "spring");
+    if (await page.locator('input[name="frequency"]').count()) fail("spring clean asks how often (should be one-off)"); else ok("one-off cleaning type skips the frequency question");
+    await page.selectOption("#cleaningType", "regular");
+    await page.click("text=Continue");
+    if (await page.isVisible("text=How often would you like us to come?")) ok("frequency validation shown"); else fail("frequency validation missing");
+    await page.click("label:has-text('Fortnightly')");
+    await page.click("text=Continue");
+    if ((await page.inputValue("#suburb")) === "Robina") ok("suburb prefilled from URL"); else fail("suburb not prefilled");
+    await page.click("text=Continue");
+    if (await page.isVisible("text=How many bedrooms?")) ok("step 2 validation shown"); else fail("step 2 validation missing");
+    await page.click("fieldset:has-text('Bedrooms') label:has-text('3')");
+    await page.click("fieldset:has-text('Bathrooms') label:has-text('2')");
+    await page.fill("#suburb", "Robina 4226");
+    await page.click("text=Continue");
+    await page.fill("#notes", "Please focus on the oven");
+    await page.click("text=Continue");
+    await page.fill("#name", "Test Person");
+    await page.fill("#phone", "123");
+    await page.click("button:has-text('Request My Free Quote')");
+    if (await page.isVisible("text=Please enter an Australian phone number")) ok("phone validation shown"); else fail("phone validation missing");
+    if (await page.isVisible("#email-error")) ok("email required (validation shown)"); else fail("email not required");
+    await page.fill("#phone", "0412 345 678");
+    await page.fill("#email", "test@example.com");
+    await page.check("input[type=checkbox] >> nth=-1");
+    await page.waitForTimeout(2600); // pass the bot timing trap
+    // A failed delivery (server error) must not count as a lead.
+    mockedApiError = true;
+    await page.route("**/api/quote", (r) => r.fulfill({ status: 502, contentType: "application/json", body: '{"ok":false}' }));
+    await page.click("button:has-text('Request My Free Quote')");
+    await page.waitForSelector("text=your request didn", { timeout: 5000 }).catch(() => {});
+    if (count(await gtagEvents(), "generate_lead") === 0) ok("no generate_lead when the submission fails"); else fail("generate_lead fired on a failed submission");
+    await page.unroute("**/api/quote");
+    mockedApiError = false;
+    await page.click("button:has-text('Request My Free Quote')");
+    await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("submission → thank-you page"), () => fail("did not reach thank-you page"));
+    {
+      const ev = await gtagEvents();
+      allEvents.push(...ev);
+      if (count(ev, "quote_start") === 1 && count(ev, "quote_start", (p) => p.customer_type === "residential")) ok("quote_start sent once (customer_type residential)"); else fail(`quote_start ${JSON.stringify(ev.filter((e) => e.name === "quote_start"))}`);
+      if (count(ev, "quote_step") >= 3) ok("quote_step sent per step"); else fail(`quote_step count ${count(ev, "quote_step")}`);
+      const gl = ev.filter((e) => e.name === "generate_lead");
+      if (gl.length === 1 && gl[0].params.lead_type === "quote" && gl[0].params.customer_type === "residential" && gl[0].params.service === "regular-house-cleaning" && gl[0].params.cleaning_type === "regular" && gl[0].params.frequency === "fortnightly") ok("residential success → exactly one generate_lead (quote, residential, regular, fortnightly)"); else fail(`residential generate_lead ${JSON.stringify(gl)}`);
+      if (count(ev, "booking_request") === 0) ok("no booking_request"); else fail("booking_request fired");
+      if (count(ev, "quote_step_error") >= 1) ok("validation errors tracked as quote_step_error (field names only)"); else fail("quote_step_error missing");
+      if (!ev.some((e) => e.name === "quote_step_error" && e.params.step === 4 && /name/.test(e.params.fields || ""))) ok("no premature last-step errors"); else fail("the details step was submitted before it was filled in");
+    }
+    // The first name is handed over in sessionStorage and rendered just after the page loads.
+    if (await page.waitForSelector("text=Thanks, Test", { timeout: 4000 }).then(() => true, () => false)) ok("thank-you personalised"); else fail("thank-you not personalised");
+    if (/[?&]name=/.test(page.url()) || /Test/.test(new URL(page.url()).search)) fail("thank-you URL contains the customer's name"); else ok("thank-you URL has no personal details");
+    // Client navigations (with the page crossfade) update <head> a moment after the URL changes – wait for it.
+    await page.waitForFunction(() => (document.querySelector('meta[name="robots"]')?.content || "").includes("noindex"), null, { timeout: 4000 }).catch(() => {});
+    const robots = await page.evaluate(() => document.querySelector('meta[name="robots"]')?.content || "");
+    if (robots.includes("noindex")) ok("thank-you page is noindex"); else fail("thank-you page indexable");
 
-  // Commercial tab. The API answer is supplied in the browser here (this suite's real submissions stay
-  // within the API rate limit); cta-check and webhook-check submit commercial quotes to the real API.
-  await page.goto(`${BASE}/quote?service=commercial-cleaning`, { waitUntil: "networkidle" });
-  await page.evaluate(() => { localStorage.clear(); sessionStorage.removeItem("swept:attribution"); });
-  await page.goto(`${BASE}/quote?service=commercial-cleaning&utm_source=smoketest&gclid=SMOKE1`, { waitUntil: "networkidle" });
-  await resetGtag();
-  await page.selectOption("#cleaningType", "office");
-  await page.click("label:has-text('Office') >> nth=0");
-  await page.click("text=Continue");
-  await page.click("label:has-text('Medium')");
-  await page.fill("#suburb", "Southport 4215");
-  await page.click("text=Continue");
-  await page.click("label:has-text('Several times a week')");
-  await page.click("label:has-text('After hours / overnight')");
-  await page.click("text=Continue");
-  await page.fill("#businessName", "Secretbiz Holdings");
-  await page.fill("#name", "Commercial Contact");
-  await page.fill("#phone", "0412 999 888");
-  await page.fill("#email", "biz@example.com");
-  await page.fill("#notes", "Alarm code needed");
-  await page.check("input[type=checkbox] >> nth=-1");
-  await page.waitForTimeout(2600);
-  let sent = null;
-  mockedApiError = true;
-  await page.route("**/api/quote", (r) => { sent = JSON.parse(r.request().postData() || "{}"); r.fulfill({ status: 422, contentType: "application/json", body: '{"ok":false}' }); });
-  await page.click("button:has-text('Request My Free Quote')");
-  await page.waitForSelector("text=your request didn", { timeout: 5000 }).catch(() => {});
-  if (count(await gtagEvents(), "generate_lead") === 0) ok("no generate_lead when the server rejects the submission"); else fail("generate_lead fired on a rejected submission");
-  await page.unroute("**/api/quote");
-  mockedApiError = false;
-  await page.route("**/api/quote", (r) => { sent = JSON.parse(r.request().postData() || "{}"); r.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' }); });
-  await page.click("button:has-text('Request My Free Quote')");
-  await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("commercial → thank-you page"), () => fail("commercial did not reach thank-you page"));
-  await page.unroute("**/api/quote");
-  {
-    const ev = await gtagEvents();
-    allEvents.push(...ev);
-    const gl = ev.filter((e) => e.name === "generate_lead");
-    if (gl.length === 1 && gl[0].params.customer_type === "commercial" && gl[0].params.service === "commercial-cleaning" && gl[0].params.cleaning_type === "office" && gl[0].params.frequency === "several_weekly" && gl[0].params.recurring === true) ok("commercial success → exactly one generate_lead (commercial, office, several_weekly)"); else fail(`commercial generate_lead ${JSON.stringify(gl)}`);
-    const want = { kind: "quote", customerType: "commercial", cleaningType: "office", service: "commercial-cleaning", businessName: "Secretbiz Holdings", propertyType: "Office", size: "Medium (150–400m²)", frequency: "several_weekly", timePref: "After hours / overnight", suburb: "Southport", postcode: "4215", name: "Commercial Contact" };
-    const bad = Object.entries(want).filter(([k, v]) => !sent || sent[k] !== v);
-    if (!bad.length && sent.attribution?.gclid === "SMOKE1" && !("bedrooms" in sent)) ok("commercial request body carries the commercial answers (and no residential ones)"); else fail(`commercial request body: ${JSON.stringify(bad)} ${JSON.stringify(sent)}`);
-  }
+    // Commercial tab. The API answer is supplied in the browser here (this suite's real submissions stay
+    // within the API rate limit); cta-check and webhook-check submit commercial quotes to the real API.
+    await page.goto(`${BASE}/quote?service=commercial-cleaning`, { waitUntil: "networkidle" });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.removeItem("swept:attribution"); });
+    await page.goto(`${BASE}/quote?service=commercial-cleaning&utm_source=smoketest&gclid=SMOKE1`, { waitUntil: "networkidle" });
+    await resetGtag();
+    await page.selectOption("#cleaningType", "office");
+    await page.click("label:has-text('Office') >> nth=0");
+    await page.click("text=Continue");
+    await page.click("label:has-text('Medium')");
+    await page.fill("#suburb", "Southport 4215");
+    await page.click("text=Continue");
+    await page.click("label:has-text('Several times a week')");
+    await page.click("label:has-text('After hours / overnight')");
+    await page.click("text=Continue");
+    await page.fill("#businessName", "Secretbiz Holdings");
+    await page.fill("#name", "Commercial Contact");
+    await page.fill("#phone", "0412 999 888");
+    await page.fill("#email", "biz@example.com");
+    await page.fill("#notes", "Alarm code needed");
+    await page.check("input[type=checkbox] >> nth=-1");
+    await page.waitForTimeout(2600);
+    let sent = null;
+    mockedApiError = true;
+    await page.route("**/api/quote", (r) => { sent = JSON.parse(r.request().postData() || "{}"); r.fulfill({ status: 422, contentType: "application/json", body: '{"ok":false}' }); });
+    await page.click("button:has-text('Request My Free Quote')");
+    await page.waitForSelector("text=your request didn", { timeout: 5000 }).catch(() => {});
+    if (count(await gtagEvents(), "generate_lead") === 0) ok("no generate_lead when the server rejects the submission"); else fail("generate_lead fired on a rejected submission");
+    await page.unroute("**/api/quote");
+    mockedApiError = false;
+    await page.route("**/api/quote", (r) => { sent = JSON.parse(r.request().postData() || "{}"); r.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' }); });
+    await page.click("button:has-text('Request My Free Quote')");
+    await page.waitForURL(/\/quote\/thanks/, { timeout: 10000 }).then(() => ok("commercial → thank-you page"), () => fail("commercial did not reach thank-you page"));
+    await page.unroute("**/api/quote");
+    {
+      const ev = await gtagEvents();
+      allEvents.push(...ev);
+      const gl = ev.filter((e) => e.name === "generate_lead");
+      if (gl.length === 1 && gl[0].params.customer_type === "commercial" && gl[0].params.service === "commercial-cleaning" && gl[0].params.cleaning_type === "office" && gl[0].params.frequency === "several_weekly" && gl[0].params.recurring === true) ok("commercial success → exactly one generate_lead (commercial, office, several_weekly)"); else fail(`commercial generate_lead ${JSON.stringify(gl)}`);
+      const want = { kind: "quote", customerType: "commercial", cleaningType: "office", service: "commercial-cleaning", businessName: "Secretbiz Holdings", propertyType: "Office", size: "Medium (150–400m²)", frequency: "several_weekly", timePref: "After hours / overnight", suburb: "Southport", postcode: "4215", name: "Commercial Contact" };
+      const bad = Object.entries(want).filter(([k, v]) => !sent || sent[k] !== v);
+      if (!bad.length && sent.attribution?.gclid === "SMOKE1" && !("bedrooms" in sent)) ok("commercial request body carries the commercial answers (and no residential ones)"); else fail(`commercial request body: ${JSON.stringify(bad)} ${JSON.stringify(sent)}`);
+    }
 
-  // Event tracking (fresh run, intercept before navigation)
-  await page.goto(`${BASE}/quote?service=deep-cleaning`, { waitUntil: "networkidle" });
-  if (await page.isVisible("text=Tell us about your home")) ok("?service= deep-links to step 2"); else fail("service deep-link failed");
-  await resetGtag();
-  await page.click("fieldset:has-text('Bedrooms') label:has-text('2')");
-  if (count(await gtagEvents(), "quote_start") === 1) ok("quote_start sent on first interaction"); else fail("quote_start missing");
-  if (await page.evaluate(() => window.dataLayer === undefined)) ok("no dataLayer events from the site outside production"); else fail("site wrote to dataLayer");
+    // Event tracking (fresh run, intercept before navigation)
+    await page.goto(`${BASE}/quote?service=deep-cleaning`, { waitUntil: "networkidle" });
+    if (await page.isVisible("text=Tell us about your home")) ok("?service= deep-links to step 2"); else fail("service deep-link failed");
+    await resetGtag();
+    await page.click("fieldset:has-text('Bedrooms') label:has-text('2')");
+    if (count(await gtagEvents(), "quote_start") === 1) ok("quote_start sent on first interaction"); else fail("quote_start missing");
+    if (await page.evaluate(() => window.dataLayer === undefined)) ok("no dataLayer events from the site outside production"); else fail("site wrote to dataLayer");
+  }
 
   // Callback flow
   await page.goto(`${BASE}/contact`, { waitUntil: "networkidle" });

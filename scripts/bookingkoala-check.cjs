@@ -24,7 +24,9 @@ const fail = (m) => failures.push(m);
 
 // BookingKoala is embedded on the customer login page only (booking and contact use our own forms).
 const embeds = [{ path: "/login", src: `https://${BK}/login?embed=true`, height: 650 }];
-const plain = ["/", "/services/bond-cleaning", "/areas/gold-coast/helensvale", "/cleaning-guides/bond-cleaning-cost-brisbane", "/quote", "/services/regular-house-cleaning", "/book-now?package=spotless", "/contact"];
+const plain = ["/", "/services/bond-cleaning", "/areas/gold-coast/helensvale", "/cleaning-guides/bond-cleaning-cost-brisbane", "/services/regular-house-cleaning", "/contact"];
+// /quote (and /book-now, which redirects there): by default BookingKoala's lead form – checked separately below.
+const LEAD_FORM = "/leads/form/8a30eb91-5b26-4ddf-ac12-29ff53bba421";
 
 async function inspectEmbed(page, e, label) {
   if (e.scrollTo) await page.locator(e.scrollTo).scrollIntoViewIfNeeded();
@@ -56,6 +58,23 @@ async function inspectEmbed(page, e, label) {
 
 (async () => {
   const browser = await chromium.launch();
+
+  // 1b. /quote: the lead form iframe and BookingKoala's iframe resizer only (never embed.js), or nothing
+  //     at all in the native build.
+  for (const p of ["/quote", "/book-now?package=spotless"]) {
+    const page = await browser.newPage();
+    const bk = [];
+    page.on("request", (r) => r.url().includes("bookingkoala.com") && bk.push(r.url()));
+    await page.goto(BASE + p, { waitUntil: "networkidle" });
+    await page.waitForTimeout(800);
+    const frames = await page.locator('iframe[src*="bookingkoala.com"]').evaluateAll((fs) => fs.map((f) => f.getAttribute("src")));
+    const bkQuote = frames.length > 0;
+    const unexpected = bk.filter((u) => !u.includes(LEAD_FORM) && !u.includes("/resources/iframeResizer.min.js"));
+    if (bkQuote && (frames.length !== 1 || !frames[0].includes(LEAD_FORM) || unexpected.length)) fail(`${p}: expected only the lead form + iframe resizer, got ${frames.length} iframe(s), ${unexpected.join(" ")}`);
+    if (!bkQuote && bk.length) fail(`${p}: BookingKoala requests in the native build`);
+    notes.push(`${p}: ${bkQuote ? "BookingKoala lead form only (" + bk.length + " BookingKoala requests: form + resizer)" : "site's own form, no BookingKoala"}`);
+    await page.close();
+  }
 
   // 1. Ordinary pages: zero BookingKoala requests.
   for (const p of plain) {
@@ -101,8 +120,9 @@ async function inspectEmbed(page, e, label) {
     await page.locator('#prices a[href="/quote?service=regular-house-cleaning&frequency=fortnightly"]').first().click();
     await page.waitForURL("**/quote?service=regular-house-cleaning&frequency=fortnightly");
     await page.waitForTimeout(1200);
-    const left = await page.evaluate(() => ({ scripts: document.querySelectorAll('script[src*="bookingkoala.com"]').length, iframes: document.querySelectorAll('iframe[src*="bookingkoala.com"]').length }));
-    if (left.iframes || bkOnBook.length) fail(`client nav → /quote @${w}px: BookingKoala still present (${left.iframes} iframe, ${bkOnBook.length} requests)`);
+    const left = await page.evaluate(() => ({ embedJs: document.querySelectorAll('script[src*="bookingkoala.com/resources/embed.js"]').length, loginFrames: document.querySelectorAll('iframe[src*="bookingkoala.com/login"]').length, leadFrames: document.querySelectorAll('iframe[src*="/leads/form/"]').length }));
+    const stray = bkOnBook.filter((u) => !u.includes(LEAD_FORM) && !u.includes("/resources/iframeResizer.min.js"));
+    if (left.loginFrames || left.embedJs || stray.length || left.leadFrames > 1) fail(`client nav → /quote @${w}px: login embed still present or duplicated forms (${JSON.stringify(left)}, ${stray.length} other requests)`);
     await page.goBack();
     await page.goBack();
     await page.waitForURL("**/login");
